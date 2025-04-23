@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    env_file: ".env.dev"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${DB_PORT}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    command: -p ${DB_PORT}
+
+  api:
+    build:
+      target: api
+    env_file: ".env.dev"
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "${API_PORT}:${API_PORT}"
+
+  migrate:
+    build:
+       target: migrate
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    env_file: ".env.dev"

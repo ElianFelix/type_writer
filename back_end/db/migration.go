@@ -18,13 +18,13 @@ func main() {
 
 	m, err := migrate.New(
 		"file://migrations",
-		fmt.Sprintf("postgres://%s:%s@back_end-db-1:%s/%s?sslmode=disable", DB_USER, DB_PASS, DB_PORT, DB_NAME))
+		fmt.Sprintf("postgres://%s:%s@type_writer-db-1:%s/%s?sslmode=disable", DB_USER, DB_PASS, DB_PORT, DB_NAME))
 	if err != nil {
-		log.Fatal("Error starting db connection for migrations", "error", err)
+		log.Fatal("Error starting db connection for migrations ", err)
 
 	}
 	if err := m.Up(); err != nil && err.Error() != "no change" {
-		log.Fatal("Error during Up migration application", " error ", err)
+		log.Fatal("Error during Up migration application ", err)
 	}
-	log.Fatal("Migrations ran properly")
+	log.Print("Migrations ran properly")
 }

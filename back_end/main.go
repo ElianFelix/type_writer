@@ -36,7 +36,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN: fmt.Sprintf("host=back_end-db-1 user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/New_York", DB_USER, DB_PASS, DB_NAME, DB_PORT),
+		DSN: fmt.Sprintf("host=type_writer-db-1 user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/New_York", DB_USER, DB_PASS, DB_NAME, DB_PORT),
 	}), &gorm.Config{})
 
 	if err != nil {
@@ -60,6 +60,10 @@ func main() {
 
 	// User routes
 	e.GET("/users", userController.GetUsers)
+	e.GET("/users/:user_id", userController.GetUser)
+	e.POST("/users", userController.CreateUser)
+	e.PUT("/users/:user_id", userController.UpdateUser)
+	e.DELETE("/users/:user_id", userController.DeleteUser)
 
 	// Server start
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", API_PORT)))

@@ -3,7 +3,7 @@ CREATE TYPE user_type AS ENUM ('admin', 'regular', 'generic');
 CREATE TABLE users(
     id serial primary key,
     user_type user_type not null DEFAULT 'regular',
-    username varchar(60) not null,
+    username varchar(60) not null unique,
     passwd_hash char(255) not null,
     name varchar(60),
     email varchar(60) not null,

@@ -33,7 +33,7 @@ type UserResp struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func ConverRequestToUser(req *UserReq) *User {
+func ConvertRequestToUser(req *UserReq) *User {
 	return &User{
 		UserType: req.UserType,
 		Username: req.Username,
@@ -42,7 +42,7 @@ func ConverRequestToUser(req *UserReq) *User {
 	}
 }
 
-func ConverUserToResponse(user *User) *UserResp {
+func ConvertUserToResponse(user *User) *UserResp {
 	return &UserResp{
 		Id:        user.Id,
 		UserType:  user.UserType,

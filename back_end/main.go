@@ -46,12 +46,21 @@ func main() {
 
 	// Providers
 	userProvider := providers.NewUserProvider(db)
+	textProvider := providers.NewTextProvider(db)
+	activityProvider := providers.NewActivityProvider(db)
+	scoreProvider := providers.NewScoreProvider(db)
 
 	// Services
 	userService := services.NewUserService(userProvider)
+	textService := services.NewTextService(textProvider)
+	activityService := services.NewActivityService(activityProvider)
+	scoreService := services.NewScoreService(scoreProvider)
 
 	// Controllers
 	userController := controllers.NewUserController(userService)
+	textController := controllers.NewTextController(textService)
+	activityController := controllers.NewActivityController(activityService)
+	scoreController := controllers.NewScoreController(scoreService)
 
 	// Routes
 	e.GET("/", func(c echo.Context) error {
@@ -64,6 +73,27 @@ func main() {
 	e.POST("/users", userController.CreateUser)
 	e.PUT("/users/:user_id", userController.UpdateUser)
 	e.DELETE("/users/:user_id", userController.DeleteUser)
+
+	// Text routes
+	e.GET("/texts", textController.GetTexts)
+	e.GET("/texts/:text_id", textController.GetText)
+	e.POST("/texts", textController.CreateText)
+	e.PUT("/texts/:text_id", textController.UpdateText)
+	e.DELETE("/texts/:text_id", textController.DeleteText)
+
+	// Activity routes
+	e.GET("/activities", activityController.GetActivities)
+	e.GET("/activities/:activity_id", activityController.GetActivity)
+	e.POST("/activities", activityController.CreateActivity)
+	e.PUT("/activities/:activity_id", activityController.UpdateActivity)
+	e.DELETE("/activities/:activity_id", activityController.DeleteActivity)
+
+	// Score routes
+	e.GET("/scores", scoreController.GetScores)
+	e.GET("/scores/:score_id", scoreController.GetScore)
+	e.POST("/scores", scoreController.CreateScore)
+	e.PUT("/scores/:score_id", scoreController.UpdateScore)
+	e.DELETE("/scores/:score_id", scoreController.DeleteScore)
 
 	// Server start
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", API_PORT)))

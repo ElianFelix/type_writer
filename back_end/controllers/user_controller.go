@@ -23,6 +23,7 @@ func (u *UserController) GetUsers(ctx echo.Context) error {
 		slog.ErrorContext(reqCtx, "error fetching users", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error fetching users")
 	}
+
 	return ctx.JSON(http.StatusOK, struct{ Users []*structures.UserResp }{Users: users})
 }
 
@@ -47,6 +48,7 @@ func (u *UserController) GetUser(ctx echo.Context) error {
 		slog.ErrorContext(reqCtx, "error fetching user", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error fetching user")
 	}
+
 	return ctx.JSON(http.StatusOK, user)
 }
 
@@ -119,6 +121,7 @@ func (u *UserController) DeleteUser(ctx echo.Context) error {
 		slog.ErrorContext(reqCtx, "error deleting user", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error deleting user")
 	}
+
 	return ctx.JSON(http.StatusOK, user)
 }
 

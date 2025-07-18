@@ -29,7 +29,7 @@ func (u *UserService) GetUsers(ctx context.Context) ([]*structures.UserResp, err
 	}
 
 	for _, user := range users {
-		result = append(result, structures.ConverUserToResponse(user))
+		result = append(result, structures.ConvertUserToResponse(user))
 	}
 
 	return result, nil
@@ -41,12 +41,12 @@ func (u *UserService) GetUserByIdOrUsername(ctx context.Context, userId int, use
 		return nil, err
 	}
 
-	result := structures.ConverUserToResponse(user)
+	result := structures.ConvertUserToResponse(user)
 	return result, nil
 }
 
 func (u *UserService) CreateUser(ctx context.Context, userInfo structures.UserReq) (*structures.UserResp, error) {
-	userToCreate := structures.ConverRequestToUser(&userInfo)
+	userToCreate := structures.ConvertRequestToUser(&userInfo)
 
 	hashedPassword, err := helpers.HashPassword(userInfo.Password)
 	if err != nil {
@@ -61,7 +61,7 @@ func (u *UserService) CreateUser(ctx context.Context, userInfo structures.UserRe
 		return nil, err
 	}
 
-	result := structures.ConverUserToResponse(createdUser)
+	result := structures.ConvertUserToResponse(createdUser)
 	return result, nil
 }
 
@@ -100,7 +100,7 @@ func (u *UserService) UpdateUser(ctx context.Context, userInfo structures.UserRe
 		return nil, err
 	}
 
-	result := structures.ConverUserToResponse(updatedUser)
+	result := structures.ConvertUserToResponse(updatedUser)
 	return result, nil
 }
 

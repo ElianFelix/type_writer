@@ -135,27 +135,6 @@ func TestGetScoreByIdOrNameSuccess(t *testing.T) {
 	if err := helpers.CompareReflectedStructFields(*result, expectedRow); err != nil {
 		t.Fatal(err)
 	}
-	// if result.Id != expectedRow.Id {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Id, expectedRow.Id)
-	// }
-	// if result.UserId != expectedRow.UserId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.UserId, expectedRow.UserId)
-	// }
-	// if result.ActivityId != expectedRow.ActivityId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.ActivityId, expectedRow.ActivityId)
-	// }
-	// if result.TextId != expectedRow.TextId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.TextId, expectedRow.TextId)
-	// }
-	// if result.Points != expectedRow.Points {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Points, expectedRow.Points)
-	// }
-	// if result.Duration != expectedRow.Duration {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Duration, expectedRow.Duration)
-	// }
-	// if result.Errors != expectedRow.Errors {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Errors, expectedRow.Errors)
-	// }
 }
 
 func TestCreateScoreSuccess(t *testing.T) {
@@ -207,27 +186,6 @@ func TestCreateScoreSuccess(t *testing.T) {
 	if err := helpers.CompareReflectedStructFields(*result, expectedRow); err != nil {
 		t.Fatal(err)
 	}
-	// if result.Id != expectedRow.Id {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Id, expectedRow.Id)
-	// }
-	// if result.UserId != expectedRow.UserId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.UserId, expectedRow.UserId)
-	// }
-	// if result.ActivityId != expectedRow.ActivityId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.ActivityId, expectedRow.ActivityId)
-	// }
-	// if result.TextId != expectedRow.TextId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.TextId, expectedRow.TextId)
-	// }
-	// if result.Points != expectedRow.Points {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Points, expectedRow.Points)
-	// }
-	// if result.Duration != expectedRow.Duration {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Duration, expectedRow.Duration)
-	// }
-	// if result.Errors != expectedRow.Errors {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Errors, expectedRow.Errors)
-	// }
 }
 
 func TestUpdateScoreSuccess(t *testing.T) {
@@ -259,27 +217,6 @@ func TestUpdateScoreSuccess(t *testing.T) {
 	if err := helpers.CompareReflectedStructFields(*result, expectedRow); err != nil {
 		t.Fatal(err)
 	}
-	// if result.Id != expectedRow.Id {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Id, expectedRow.Id)
-	// }
-	// if result.UserId != expectedRow.UserId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.UserId, expectedRow.UserId)
-	// }
-	// if result.ActivityId != expectedRow.ActivityId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.ActivityId, expectedRow.ActivityId)
-	// }
-	// if result.TextId != expectedRow.TextId {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.TextId, expectedRow.TextId)
-	// }
-	// if result.Points != expectedRow.Points {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Points, expectedRow.Points)
-	// }
-	// if result.Duration != expectedRow.Duration {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Duration, expectedRow.Duration)
-	// }
-	// if result.Errors != expectedRow.Errors {
-	// 	t.Fatalf("unexpected result field: expected %v, got %v", result.Errors, expectedRow.Errors)
-	// }
 }
 
 func TestDeleteScoreSuccess(t *testing.T) {

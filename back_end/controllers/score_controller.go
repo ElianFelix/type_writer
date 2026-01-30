@@ -4,21 +4,21 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
-	"type_writer_api/services"
+	"type_writer_api/services/scores"
 	"type_writer_api/structures"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
-type ScoreController struct {
-	ScoreService services.ScoreServiceInterface
+type ScoresController struct {
+	ScoresService scores_service.ScoresServiceInterface
 }
 
-func (t *ScoreController) GetScores(ctx echo.Context) error {
+func (t *ScoresController) GetScores(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 
-	scores, err := t.ScoreService.GetScores(reqCtx)
+	scores, err := t.ScoresService.GetScores(reqCtx)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error fetching scores", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error fetching scores")
@@ -27,7 +27,7 @@ func (t *ScoreController) GetScores(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, struct{ Scores []*structures.Score }{Scores: scores})
 }
 
-func (t *ScoreController) GetScore(ctx echo.Context) error {
+func (t *ScoresController) GetScore(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		scoreId int
@@ -40,7 +40,7 @@ func (t *ScoreController) GetScore(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "bad score id in request")
 	}
 
-	score, err := t.ScoreService.GetScoreById(reqCtx, scoreId)
+	score, err := t.ScoresService.GetScoreById(reqCtx, scoreId)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		slog.ErrorContext(reqCtx, "score not found", "error", err)
 		return ctx.JSON(http.StatusNotFound, "score not found")
@@ -52,7 +52,7 @@ func (t *ScoreController) GetScore(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, score)
 }
 
-func (t *ScoreController) CreateScore(ctx echo.Context) error {
+func (t *ScoresController) CreateScore(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	req := structures.ScoreReq{}
 
@@ -62,7 +62,7 @@ func (t *ScoreController) CreateScore(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "error binding request body, incomplete or bad request")
 	}
 
-	createdScore, err := t.ScoreService.CreateScore(reqCtx, req)
+	createdScore, err := t.ScoresService.CreateScore(reqCtx, req)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error creating new score", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error creating new score")
@@ -71,7 +71,7 @@ func (t *ScoreController) CreateScore(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, createdScore)
 }
 
-func (t *ScoreController) UpdateScore(ctx echo.Context) error {
+func (t *ScoresController) UpdateScore(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		req     structures.ScoreReq
@@ -91,7 +91,7 @@ func (t *ScoreController) UpdateScore(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "error binding request body, incomplete or bad request")
 	}
 
-	updatedScore, err := t.ScoreService.UpdateScore(reqCtx, req, scoreId)
+	updatedScore, err := t.ScoresService.UpdateScore(reqCtx, req, scoreId)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error updating score", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error updating score")
@@ -100,7 +100,7 @@ func (t *ScoreController) UpdateScore(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, updatedScore)
 }
 
-func (t *ScoreController) DeleteScore(ctx echo.Context) error {
+func (t *ScoresController) DeleteScore(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		scoreId int
@@ -113,7 +113,7 @@ func (t *ScoreController) DeleteScore(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "bad score id in request")
 	}
 
-	score, err := t.ScoreService.DeleteScore(reqCtx, scoreId)
+	score, err := t.ScoresService.DeleteScore(reqCtx, scoreId)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		slog.ErrorContext(reqCtx, "score not found", "error", err)
 		return ctx.JSON(http.StatusNotFound, "score not found")
@@ -125,8 +125,8 @@ func (t *ScoreController) DeleteScore(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, score)
 }
 
-func NewScoreController(scoreService *services.ScoreService) *ScoreController {
-	return &ScoreController{
-		ScoreService: scoreService,
+func NewScoresController(scoresService *scores_service.ScoresService) *ScoresController {
+	return &ScoresController{
+		ScoresService: scoresService,
 	}
 }

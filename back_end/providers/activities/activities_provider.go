@@ -1,4 +1,4 @@
-package providers
+package activities_provider
 
 import (
 	"context"
@@ -7,19 +7,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type ActivityProviderInterface interface {
+type ActivitiesProviderInterface interface {
 	GetActivities(ctx context.Context) ([]*structures.Activity, error)
-	GetActivityByIdOrName(ctx context.Context, activityId int, title string) (*structures.Activity, error)
+	GetActivityByIdOrName(ctx context.Context, activityId *int, title *string) (*structures.Activity, error)
 	CreateActivity(ctx context.Context, textInfo structures.Activity) (*structures.Activity, error)
 	UpdateActivity(ctx context.Context, updatedtextInfo structures.Activity) (*structures.Activity, error)
 	DeleteActivity(ctx context.Context, activityId int) (bool, error)
 }
 
-type ActivityProvider struct {
+type ActivitiesProvider struct {
 	Db *gorm.DB
 }
 
-func (t *ActivityProvider) GetActivities(ctx context.Context) ([]*structures.Activity, error) {
+func (t *ActivitiesProvider) GetActivities(ctx context.Context) ([]*structures.Activity, error) {
 	var activities []*structures.Activity
 	err := t.Db.WithContext(ctx).Table(structures.ACTIVITY_TABLE_NAME).Find(&activities).Error
 	if err != nil {
@@ -28,7 +28,7 @@ func (t *ActivityProvider) GetActivities(ctx context.Context) ([]*structures.Act
 	return activities, nil
 }
 
-func (t *ActivityProvider) GetActivityByIdOrName(ctx context.Context, activityId int, name string) (*structures.Activity, error) {
+func (t *ActivitiesProvider) GetActivityByIdOrName(ctx context.Context, activityId *int, name *string) (*structures.Activity, error) {
 	var activity *structures.Activity
 	err := t.Db.WithContext(ctx).Table(structures.ACTIVITY_TABLE_NAME).
 		First(&activity, "id = ? OR name = ?", activityId, name).Error
@@ -38,16 +38,16 @@ func (t *ActivityProvider) GetActivityByIdOrName(ctx context.Context, activityId
 	return activity, nil
 }
 
-func (t *ActivityProvider) CreateActivity(ctx context.Context, textInfo structures.Activity) (*structures.Activity, error) {
+func (t *ActivitiesProvider) CreateActivity(ctx context.Context, activityInfo structures.Activity) (*structures.Activity, error) {
 	var activity *structures.Activity
-	err := t.Db.WithContext(ctx).Table(structures.ACTIVITY_TABLE_NAME).FirstOrCreate(&activity, &textInfo).Error
+	err := t.Db.WithContext(ctx).Table(structures.ACTIVITY_TABLE_NAME).FirstOrCreate(&activity, &activityInfo).Error
 	if err != nil {
 		return nil, err
 	}
 	return activity, nil
 }
 
-func (t *ActivityProvider) UpdateActivity(ctx context.Context, updatedActivityInfo structures.Activity) (*structures.Activity, error) {
+func (t *ActivitiesProvider) UpdateActivity(ctx context.Context, updatedActivityInfo structures.Activity) (*structures.Activity, error) {
 	err := t.Db.WithContext(ctx).Table(structures.ACTIVITY_TABLE_NAME).Updates(&updatedActivityInfo).Error
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (t *ActivityProvider) UpdateActivity(ctx context.Context, updatedActivityIn
 	return &updatedActivityInfo, nil
 }
 
-func (t *ActivityProvider) DeleteActivity(ctx context.Context, activityId int) (bool, error) {
+func (t *ActivitiesProvider) DeleteActivity(ctx context.Context, activityId int) (bool, error) {
 	var deleteActivity = structures.Activity{Id: activityId}
 	err := t.Db.WithContext(ctx).Table(structures.ACTIVITY_TABLE_NAME).Delete(&deleteActivity).Error
 	if err != nil {
@@ -64,8 +64,8 @@ func (t *ActivityProvider) DeleteActivity(ctx context.Context, activityId int) (
 	return true, nil
 }
 
-func NewActivityProvider(db *gorm.DB) *ActivityProvider {
-	return &ActivityProvider{
+func NewActivitiesProvider(db *gorm.DB) *ActivitiesProvider {
+	return &ActivitiesProvider{
 		Db: db,
 	}
 }

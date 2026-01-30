@@ -4,21 +4,21 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
-	"type_writer_api/services"
+	"type_writer_api/services/activites"
 	"type_writer_api/structures"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
-type ActivityController struct {
-	ActivityService services.ActivityServiceInterface
+type ActivitiesController struct {
+	ActivitiesService activities_service.ActivitiesServiceInterface
 }
 
-func (t *ActivityController) GetActivities(ctx echo.Context) error {
+func (t *ActivitiesController) GetActivities(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 
-	activities, err := t.ActivityService.GetActivities(reqCtx)
+	activities, err := t.ActivitiesService.GetActivities(reqCtx)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error fetching activities", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error fetching activities")
@@ -27,7 +27,7 @@ func (t *ActivityController) GetActivities(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, struct{ Activities []*structures.Activity }{Activities: activities})
 }
 
-func (t *ActivityController) GetActivity(ctx echo.Context) error {
+func (t *ActivitiesController) GetActivity(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		activityId int
@@ -40,7 +40,7 @@ func (t *ActivityController) GetActivity(ctx echo.Context) error {
 		name = ctx.Param("activity_id")
 	}
 
-	activity, err := t.ActivityService.GetActivityByIdOrName(reqCtx, activityId, name)
+	activity, err := t.ActivitiesService.GetActivityByIdOrName(reqCtx, &activityId, &name)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		slog.ErrorContext(reqCtx, "activity not found", "error", err)
 		return ctx.JSON(http.StatusNotFound, "activity not found")
@@ -52,7 +52,7 @@ func (t *ActivityController) GetActivity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, activity)
 }
 
-func (t *ActivityController) CreateActivity(ctx echo.Context) error {
+func (t *ActivitiesController) CreateActivity(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	req := structures.ActivityReq{}
 
@@ -62,7 +62,7 @@ func (t *ActivityController) CreateActivity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "error binding request body, incomplete or bad request")
 	}
 
-	createdActivity, err := t.ActivityService.CreateActivity(reqCtx, req)
+	createdActivity, err := t.ActivitiesService.CreateActivity(reqCtx, req)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error creating new activity", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error creating new activity")
@@ -71,7 +71,7 @@ func (t *ActivityController) CreateActivity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, createdActivity)
 }
 
-func (t *ActivityController) UpdateActivity(ctx echo.Context) error {
+func (t *ActivitiesController) UpdateActivity(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		req        structures.ActivityReq
@@ -91,7 +91,7 @@ func (t *ActivityController) UpdateActivity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "error binding request body, incomplete or bad request")
 	}
 
-	updatedActivity, err := t.ActivityService.UpdateActivity(reqCtx, req, activityId)
+	updatedActivity, err := t.ActivitiesService.UpdateActivity(reqCtx, req, activityId)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error updating activity", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error updating activity")
@@ -100,7 +100,7 @@ func (t *ActivityController) UpdateActivity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, updatedActivity)
 }
 
-func (t *ActivityController) DeleteActivity(ctx echo.Context) error {
+func (t *ActivitiesController) DeleteActivity(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		activityId int
@@ -113,7 +113,7 @@ func (t *ActivityController) DeleteActivity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "bad activity id in request")
 	}
 
-	activity, err := t.ActivityService.DeleteActivity(reqCtx, activityId)
+	activity, err := t.ActivitiesService.DeleteActivity(reqCtx, activityId)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		slog.ErrorContext(reqCtx, "activity not found", "error", err)
 		return ctx.JSON(http.StatusNotFound, "activity not found")
@@ -125,8 +125,8 @@ func (t *ActivityController) DeleteActivity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, activity)
 }
 
-func NewActivityController(activityService *services.ActivityService) *ActivityController {
-	return &ActivityController{
-		ActivityService: activityService,
+func NewActivitiesController(activitiesService *activities_service.ActivitiesService) *ActivitiesController {
+	return &ActivitiesController{
+		ActivitiesService: activitiesService,
 	}
 }

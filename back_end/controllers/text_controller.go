@@ -4,21 +4,21 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
-	"type_writer_api/services"
+	"type_writer_api/services/texts"
 	"type_writer_api/structures"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
-type TextController struct {
-	TextService services.TextServiceInterface
+type TextsController struct {
+	TextsService texts_service.TextsServiceInterface
 }
 
-func (t *TextController) GetTexts(ctx echo.Context) error {
+func (t *TextsController) GetTexts(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 
-	texts, err := t.TextService.GetTexts(reqCtx)
+	texts, err := t.TextsService.GetTexts(reqCtx)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error fetching texts", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error fetching texts")
@@ -27,7 +27,7 @@ func (t *TextController) GetTexts(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, struct{ Texts []*structures.Text }{Texts: texts})
 }
 
-func (t *TextController) GetText(ctx echo.Context) error {
+func (t *TextsController) GetText(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		textId int
@@ -40,7 +40,7 @@ func (t *TextController) GetText(ctx echo.Context) error {
 		title = ctx.Param("text_id")
 	}
 
-	text, err := t.TextService.GetTextByIdOrTitle(reqCtx, textId, title)
+	text, err := t.TextsService.GetTextByIdOrTitle(reqCtx, &textId, &title)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		slog.ErrorContext(reqCtx, "text not found", "error", err)
 		return ctx.JSON(http.StatusNotFound, "text not found")
@@ -52,7 +52,7 @@ func (t *TextController) GetText(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, text)
 }
 
-func (t *TextController) CreateText(ctx echo.Context) error {
+func (t *TextsController) CreateText(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	req := structures.TextReq{}
 
@@ -62,7 +62,7 @@ func (t *TextController) CreateText(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "error binding request body, incomplete or bad request")
 	}
 
-	createdText, err := t.TextService.CreateText(reqCtx, req)
+	createdText, err := t.TextsService.CreateText(reqCtx, req)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error creating new text", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error creating new text")
@@ -71,7 +71,7 @@ func (t *TextController) CreateText(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, createdText)
 }
 
-func (t *TextController) UpdateText(ctx echo.Context) error {
+func (t *TextsController) UpdateText(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		req    structures.TextReq
@@ -91,7 +91,7 @@ func (t *TextController) UpdateText(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "error binding request body, incomplete or bad request")
 	}
 
-	updatedText, err := t.TextService.UpdateText(reqCtx, req, textId)
+	updatedText, err := t.TextsService.UpdateText(reqCtx, req, textId)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "error updating text", "error", err)
 		return ctx.JSON(http.StatusInternalServerError, "error updating text")
@@ -100,7 +100,7 @@ func (t *TextController) UpdateText(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, updatedText)
 }
 
-func (t *TextController) DeleteText(ctx echo.Context) error {
+func (t *TextsController) DeleteText(ctx echo.Context) error {
 	reqCtx := ctx.Request().Context()
 	var (
 		textId int
@@ -113,7 +113,7 @@ func (t *TextController) DeleteText(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, "bad text id in request")
 	}
 
-	text, err := t.TextService.DeleteText(reqCtx, textId)
+	text, err := t.TextsService.DeleteText(reqCtx, textId)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		slog.ErrorContext(reqCtx, "text not found", "error", err)
 		return ctx.JSON(http.StatusNotFound, "text not found")
@@ -125,8 +125,8 @@ func (t *TextController) DeleteText(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, text)
 }
 
-func NewTextController(textService *services.TextService) *TextController {
-	return &TextController{
-		TextService: textService,
+func NewTextsController(textsService *texts_service.TextsService) *TextsController {
+	return &TextsController{
+		TextsService: textsService,
 	}
 }

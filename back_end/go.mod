@@ -3,9 +3,12 @@ module type_writer_api
 go 1.23.8
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/golang-migrate/migrate/v4 v4.18.2
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/samber/slog-echo v1.16.1
+	go.uber.org/mock v0.6.0
+	golang.org/x/crypto v0.31.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
 )
@@ -29,9 +32,8 @@ require (
 	go.opentelemetry.io/otel v1.29.0 // indirect
 	go.opentelemetry.io/otel/trace v1.29.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.8.0 // indirect

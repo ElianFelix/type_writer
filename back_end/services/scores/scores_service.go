@@ -1,13 +1,13 @@
-package services
+package scores_service
 
 import (
 	"context"
 	"log/slog"
-	"type_writer_api/providers"
+	"type_writer_api/providers/scores"
 	"type_writer_api/structures"
 )
 
-type ScoreServiceInterface interface {
+type ScoresServiceInterface interface {
 	GetScores(ctx context.Context) ([]*structures.Score, error)
 	GetScoreById(ctx context.Context, scoreId int) (*structures.Score, error)
 	CreateScore(ctx context.Context, scoreInfo structures.ScoreReq) (*structures.Score, error)
@@ -15,14 +15,14 @@ type ScoreServiceInterface interface {
 	DeleteScore(ctx context.Context, scoreId int) (bool, error)
 }
 
-type ScoreService struct {
-	ScoreProvider providers.ScoreProviderInterface
+type ScoresService struct {
+	ScoresProvider scores_provider.ScoresProviderInterface
 }
 
-func (a *ScoreService) GetScores(ctx context.Context) ([]*structures.Score, error) {
+func (a *ScoresService) GetScores(ctx context.Context) ([]*structures.Score, error) {
 	var results []*structures.Score
 
-	scores, err := a.ScoreProvider.GetScores(ctx)
+	scores, err := a.ScoresProvider.GetScores(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +34,8 @@ func (a *ScoreService) GetScores(ctx context.Context) ([]*structures.Score, erro
 	return results, nil
 }
 
-func (a *ScoreService) GetScoreById(ctx context.Context, scoreId int) (*structures.Score, error) {
-	score, err := a.ScoreProvider.GetScoreById(ctx, scoreId)
+func (a *ScoresService) GetScoreById(ctx context.Context, scoreId int) (*structures.Score, error) {
+	score, err := a.ScoresProvider.GetScoreById(ctx, scoreId)
 	if err != nil {
 		return nil, err
 	}
@@ -44,10 +44,10 @@ func (a *ScoreService) GetScoreById(ctx context.Context, scoreId int) (*structur
 	return result, nil
 }
 
-func (a *ScoreService) CreateScore(ctx context.Context, scoreInfo structures.ScoreReq) (*structures.Score, error) {
+func (a *ScoresService) CreateScore(ctx context.Context, scoreInfo structures.ScoreReq) (*structures.Score, error) {
 	scoreToCreate := structures.ConvertRequestToScore(&scoreInfo)
 
-	createdScore, err := a.ScoreProvider.CreateScore(ctx, *scoreToCreate)
+	createdScore, err := a.ScoresProvider.CreateScore(ctx, *scoreToCreate)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to create score", "error", err)
 		return nil, err
@@ -57,8 +57,8 @@ func (a *ScoreService) CreateScore(ctx context.Context, scoreInfo structures.Sco
 	return result, nil
 }
 
-func (a *ScoreService) UpdateScore(ctx context.Context, scoreInfo structures.ScoreReq, scoreId int) (*structures.Score, error) {
-	existingScore, err := a.ScoreProvider.GetScoreById(ctx, scoreId)
+func (a *ScoresService) UpdateScore(ctx context.Context, scoreInfo structures.ScoreReq, scoreId int) (*structures.Score, error) {
+	existingScore, err := a.ScoresProvider.GetScoreById(ctx, scoreId)
 
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to update score", "error", err)
@@ -75,7 +75,7 @@ func (a *ScoreService) UpdateScore(ctx context.Context, scoreInfo structures.Sco
 		existingScore.Errors = scoreInfo.Errors
 	}
 
-	updatedScore, err := a.ScoreProvider.UpdateScore(ctx, *existingScore)
+	updatedScore, err := a.ScoresProvider.UpdateScore(ctx, *existingScore)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to update score", "error", err)
 		return nil, err
@@ -85,8 +85,8 @@ func (a *ScoreService) UpdateScore(ctx context.Context, scoreInfo structures.Sco
 	return result, nil
 }
 
-func (t *ScoreService) DeleteScore(ctx context.Context, scoreId int) (bool, error) {
-	deleted, err := t.ScoreProvider.DeleteScore(ctx, scoreId)
+func (t *ScoresService) DeleteScore(ctx context.Context, scoreId int) (bool, error) {
+	deleted, err := t.ScoresProvider.DeleteScore(ctx, scoreId)
 	if err != nil {
 		return false, err
 	}
@@ -94,8 +94,8 @@ func (t *ScoreService) DeleteScore(ctx context.Context, scoreId int) (bool, erro
 	return deleted, nil
 }
 
-func NewScoreService(scoreProvider *providers.ScoreProvider) *ScoreService {
-	return &ScoreService{
-		ScoreProvider: scoreProvider,
+func NewScoresService(scoresProvider scores_provider.ScoresProviderInterface) *ScoresService {
+	return &ScoresService{
+		ScoresProvider: scoresProvider,
 	}
 }

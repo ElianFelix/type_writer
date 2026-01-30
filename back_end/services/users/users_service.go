@@ -1,29 +1,29 @@
-package services
+package users_service
 
 import (
 	"context"
 	"log/slog"
 	"type_writer_api/helpers"
-	"type_writer_api/providers"
+	"type_writer_api/providers/users"
 	"type_writer_api/structures"
 )
 
-type UserServiceInterface interface {
+type UsersServiceInterface interface {
 	GetUsers(ctx context.Context) ([]*structures.UserResp, error)
-	GetUserByIdOrUsername(ctx context.Context, userId int, username string) (*structures.UserResp, error)
+	GetUserByIdOrUsername(ctx context.Context, userId *int, username *string) (*structures.UserResp, error)
 	CreateUser(ctx context.Context, userInfo structures.UserReq) (*structures.UserResp, error)
 	UpdateUser(ctx context.Context, userInfo structures.UserReq, userId int) (*structures.UserResp, error)
 	DeleteUser(ctx context.Context, userId int) (bool, error)
 }
 
-type UserService struct {
-	UserProvider providers.UserProviderInterface
+type UsersService struct {
+	UsersProvider users_provider.UsersProviderInterface
 }
 
-func (u *UserService) GetUsers(ctx context.Context) ([]*structures.UserResp, error) {
+func (u *UsersService) GetUsers(ctx context.Context) ([]*structures.UserResp, error) {
 	var result []*structures.UserResp
 
-	users, err := u.UserProvider.GetUsers(ctx)
+	users, err := u.UsersProvider.GetUsers(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +35,8 @@ func (u *UserService) GetUsers(ctx context.Context) ([]*structures.UserResp, err
 	return result, nil
 }
 
-func (u *UserService) GetUserByIdOrUsername(ctx context.Context, userId int, username string) (*structures.UserResp, error) {
-	user, err := u.UserProvider.GetUserByIdOrUsername(ctx, userId, username)
+func (u *UsersService) GetUserByIdOrUsername(ctx context.Context, userId *int, username *string) (*structures.UserResp, error) {
+	user, err := u.UsersProvider.GetUserByIdOrUsername(ctx, userId, username)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (u *UserService) GetUserByIdOrUsername(ctx context.Context, userId int, use
 	return result, nil
 }
 
-func (u *UserService) CreateUser(ctx context.Context, userInfo structures.UserReq) (*structures.UserResp, error) {
+func (u *UsersService) CreateUser(ctx context.Context, userInfo structures.UserReq) (*structures.UserResp, error) {
 	userToCreate := structures.ConvertRequestToUser(&userInfo)
 
 	hashedPassword, err := helpers.HashPassword(userInfo.Password)
@@ -55,7 +55,7 @@ func (u *UserService) CreateUser(ctx context.Context, userInfo structures.UserRe
 	}
 	userToCreate.PasswdHash = hashedPassword
 
-	createdUser, err := u.UserProvider.CreateUser(ctx, *userToCreate)
+	createdUser, err := u.UsersProvider.CreateUser(ctx, *userToCreate)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to create user", "error", err)
 		return nil, err
@@ -65,8 +65,8 @@ func (u *UserService) CreateUser(ctx context.Context, userInfo structures.UserRe
 	return result, nil
 }
 
-func (u *UserService) UpdateUser(ctx context.Context, userInfo structures.UserReq, userId int) (*structures.UserResp, error) {
-	existingUser, err := u.UserProvider.GetUserByIdOrUsername(ctx, userId, "")
+func (u *UsersService) UpdateUser(ctx context.Context, userInfo structures.UserReq, userId int) (*structures.UserResp, error) {
+	existingUser, err := u.UsersProvider.GetUserByIdOrUsername(ctx, &userId, nil)
 
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to update user", "error", err)
@@ -94,7 +94,7 @@ func (u *UserService) UpdateUser(ctx context.Context, userInfo structures.UserRe
 		existingUser.PasswdHash = hashedPassword
 	}
 
-	updatedUser, err := u.UserProvider.UpdateUser(ctx, *existingUser)
+	updatedUser, err := u.UsersProvider.UpdateUser(ctx, *existingUser)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to update user", "error", err)
 		return nil, err
@@ -104,8 +104,8 @@ func (u *UserService) UpdateUser(ctx context.Context, userInfo structures.UserRe
 	return result, nil
 }
 
-func (u *UserService) DeleteUser(ctx context.Context, userId int) (bool, error) {
-	deleted, err := u.UserProvider.DeleteUser(ctx, userId)
+func (u *UsersService) DeleteUser(ctx context.Context, userId int) (bool, error) {
+	deleted, err := u.UsersProvider.DeleteUser(ctx, userId)
 	if err != nil {
 		return false, err
 	}
@@ -113,8 +113,8 @@ func (u *UserService) DeleteUser(ctx context.Context, userId int) (bool, error) 
 	return deleted, nil
 }
 
-func NewUserService(userProvider *providers.UserProvider) *UserService {
-	return &UserService{
-		UserProvider: userProvider,
+func NewUsersService(usersProvider users_provider.UsersProviderInterface) *UsersService {
+	return &UsersService{
+		UsersProvider: usersProvider,
 	}
 }

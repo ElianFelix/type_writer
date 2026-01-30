@@ -1,28 +1,28 @@
-package services
+package texts_service
 
 import (
 	"context"
 	"log/slog"
-	"type_writer_api/providers"
+	"type_writer_api/providers/texts"
 	"type_writer_api/structures"
 )
 
-type TextServiceInterface interface {
+type TextsServiceInterface interface {
 	GetTexts(ctx context.Context) ([]*structures.Text, error)
-	GetTextByIdOrTitle(ctx context.Context, textId int, title string) (*structures.Text, error)
+	GetTextByIdOrTitle(ctx context.Context, textId *int, title *string) (*structures.Text, error)
 	CreateText(ctx context.Context, textInfo structures.TextReq) (*structures.Text, error)
 	UpdateText(ctx context.Context, textInfo structures.TextReq, textId int) (*structures.Text, error)
 	DeleteText(ctx context.Context, textId int) (bool, error)
 }
 
-type TextService struct {
-	TextProvider providers.TextProviderInterface
+type TextsService struct {
+	TextsProvider texts_provider.TextsProviderInterface
 }
 
-func (t *TextService) GetTexts(ctx context.Context) ([]*structures.Text, error) {
+func (t *TextsService) GetTexts(ctx context.Context) ([]*structures.Text, error) {
 	var result []*structures.Text
 
-	texts, err := t.TextProvider.GetTexts(ctx)
+	texts, err := t.TextsProvider.GetTexts(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +34,8 @@ func (t *TextService) GetTexts(ctx context.Context) ([]*structures.Text, error) 
 	return result, nil
 }
 
-func (t *TextService) GetTextByIdOrTitle(ctx context.Context, textId int, title string) (*structures.Text, error) {
-	text, err := t.TextProvider.GetTextByIdOrTitle(ctx, textId, title)
+func (t *TextsService) GetTextByIdOrTitle(ctx context.Context, textId *int, title *string) (*structures.Text, error) {
+	text, err := t.TextsProvider.GetTextByIdOrTitle(ctx, textId, title)
 	if err != nil {
 		return nil, err
 	}
@@ -44,10 +44,10 @@ func (t *TextService) GetTextByIdOrTitle(ctx context.Context, textId int, title 
 	return result, nil
 }
 
-func (t *TextService) CreateText(ctx context.Context, textInfo structures.TextReq) (*structures.Text, error) {
+func (t *TextsService) CreateText(ctx context.Context, textInfo structures.TextReq) (*structures.Text, error) {
 	textToCreate := structures.ConvertRequestToText(&textInfo)
 
-	createdText, err := t.TextProvider.CreateText(ctx, *textToCreate)
+	createdText, err := t.TextsProvider.CreateText(ctx, *textToCreate)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to create text", "error", err)
 		return nil, err
@@ -57,8 +57,8 @@ func (t *TextService) CreateText(ctx context.Context, textInfo structures.TextRe
 	return result, nil
 }
 
-func (t *TextService) UpdateText(ctx context.Context, textInfo structures.TextReq, textId int) (*structures.Text, error) {
-	existingText, err := t.TextProvider.GetTextByIdOrTitle(ctx, textId, "")
+func (t *TextsService) UpdateText(ctx context.Context, textInfo structures.TextReq, textId int) (*structures.Text, error) {
+	existingText, err := t.TextsProvider.GetTextByIdOrTitle(ctx, &textId, nil)
 
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to update text", "error", err)
@@ -79,7 +79,7 @@ func (t *TextService) UpdateText(ctx context.Context, textInfo structures.TextRe
 		existingText.TextLength = len(textInfo.TextBody)
 	}
 
-	updatedText, err := t.TextProvider.UpdateText(ctx, *existingText)
+	updatedText, err := t.TextsProvider.UpdateText(ctx, *existingText)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to update text", "error", err)
 		return nil, err
@@ -89,8 +89,8 @@ func (t *TextService) UpdateText(ctx context.Context, textInfo structures.TextRe
 	return result, nil
 }
 
-func (t *TextService) DeleteText(ctx context.Context, textId int) (bool, error) {
-	deleted, err := t.TextProvider.DeleteText(ctx, textId)
+func (t *TextsService) DeleteText(ctx context.Context, textId int) (bool, error) {
+	deleted, err := t.TextsProvider.DeleteText(ctx, textId)
 	if err != nil {
 		return false, err
 	}
@@ -98,8 +98,8 @@ func (t *TextService) DeleteText(ctx context.Context, textId int) (bool, error) 
 	return deleted, nil
 }
 
-func NewTextService(textProvider *providers.TextProvider) *TextService {
-	return &TextService{
-		TextProvider: textProvider,
+func NewTextsService(textsProvider texts_provider.TextsProviderInterface) *TextsService {
+	return &TextsService{
+		TextsProvider: textsProvider,
 	}
 }

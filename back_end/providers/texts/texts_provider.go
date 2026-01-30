@@ -1,4 +1,4 @@
-package providers
+package texts_provider
 
 import (
 	"context"
@@ -7,19 +7,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type TextProviderInterface interface {
+type TextsProviderInterface interface {
 	GetTexts(ctx context.Context) ([]*structures.Text, error)
-	GetTextByIdOrTitle(ctx context.Context, textId int, title string) (*structures.Text, error)
+	GetTextByIdOrTitle(ctx context.Context, textId *int, title *string) (*structures.Text, error)
 	CreateText(ctx context.Context, textInfo structures.Text) (*structures.Text, error)
 	UpdateText(ctx context.Context, updatedtextInfo structures.Text) (*structures.Text, error)
 	DeleteText(ctx context.Context, textId int) (bool, error)
 }
 
-type TextProvider struct {
+type TextsProvider struct {
 	Db *gorm.DB
 }
 
-func (t *TextProvider) GetTexts(ctx context.Context) ([]*structures.Text, error) {
+func (t *TextsProvider) GetTexts(ctx context.Context) ([]*structures.Text, error) {
 	var texts []*structures.Text
 	err := t.Db.WithContext(ctx).Table(structures.TEXT_TABLE_NAME).Find(&texts).Error
 	if err != nil {
@@ -28,7 +28,7 @@ func (t *TextProvider) GetTexts(ctx context.Context) ([]*structures.Text, error)
 	return texts, nil
 }
 
-func (t *TextProvider) GetTextByIdOrTitle(ctx context.Context, textId int, title string) (*structures.Text, error) {
+func (t *TextsProvider) GetTextByIdOrTitle(ctx context.Context, textId *int, title *string) (*structures.Text, error) {
 	var text *structures.Text
 	err := t.Db.WithContext(ctx).Table(structures.TEXT_TABLE_NAME).
 		First(&text, "id = ? OR title = ?", textId, title).Error
@@ -38,7 +38,7 @@ func (t *TextProvider) GetTextByIdOrTitle(ctx context.Context, textId int, title
 	return text, nil
 }
 
-func (t *TextProvider) CreateText(ctx context.Context, textInfo structures.Text) (*structures.Text, error) {
+func (t *TextsProvider) CreateText(ctx context.Context, textInfo structures.Text) (*structures.Text, error) {
 	var text *structures.Text
 	err := t.Db.WithContext(ctx).Table(structures.TEXT_TABLE_NAME).FirstOrCreate(&text, &textInfo).Error
 	if err != nil {
@@ -47,7 +47,7 @@ func (t *TextProvider) CreateText(ctx context.Context, textInfo structures.Text)
 	return text, nil
 }
 
-func (t *TextProvider) UpdateText(ctx context.Context, updatedTextInfo structures.Text) (*structures.Text, error) {
+func (t *TextsProvider) UpdateText(ctx context.Context, updatedTextInfo structures.Text) (*structures.Text, error) {
 	err := t.Db.WithContext(ctx).Table(structures.TEXT_TABLE_NAME).Updates(&updatedTextInfo).Error
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (t *TextProvider) UpdateText(ctx context.Context, updatedTextInfo structure
 	return &updatedTextInfo, nil
 }
 
-func (t *TextProvider) DeleteText(ctx context.Context, textId int) (bool, error) {
+func (t *TextsProvider) DeleteText(ctx context.Context, textId int) (bool, error) {
 	var deleteText = structures.Text{Id: textId}
 	err := t.Db.WithContext(ctx).Table(structures.TEXT_TABLE_NAME).Delete(&deleteText).Error
 	if err != nil {
@@ -64,8 +64,8 @@ func (t *TextProvider) DeleteText(ctx context.Context, textId int) (bool, error)
 	return true, nil
 }
 
-func NewTextProvider(db *gorm.DB) *TextProvider {
-	return &TextProvider{
+func NewTextsProvider(db *gorm.DB) *TextsProvider {
+	return &TextsProvider{
 		Db: db,
 	}
 }

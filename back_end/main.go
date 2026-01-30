@@ -5,8 +5,14 @@ import (
 	"net/http"
 	"os"
 	"type_writer_api/controllers"
-	"type_writer_api/providers"
-	"type_writer_api/services"
+	"type_writer_api/providers/activities"
+	"type_writer_api/providers/scores"
+	"type_writer_api/providers/texts"
+	"type_writer_api/providers/users"
+	"type_writer_api/services/activites"
+	"type_writer_api/services/scores"
+	"type_writer_api/services/texts"
+	"type_writer_api/services/users"
 
 	"log/slog"
 
@@ -45,22 +51,22 @@ func main() {
 	}
 
 	// Providers
-	userProvider := providers.NewUserProvider(db)
-	textProvider := providers.NewTextProvider(db)
-	activityProvider := providers.NewActivityProvider(db)
-	scoreProvider := providers.NewScoreProvider(db)
+	usersProvider := users_provider.NewUsersProvider(db)
+	textsProvider := texts_provider.NewTextsProvider(db)
+	activitiesProvider := activities_provider.NewActivitiesProvider(db)
+	scoresProvider := scores_provider.NewScoresProvider(db)
 
 	// Services
-	userService := services.NewUserService(userProvider)
-	textService := services.NewTextService(textProvider)
-	activityService := services.NewActivityService(activityProvider)
-	scoreService := services.NewScoreService(scoreProvider)
+	usersService := users_service.NewUsersService(usersProvider)
+	textsService := texts_service.NewTextsService(textsProvider)
+	activitiesService := activities_service.NewActivitiesService(activitiesProvider)
+	scoresService := scores_service.NewScoresService(scoresProvider)
 
 	// Controllers
-	userController := controllers.NewUserController(userService)
-	textController := controllers.NewTextController(textService)
-	activityController := controllers.NewActivityController(activityService)
-	scoreController := controllers.NewScoreController(scoreService)
+	userController := controllers.NewUsersController(usersService)
+	textController := controllers.NewTextsController(textsService)
+	activityController := controllers.NewActivitiesController(activitiesService)
+	scoreController := controllers.NewScoresController(scoresService)
 
 	// Routes
 	e.GET("/", func(c echo.Context) error {

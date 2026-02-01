@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"type_writer_api/controllers"
+	"type_writer_api/helpers"
 	"type_writer_api/providers/activities"
 	"type_writer_api/providers/scores"
 	"type_writer_api/providers/texts"
@@ -23,6 +24,8 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+const TESTING = "integration"
 
 func main() {
 	DB_USER := os.Getenv("DB_USER")
@@ -48,6 +51,15 @@ func main() {
 	if err != nil {
 		e.Logger.Fatal("Error initializing DB")
 		e.Close()
+	}
+
+	if TESTING == "integration" {
+		e.Logger.Debug("Loading test fixtures")
+		err := helpers.LoadFixturesIntoDB(db, "testing/fixtures", true)
+		if err != nil {
+			e.Logger.Fatal("Error loading fixtures into DB\t", err)
+		}
+		e.Logger.Debug("Finished loading test fixtures")
 	}
 
 	// Providers

@@ -1,8 +1,11 @@
 package helpers
 
 import (
-	"reflect"
 	"fmt"
+	"os"
+	"reflect"
+
+	"gorm.io/gorm"
 )
 
 func CompareReflectedStructFields(firstI, secondI any) error {
@@ -33,5 +36,32 @@ func CompareReflectedStructFields(firstI, secondI any) error {
 			return fmt.Errorf("fields did not match: got %v=%[2]v, expected %[1]v=%[3]v", first.Type().Field(i).Name, firstFieldValue, secondFieldValue)
 		}
 	}
+	return nil
+}
+
+func LoadFixturesIntoDB(db *gorm.DB, location string, isDir bool) error {
+	if isDir {
+		fileNames, err := os.ReadDir(location)
+		if err != nil {
+			return err
+		}
+		for _, fileName := range fileNames {
+			err := LoadFixturesIntoDB(db, location+"/"+fileName.Name(), fileName.IsDir())
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		file, err := os.ReadFile(location)
+		if err != nil {
+			return err
+		}
+
+		err = db.Exec(string(file)).Error
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

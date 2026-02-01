@@ -40,7 +40,7 @@ func (u *UsersController) GetUser(ctx echo.Context) error {
 		username = ctx.Param("user_id")
 	}
 
-	user, err := u.UsersService.GetUserByIdOrUsername(reqCtx, *userId, *username)
+	user, err := u.UsersService.GetUserByIdOrUsername(reqCtx, &userId, &username)
 	if err != nil && err == gorm.ErrRecordNotFound {
 		slog.ErrorContext(reqCtx, "user not found", "error", err)
 		return ctx.JSON(http.StatusNotFound, "user not found")

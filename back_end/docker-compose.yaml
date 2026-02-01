@@ -1,8 +1,12 @@
 services:
   db:
     image: postgres
-    restart: always
-    env_file: ".env.dev"
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
+      DB_PORT:
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${DB_PORT}"]
       interval: 10s
@@ -16,7 +20,12 @@ services:
   api:
     build:
       target: api
-    env_file: ".env.dev"
+    environment:
+      DB_USER:
+      DB_PASS:
+      DB_NAME:
+      DB_PORT:
+      API_PORT:
     depends_on:
       db:
         condition: service_healthy
@@ -29,8 +38,12 @@ services:
   migrate:
     build:
        target: migrate
+    environment:
+      DB_USER:
+      DB_PASS:
+      DB_NAME:
+      DB_PORT:
     depends_on:
       db:
         condition: service_healthy
         restart: true
-    env_file: ".env.dev"

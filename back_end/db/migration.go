@@ -16,6 +16,10 @@ func main() {
 	DB_NAME := os.Getenv("DB_NAME")
 	DB_PORT := os.Getenv("DB_PORT")
 
+	if DB_USER == "" || DB_PASS == "" || DB_NAME == "" || DB_PORT == "" {
+		log.Fatalf("Missing one or more environment variables: %v - %v - %v - %v", DB_USER, DB_PASS, DB_NAME, DB_PORT)
+	}
+
 	m, err := migrate.New(
 		"file://migrations",
 		fmt.Sprintf("postgres://%s:%s@type_writer-db-1:%s/%s?sslmode=disable", DB_USER, DB_PASS, DB_PORT, DB_NAME))
@@ -26,5 +30,6 @@ func main() {
 	if err := m.Up(); err != nil && err.Error() != "no change" {
 		log.Fatal("Error during Up migration application ", err)
 	}
+	m.Close()
 	log.Print("Migrations ran properly")
 }

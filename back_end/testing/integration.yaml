@@ -1,0 +1,313 @@
+name: type_writer api integration tests
+vars:
+  api_url: http://localhost:1323
+
+testcases:
+- name: GET users
+  steps:
+  - type: http
+    method: GET
+    url: {{.api_url}}/users
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.body ShouldContainSubstring users
+    - result.bodyjson.users ShouldHaveLength 2
+    - result.bodyjson.users.users0.id ShouldEqual 1
+    - result.bodyjson.users.users0.user_type ShouldEqual regular
+    - result.bodyjson.users.users0.username ShouldEqual testivo1
+    - result.bodyjson.users.users0.name ShouldEqual testivo
+    - result.bodyjson.users.users0.email ShouldEqual testivo1@mail.test
+    - result.bodyjson.users.users1.id ShouldEqual 2
+    - result.bodyjson.users.users1.user_type ShouldEqual regular
+    - result.bodyjson.users.users1.username ShouldEqual testivo2
+    - result.bodyjson.users.users1.name ShouldEqual testivo
+    - result.bodyjson.users.users1.email ShouldEqual testivo2@mail.test
+
+- name: POST user
+  steps:
+  - type: http
+    method: POST
+    url: {{.api_url}}/users
+    body: |
+      {
+        "user_type": "regular",
+        "username": "testivo3",
+        "name": "testivo",
+        "password": "password",
+        "email": "testivo3@mail.test"
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 201
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.user_type ShouldEqual regular
+    - result.bodyjson.username ShouldEqual testivo3
+    - result.bodyjson.name ShouldEqual testivo
+    - result.bodyjson.email ShouldEqual testivo3@mail.test
+
+- name: PUT user
+  steps:
+  - type: http
+    method: PUT
+    url: {{.api_url}}/users/3
+    body: |
+      {
+        "user_type": "admin",
+        "username": "testivo4",
+        "email": "testivo4@mail.test"
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.user_type ShouldEqual admin
+    - result.bodyjson.username ShouldEqual testivo4
+    - result.bodyjson.name ShouldEqual testivo
+    - result.bodyjson.email ShouldEqual testivo4@mail.test
+
+- name: DELETE user
+  steps:
+  - type: http
+    method: DELETE
+    url: {{.api_url}}/users/3
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson ShouldEqual true
+
+- name: GET activities
+  steps:
+  - type: http
+    method: GET
+    url: {{.api_url}}/activities
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.body ShouldContainSubstring activities
+    - result.bodyjson.activities ShouldHaveLength 2
+    - result.bodyjson.activities.activities0.id ShouldEqual 1
+    - result.bodyjson.activities.activities0.name ShouldEqual "speed drill"
+    - result.bodyjson.activities.activities0.description ShouldHaveLength 144
+    - result.bodyjson.activities.activities1.id ShouldEqual 2
+    - result.bodyjson.activities.activities1.name ShouldEqual article
+    - result.bodyjson.activities.activities1.description ShouldHaveLength 74
+
+- name: POST activity
+  steps:
+  - type: http
+    method: POST
+    url: {{.api_url}}/activities
+    body: |
+      {
+        "name": "test article",
+        "description": "integration test description"
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 201
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.name ShouldEqual "test article"
+    - result.bodyjson.description ShouldHaveLength 28
+
+- name: PUT activity
+  steps:
+  - type: http
+    method: PUT
+    url: {{.api_url}}/activities/3
+    body: |
+      {
+        "name": "modified test article",
+        "description": "modified integration test description"
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.name ShouldEqual "modified test article"
+    - result.bodyjson.description ShouldHaveLength 37
+
+- name: DELETE activity
+  steps:
+  - type: http
+    method: DELETE
+    url: {{.api_url}}/activities/3
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson ShouldEqual true
+
+- name: GET texts
+  steps:
+  - type: http
+    method: GET
+    url: {{.api_url}}/texts
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.body ShouldContainSubstring texts
+    - result.bodyjson.texts ShouldHaveLength 2
+    - result.bodyjson.texts.texts0.id ShouldEqual 1
+    - result.bodyjson.texts.texts0.text_type ShouldEqual "full-text"
+    - result.bodyjson.texts.texts0.title ShouldEqual "test text 1"
+    - result.bodyjson.texts.texts0.difficulty ShouldEqual easy
+    - result.bodyjson.texts.texts0.text_body ShouldHaveLength 54
+    - result.bodyjson.texts.texts0.text_length ShouldEqual 54
+    - result.bodyjson.texts.texts1.id ShouldEqual 2
+    - result.bodyjson.texts.texts1.text_type ShouldEqual "drill"
+    - result.bodyjson.texts.texts1.title ShouldEqual "test text 2"
+    - result.bodyjson.texts.texts1.difficulty ShouldEqual normal
+    - result.bodyjson.texts.texts1.text_body ShouldHaveLength 53
+    - result.bodyjson.texts.texts1.text_length ShouldEqual 53
+
+- name: POST text
+  steps:
+  - type: http
+    method: POST
+    url: {{.api_url}}/texts
+    body: |
+      {
+        "text_type": "article",
+        "title": "test text 3",
+        "difficulty": "hard",
+        "text_body": "hard test article made inside integration testing suite"
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 201
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.text_type ShouldEqual "article"
+    - result.bodyjson.title ShouldEqual "test text 3"
+    - result.bodyjson.difficulty ShouldEqual hard
+    - result.bodyjson.text_body ShouldHaveLength 55
+    - result.bodyjson.text_length ShouldEqual 55
+
+- name: PUT text
+  steps:
+  - type: http
+    method: PUT
+    url: {{.api_url}}/texts/3
+    body: |
+      {
+        "text_type": "full-text",
+        "title": "modified test text 3",
+        "difficulty": "easy",
+        "text_body": "modified now easy test full-text made inside integration testing suite"
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.text_type ShouldEqual "full-text"
+    - result.bodyjson.title ShouldEqual "modified test text 3"
+    - result.bodyjson.difficulty ShouldEqual easy
+    - result.bodyjson.text_body ShouldHaveLength 70
+    - result.bodyjson.text_length ShouldEqual 70
+
+- name: DELETE text
+  steps:
+  - type: http
+    method: DELETE
+    url: {{.api_url}}/texts/3
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson ShouldEqual true
+
+- name: GET scores
+  steps:
+  - type: http
+    method: GET
+    url: {{.api_url}}/scores
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.body ShouldContainSubstring scores
+    - result.bodyjson.scores ShouldHaveLength 2
+    - result.bodyjson.scores.scores0.id ShouldEqual 1
+    - result.bodyjson.scores.scores0.user_id ShouldEqual 1
+    - result.bodyjson.scores.scores0.activity_id ShouldEqual 1
+    - result.bodyjson.scores.scores0.text_id ShouldEqual 1
+    - result.bodyjson.scores.scores0.points ShouldEqual 100
+    - result.bodyjson.scores.scores0.duration ShouldEqual 60
+    - result.bodyjson.scores.scores0.errors ShouldEqual 0
+    - result.bodyjson.scores.scores1.id ShouldEqual 2
+    - result.bodyjson.scores.scores1.user_id ShouldEqual 2
+    - result.bodyjson.scores.scores1.activity_id ShouldEqual 2
+    - result.bodyjson.scores.scores1.text_id ShouldEqual 2
+    - result.bodyjson.scores.scores1.points ShouldEqual 0
+    - result.bodyjson.scores.scores1.duration ShouldEqual 60
+    - result.bodyjson.scores.scores1.errors ShouldEqual 53
+
+- name: POST score
+  steps:
+  - type: http
+    method: POST
+    url: {{.api_url}}/scores
+    body: |
+      {
+        "user_id": 1,
+        "activity_id": 2,
+        "text_id": 1,
+        "points": 50,
+        "duration": 60,
+        "errors": 50
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 201
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.user_id ShouldEqual 1
+    - result.bodyjson.activity_id ShouldEqual 2
+    - result.bodyjson.text_id ShouldEqual 1
+    - result.bodyjson.points ShouldEqual 50
+    - result.bodyjson.duration ShouldEqual 60
+    - result.bodyjson.errors ShouldEqual 50
+
+- name: PUT score
+  steps:
+  - type: http
+    method: PUT
+    url: {{.api_url}}/scores/3
+    body: |
+      {
+        "points": 49,
+        "duration": 60,
+        "errors": 51
+      }
+    headers:
+      Content-Type: application/json
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson.id ShouldEqual 3
+    - result.bodyjson.user_id ShouldEqual 1
+    - result.bodyjson.activity_id ShouldEqual 2
+    - result.bodyjson.text_id ShouldEqual 1
+    - result.bodyjson.points ShouldEqual 49
+    - result.bodyjson.duration ShouldEqual 60
+    - result.bodyjson.errors ShouldEqual 51
+
+- name: DELETE score
+  steps:
+  - type: http
+    method: DELETE
+    url: {{.api_url}}/scores/3
+    timeout: 2
+    assertions:
+    - result.statuscode ShouldEqual 200
+    - result.bodyjson ShouldEqual true

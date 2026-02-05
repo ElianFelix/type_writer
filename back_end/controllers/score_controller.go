@@ -24,7 +24,7 @@ func (t *ScoresController) GetScores(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, "error fetching scores")
 	}
 
-	return ctx.JSON(http.StatusOK, struct{ Scores []*structures.Score }{Scores: scores})
+	return ctx.JSON(http.StatusOK, struct{ Scores []*structures.Score `json:"scores"`}{Scores: scores})
 }
 
 func (t *ScoresController) GetScore(ctx echo.Context) error {

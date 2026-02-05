@@ -9,9 +9,9 @@ type Score struct {
 	UserId     int       `json:"user_id"`
 	ActivityId int       `json:"activity_id"`
 	TextId     int       `json:"text_id"`
-	Points     int       `json:"points,omitempty"`
-	Duration   int       `json:"duration,omitempty"`
-	Errors     int       `json:"erros,omitempty"`
+	Points     int       `json:"points"`
+	Duration   int       `json:"duration"`
+	Errors     int       `json:"errors"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 }
@@ -22,7 +22,7 @@ type ScoreReq struct {
 	TextId     int `json:"text_id,omitempty"`
 	Points     int `json:"points,omitempty"`
 	Duration   int `json:"duration,omitempty"`
-	Errors     int `json:"erros,omitempty"`
+	Errors     int `json:"errors,omitempty"`
 }
 
 func ConvertRequestToScore(req *ScoreReq) *Score {

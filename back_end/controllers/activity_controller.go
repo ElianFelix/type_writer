@@ -24,7 +24,7 @@ func (t *ActivitiesController) GetActivities(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, "error fetching activities")
 	}
 
-	return ctx.JSON(http.StatusOK, struct{ Activities []*structures.Activity }{Activities: activities})
+	return ctx.JSON(http.StatusOK, struct{ Activities []*structures.Activity `json:"activities"`}{Activities: activities})
 }
 
 func (t *ActivitiesController) GetActivity(ctx echo.Context) error {

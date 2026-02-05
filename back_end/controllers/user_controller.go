@@ -24,7 +24,7 @@ func (u *UsersController) GetUsers(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, "error fetching users")
 	}
 
-	return ctx.JSON(http.StatusOK, struct{ Users []*structures.UserResp }{Users: users})
+	return ctx.JSON(http.StatusOK, struct{ Users []*structures.UserResp `json:"users"`}{Users: users})
 }
 
 func (u *UsersController) GetUser(ctx echo.Context) error {

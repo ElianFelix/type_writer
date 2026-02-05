@@ -33,6 +33,7 @@ func main() {
 	DB_NAME := os.Getenv("DB_NAME")
 	DB_PORT := os.Getenv("DB_PORT")
 	API_PORT := os.Getenv("API_PORT")
+	ENV := os.Getenv("ENV")
 
 	// Create a slog logger, which:
 	//   - Logs to stdout.
@@ -53,7 +54,7 @@ func main() {
 		e.Close()
 	}
 
-	if TESTING == "integration" {
+	if ENV == "INTEGRATION" {
 		e.Logger.Debug("Loading test fixtures")
 		err := helpers.LoadFixturesIntoDB(db, "testing/fixtures", true)
 		if err != nil {

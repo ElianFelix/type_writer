@@ -24,7 +24,7 @@ func (t *TextsController) GetTexts(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, "error fetching texts")
 	}
 
-	return ctx.JSON(http.StatusOK, struct{ Texts []*structures.Text }{Texts: texts})
+	return ctx.JSON(http.StatusOK, struct{ Texts []*structures.Text `json:"texts"`}{Texts: texts})
 }
 
 func (t *TextsController) GetText(ctx echo.Context) error {

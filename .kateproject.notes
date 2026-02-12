@@ -1,1 +1,3 @@
 Will these notes stay throughout multiple openings of the folder/project?
+
+TODO: change logger to output POST request body when fail

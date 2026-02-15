@@ -8,3 +8,12 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+// @use 'vuetify' with (
+//   $body-font-family: 'Roboto',
+// );
+
+// @use "tailwindcss";
+@use 'vuetify/settings' with (
+  $layers: true,
+);
+@use 'main'

@@ -1,0 +1,18 @@
+// @import "tailwindcss";
+/* @debug "is this file being loaded?";*/
+
+.font-mono {
+  font-family: 'roboto mono';
+  line-height: 30px;
+}
+
+.board-container {
+  max-width: 990px;
+  min-width: 700px;
+  margin-top: 120px;
+  margin-inline: auto;
+}
+
+.timer-container {
+  top: 80px;
+}

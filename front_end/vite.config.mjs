@@ -3,6 +3,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Fonts from 'unplugin-fonts/vite'
 import Layouts from 'vite-plugin-vue-layouts-next'
+import tailwindcss from '@tailwindcss/vite'
 import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
@@ -17,6 +18,7 @@ export default defineConfig({
   plugins: [
     VueRouter(),
     Layouts(),
+    tailwindcss(),
     Vue({
       template: { transformAssetUrls },
     }),
@@ -26,12 +28,18 @@ export default defineConfig({
       styles: {
         configFile: 'src/styles/settings.scss',
       },
+      theme: {
+        layers: true,
+      },
     }),
     Components(),
     Fonts({
       google: {
         families: [{
           name: 'Roboto',
+          styles: 'wght@100;300;400;500;700;900',
+        },{
+          name: 'Roboto Mono',
           styles: 'wght@100;300;400;500;700;900',
         }],
       },

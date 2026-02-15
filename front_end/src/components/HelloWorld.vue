@@ -7,7 +7,7 @@
         src="@/assets/logo.png"
       />
 
-      <div class="mb-8 text-center">
+      <div class="p-5 font-mono font-bold text-center">
         <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
         <h1 class="text-h2 my-0 font-weight-bold">Vuetify</h1>
       </div>
@@ -15,7 +15,7 @@
       <v-row>
         <v-col cols="12">
           <v-card
-            class="py-4"
+            class="p-5 font-[Roboto-Mono]"
             color="surface-variant"
             image="https://cdn.vuetifyjs.com/docs/images/one/create/feature.png"
             prepend-icon="mdi-rocket-launch-outline"

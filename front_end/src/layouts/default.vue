@@ -1,10 +1,9 @@
 <template>
-  <AppHeader />
   <v-main>
+    <AppHeader />
     <router-view />
+    <AppFooter />
   </v-main>
-
-  <AppFooter />
 </template>
 
 <script setup>

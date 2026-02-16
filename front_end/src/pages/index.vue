@@ -1,7 +1,7 @@
 <template>
-  <div class="board-container">
+  <div class="fill-height board-container">
     <Timer />
-    <div class="d-flex flex-column ga-3 fill-height justify-center align-center">
+    <div class="d-flex flex-column fill-height ga-3 align-center">
       <Stats />
       <Area />
     </div>

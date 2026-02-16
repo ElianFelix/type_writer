@@ -28,9 +28,6 @@ export default defineConfig({
       styles: {
         configFile: 'src/styles/settings.scss',
       },
-      theme: {
-        layers: true,
-      },
     }),
     Components(),
     Fonts({

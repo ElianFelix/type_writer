@@ -3,16 +3,36 @@
 
 .font-mono {
   font-family: 'roboto mono';
-  line-height: 30px;
+  line-height: 40px;
+}
+
+.app-container {
+  height: max-content;
+  max-width: 1400px;
+  margin-inline: auto;
+  overflow: hidden;
+  flex-grow: 1;
 }
 
 .board-container {
   max-width: 990px;
   min-width: 700px;
-  margin-top: 120px;
+  padding-top: 120px;
   margin-inline: auto;
 }
 
 .timer-container {
   top: 80px;
+}
+
+.area-container {
+  max-height: 500px;
+}
+
+.stats-container {
+  width: 1500px;
+}
+
+.inset-shadow {
+  box-shadow: inset 0px 0px 2px 1px darkgrey;
 }

@@ -3,6 +3,7 @@
 
 .font-mono {
   font-family: 'roboto mono';
+  font-size: 18px;
   line-height: 40px;
 }
 
@@ -38,6 +39,7 @@
   background: rgb(var(--v-theme-primary));
   // border: 1px solid rgb(var(--v-theme-surface));
   box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
+  animation: 0.7s steps(2, jump-none) 0s infinite forwards blinking; 
 }
 
 .right {
@@ -56,4 +58,16 @@
 
 .inset-shadow {
   box-shadow: inset 0px 0px 2px 0.5px darkgrey;
+}
+
+@keyframes blinking {
+  from {
+    color: rgb(var(--v-theme-on-primary));
+    background-color: rgb(var(--v-theme-primary));
+  }
+  
+  to {
+    color: rgb(var(--v-theme-on-error));
+    background-color: transparent;
+  }
 }

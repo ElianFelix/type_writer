@@ -1,14 +1,6 @@
 <template>
   <div class="d-flex flex-column flex-grow-1 align-self-center justify-center align-center mx-8 area-container">
     <v-sheet class="px-10 py-4 fill-height font-mono">
-<!--      <span class="cursor">
-        <v-tooltip activator="parent" location="top" model-value text="Start Typing" @update:model-value="true" />
-      I</span>t is a long established fact that a reader will be distracted by the readable content of a page when
-      looking at its layout. The point of  using Lorem Ipsum is that it has a more-or-less normal distribution of
-      letters, as opposed to using 'Content here, content here', making it  look like readable English.
-      Many desktop publishing packages and web  page editors now use Lorem Ipsum as their default model text, and a
-      search for 'lorem ipsum' will uncover many web sites still in their  infancy. Various versions have evolved over the years,
-      sometimes by  accident, sometimes on purpose (injected humour and the like). -->
       <span v-for="elem, index in computedText" :key="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div class="d-flex ga-4 py-5">
@@ -19,26 +11,81 @@
 </template>
 
 <script setup>
-  import { onMounted, ref } from 'vue'
+  import { onMounted, onUnmounted, ref } from 'vue'
 
   function ProcessInputText(text) {
-    const output = text.map((l, idx) => { return {letter: l, status: idx == 0 ? 'cursor' : ''} })
+    const output = text.map((l, idx) => { return { letter: l, status: idx == 0 ? 'cursor' : '' } })
     return output
   }
 
   function HandleKeyPress(e) {
-    console.log(`key ${e.key} was pressed; also cursor is at ${currentIdx}`)
-    if (currentIdx >= computedText.value.length) return
-    computedText.value[currentIdx].status = computedText.value[currentIdx].letter == e.key ? 'right' : 'wrong'
-    currentIdx++
-    if (currentIdx >= computedText.value.length) return
-    computedText.value[currentIdx].status = 'cursor'
+    // ignore if f-keys, tab, esc or modifiers other than shift are active
+    if (/^(F\d{1,2}|Tab|Escape)$/.test(e.key) || e.ctrlKey || e.altKey || e.metaKey) {
+      return
+    }
+    e.stopPropagation()
+    e.preventDefault()
+    console.log(`Key ${e.key} was pressed; cursor is at ${currentIdx}`, e)
+    switch (true) {
+      // is printable character
+      case /^.$/.test(e.key): {
+        if (running == false && currentIdx == 0) {
+          running = true
+          timerCountDownId = setInterval(() => {
+            if (model.value == 0) {
+              clearInterval(timerCountDownId)
+              stats.value = ComputeStats(computedText.value)
+              timerCountDownId = null
+              running = false
+            } else model.value--
+          }, 1000, model)
+        }
+        if (currentIdx >= computedText.value.length) return
+        if (running) {
+          computedText.value[currentIdx].status = computedText.value[currentIdx].letter == e.key ? 'right' : 'wrong'
+          currentIdx++
+          if (currentIdx >= computedText.value.length) return
+          computedText.value[currentIdx].status = 'cursor'
+        }
+        break
+      }
+      // is deleting prev input
+      case /^Backspace$/.test(e.key) && running: {
+        if (currentIdx <= 0) return
+        if (currentIdx < computedText.value.length) computedText.value[currentIdx].status = ''
+        currentIdx--
+        computedText.value[currentIdx].status = 'cursor'
+        break
+      }
+    // default: {
+    // }
+    }
+  }
+
+  function ComputeStats(values) {
+    let [letters, words, errors] = [0, 0, 0]
+    values.forEach((cur, idx) => {
+      letters += cur.status == 'right'
+      words += /^\s$/.test(cur.letter) && (cur.status == 'right' || cur.status == 'wrong')
+      errors += cur.status == 'wrong'
+    })
+    console.log(`letters: ${letters}, words: ${words}, errors: ${errors}`)
+    return {letters: letters, words: words, errors: errors, time: 60}
   }
 
   function Restart() {
     computedText.value = ProcessInputText(SampleText.split(''))
     currentIdx = 0
+    model.value = 5
+    running = false
+    if (timerCountDownId) {
+      clearInterval(timerCountDownId)
+      timerCountDownId = null
+    }
   }
+
+  const model = defineModel()
+  const stats = defineModel('stats')
 
   const SampleText = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
     "looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of " +
@@ -50,13 +97,16 @@
   const computedText = ref(ProcessInputText(SampleText.split('')))
 
   let currentIdx = 0
+  let running = false
+  let timerCountDownId
 
   onMounted(() => {
-    window.addEventListener('keypress', HandleKeyPress)
+    document.addEventListener('keydown', HandleKeyPress, { capture: true })
   })
 
-
+  onUnmounted(() => {
+    document.removeEventListener('keydown', HandleKeyPress)
+  })
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

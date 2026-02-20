@@ -39,7 +39,7 @@ export default createVuetify({
   },
   theme: {
     layers: true,
-    defaultTheme: 'light',
+    defaultTheme: 'dark',
     themes: {
       light,
       dark,

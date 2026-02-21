@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex align-self-center pa-auto justify-center align-center stats-container" style="visibility: visible;">
     <v-sheet class="d-flex ga-12 w-100 py-8 justify-center align-center inset-shadow">
-      <div>99 WPM</div>
-      <div>99 LPM</div>
+      <div>{{ model?.wpm ?? '' }} WPM</div>
+      <div>{{ model?.lpm ?? '' }} LPM</div>
       <div>time: {{ model?.time ?? '' }}</div>
       <div>letters: {{ model?.letters ?? '' }}</div>
       <div>words: {{ model?.words ?? '' }}</div>

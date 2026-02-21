@@ -32,13 +32,13 @@
         if (running == false && currentIdx == 0) {
           running = true
           timerCountDownId = setInterval(() => {
-            if (model.value == 0) {
+            if (timerSeconds.value == 0) {
               clearInterval(timerCountDownId)
               stats.value = ComputeStats(computedText.value)
               timerCountDownId = null
               running = false
-            } else model.value--
-          }, 1000, model)
+            } else timerSeconds.value--
+          }, 1000, timerSeconds)
         }
         if (currentIdx >= computedText.value.length) return
         if (running) {
@@ -63,20 +63,27 @@
   }
 
   function ComputeStats(values) {
-    let [letters, words, errors] = [0, 0, 0]
+    let letters = 0, words = 0, errors = 0, wpm = 0, lpm = 0
+    let MODIFIER =  testTime / 60
     values.forEach((cur, idx) => {
-      letters += cur.status == 'right'
-      words += /^\s$/.test(cur.letter) && (cur.status == 'right' || cur.status == 'wrong')
-      errors += cur.status == 'wrong'
+      if (idx < currentIdx) {
+        letters++
+        words += /^\s$/.test(cur.letter)
+        errors += cur.status == 'wrong'
+      }
     })
-    console.log(`letters: ${letters}, words: ${words}, errors: ${errors}`)
-    return {letters: letters, words: words, errors: errors, time: 60}
+    wpm = (words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0)
+    lpm = (letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0)
+    console.log(`letters: ${letters}, words: ${words}, errors: ${errors}, time: ${testTime}, wpm: ${wpm}, lpm: ${lpm}`)
+    console.log({letters: letters, words: words, errors: errors, time: testTime, wpm: wpm, lpm: lpm})
+    return {letters: letters, words: words, errors: errors, time: testTime, wpm: wpm, lpm: lpm}
   }
 
   function Restart() {
     computedText.value = ProcessInputText(SampleText.split(''))
     currentIdx = 0
-    model.value = 5
+    timerSeconds.value = 5
+    testTime = 5
     running = false
     if (timerCountDownId) {
       clearInterval(timerCountDownId)
@@ -84,7 +91,7 @@
     }
   }
 
-  const model = defineModel()
+  const timerSeconds = defineModel('timerSeconds')
   const stats = defineModel('stats')
 
   const SampleText = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
@@ -99,8 +106,10 @@
   let currentIdx = 0
   let running = false
   let timerCountDownId
+  let testTime
 
   onMounted(() => {
+    testTime = timerSeconds.value
     document.addEventListener('keydown', HandleKeyPress, { capture: true })
   })
 

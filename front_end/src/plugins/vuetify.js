@@ -4,12 +4,12 @@
  * Framework documentation: https://vuetifyjs.com`
  */
 
+// Composables
+import { createVuetify } from 'vuetify'
+
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
-
-// Composables
-import { createVuetify } from 'vuetify'
 
 const light = {
   dark: false,

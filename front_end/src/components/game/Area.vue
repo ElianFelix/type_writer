@@ -19,14 +19,12 @@
   }
 
   function HandleKeyPress(e) {
-    // ignore if f-keys, tab, esc or modifiers other than shift are active
-    if (/^(F\d{1,2}|Tab|Escape)$/.test(e.key) || e.ctrlKey || e.altKey || e.metaKey) {
-      return
-    }
-    e.stopPropagation()
-    e.preventDefault()
     console.log(`Key ${e.key} was pressed; cursor is at ${currentIdx}`, e)
     switch (true) {
+      // ignore if f-keys, tab, esc or modifiers other than shift are active
+      case /^(F\d{1,2}|Tab|Escape)$/.test(e.key) || e.ctrlKey || e.altKey || e.metaKey: {
+        return
+      }
       // is printable character
       case /^.$/.test(e.key): {
         if (running == false && currentIdx == 0) {
@@ -60,11 +58,13 @@
     // default: {
     // }
     }
+    e.stopPropagation()
+    e.preventDefault()
   }
 
   function ComputeStats(values) {
     let letters = 0, words = 0, errors = 0, wpm = 0, lpm = 0
-    let MODIFIER =  testTime / 60
+    const MODIFIER =  testTime.value / 60
     values.forEach((cur, idx) => {
       if (idx < currentIdx) {
         letters++
@@ -72,18 +72,18 @@
         errors += cur.status == 'wrong'
       }
     })
-    wpm = (words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0)
-    lpm = (letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0)
-    console.log(`letters: ${letters}, words: ${words}, errors: ${errors}, time: ${testTime}, wpm: ${wpm}, lpm: ${lpm}`)
-    console.log({letters: letters, words: words, errors: errors, time: testTime, wpm: wpm, lpm: lpm})
-    return {letters: letters, words: words, errors: errors, time: testTime, wpm: wpm, lpm: lpm}
+    wpm = Number((words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
+    lpm = Number((letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
+    console.log(`letters: ${letters}, words: ${words}, errors: ${errors}, time: ${testTime.value}, wpm: ${wpm}, lpm: ${lpm}`)
+    console.log({letters: letters, words: words, errors: errors, time: testTime.value, wpm: wpm, lpm: lpm})
+    return {letters: letters, words: words, errors: errors, time: testTime.value, wpm: wpm, lpm: lpm}
   }
 
   function Restart() {
     computedText.value = ProcessInputText(SampleText.split(''))
     currentIdx = 0
-    timerSeconds.value = 5
-    testTime = 5
+    timerSeconds.value = 30
+    testTime.value = 30
     running = false
     if (timerCountDownId) {
       clearInterval(timerCountDownId)
@@ -92,6 +92,7 @@
   }
 
   const timerSeconds = defineModel('timerSeconds')
+  const testTime = defineModel('testTime')
   const stats = defineModel('stats')
 
   const SampleText = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
@@ -106,10 +107,8 @@
   let currentIdx = 0
   let running = false
   let timerCountDownId
-  let testTime
 
   onMounted(() => {
-    testTime = timerSeconds.value
     document.addEventListener('keydown', HandleKeyPress, { capture: true })
   })
 

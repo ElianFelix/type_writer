@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <v-main class="position-relative">
     <AppHeader />
     <router-view />
     <AppFooter />

@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex flex-column flex-grow-1 align-self-center justify-center align-center mx-8 area-container">
-    <v-sheet class="px-10 py-4 fill-height font-mono">
+  <div class="d-flex flex-column flex-grow-1 align-self-center justify-top align-center mx-8 area-container">
+    <v-sheet class="px-10 py-4 font-mono">
       <span v-for="elem, index in computedText" :key="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div class="d-flex ga-4 py-5">

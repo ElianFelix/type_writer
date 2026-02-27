@@ -5,6 +5,7 @@
   font-family: 'roboto mono';
   font-size: 18px;
   line-height: 40px;
+  letter-spacing: 2.5px;
 }
 
 .app-container {
@@ -27,7 +28,9 @@
 }
 
 .area-container {
-  max-height: 500px;
+  height: 300px;
+  max-height: 800px;
+  overflow: hidden;
 }
 
 .stats-container {
@@ -55,6 +58,10 @@
 
 .inset-shadow {
   box-shadow: inset 0px 0px 2px 0.5px darkgrey;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 @keyframes blinking {

@@ -1,5 +1,7 @@
 <template>
-  <div class="d-flex align-self-center pa-auto justify-center align-center stats-container" style="visibility: visible;">
+  <div class="d-flex align-self-center pa-auto justify-center align-center stats-container"
+       :class="{ 'hidden': model == nil }"
+  >
     <v-sheet class="d-flex ga-12 w-100 py-8 justify-center align-center inset-shadow">
       <div>{{ model?.wpm ?? '' }} WPM</div>
       <div>{{ model?.lpm ?? '' }} LPM</div>

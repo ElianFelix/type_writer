@@ -37,22 +37,19 @@
 .cursor {
   color: rgb(var(--v-theme-on-primary));
   background: rgb(var(--v-theme-primary));
-  // border: 1px solid rgb(var(--v-theme-surface));
   box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
   animation: 0.7s steps(2, jump-none) 0s infinite forwards blinking; 
 }
 
 .right {
-  color: rgb(var(--v-theme-on-primary));
+  color: rgb(var(--v-theme-on-secondary));
   background: rgb(var(--v-theme-secondary));
-  // border: 1px solid rgb(var(--v-theme-surface));
   box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
 }
 
 .wrong {
   color: rgb(var(--v-theme-on-error));
-  background: darkred;
-  // border: 1px solid rgb(var(--v-theme-surface));
+  background: rgb(var(--v-theme-error));
   box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
 }
 
@@ -67,7 +64,7 @@
   }
   
   to {
-    color: rgb(var(--v-theme-on-error));
+    color: rgb(var(--v-theme-on-background));
     background-color: transparent;
   }
 }

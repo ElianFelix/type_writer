@@ -113,7 +113,7 @@
   })
 
   onUnmounted(() => {
-    document.removeEventListener('keydown', HandleKeyPress)
+    document.removeEventListener('keydown', HandleKeyPress, { capture: true })
   })
 </script>
 

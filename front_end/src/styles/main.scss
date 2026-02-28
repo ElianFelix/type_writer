@@ -1,6 +1,12 @@
 // @import "tailwindcss";
 /* @debug "is this file being loaded?";*/
 
+.open-menu {
+  max-width: 260px;
+  height: fit-content;
+  box-shadow: -2px 6px 6px 2px rgba(0, 0, 0, 0.2);
+}
+
 .font-mono {
   font-family: 'roboto mono';
   font-size: 18px;
@@ -9,9 +15,9 @@
 }
 
 .app-container {
-  height: max-content;
-  max-width: 1400px;
+  width: 1400px;
   margin-inline: auto;
+  // padding-inline: 10px;
   overflow: hidden;
   flex-grow: 1;
 }
@@ -34,7 +40,7 @@
 }
 
 .stats-container {
-  width: 1500px;
+  width: 100%;
 }
 
 .cursor {

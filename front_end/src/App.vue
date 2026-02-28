@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <div class="d-flex app-container">
-    	<router-view />
-    </div>
+    <router-view />
   </v-app>
 </template>
 

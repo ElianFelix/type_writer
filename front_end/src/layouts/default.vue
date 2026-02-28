@@ -1,5 +1,5 @@
 <template>
-  <v-main class="position-relative">
+  <v-main class="d-flex app-container position-relative">
     <AppHeader />
     <router-view />
     <AppFooter />

@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex align-self-center pa-auto justify-center align-center stats-container"
-       :class="{ 'hidden': model == nil }"
+       :class="{ 'hidden': false }"
   >
-    <v-sheet class="d-flex ga-12 w-100 py-8 justify-center align-center inset-shadow">
+    <v-sheet class="d-flex ga-12 w-100 px-4 py-8 justify-center align-center inset-shadow">
       <div>{{ model?.wpm ?? '' }} WPM</div>
       <div>{{ model?.lpm ?? '' }} LPM</div>
       <div>time: {{ model?.time ?? '' }}</div>

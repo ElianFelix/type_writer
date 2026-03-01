@@ -4,8 +4,8 @@
       <span v-for="elem, index in computedText" :key="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div class="d-flex ga-4 py-5">
-      <v-btn @click="Restart">Retry</v-btn>
-      <v-btn>Done</v-btn>
+      <v-btn @click="restart(15)">Retry</v-btn>
+      <v-btn @click="restart(60)">Done</v-btn>
     </div>
   </div>
 </template>
@@ -13,12 +13,12 @@
 <script setup>
   import { onMounted, onUnmounted, ref } from 'vue'
 
-  function ProcessInputText(text) {
+  function processInputText(text) {
     const output = text.map((l, idx) => { return { letter: l, status: idx == 0 ? 'cursor' : '' } })
     return output
   }
 
-  function HandleKeyPress(e) {
+  function handleKeyPress(e) {
     console.log(`Key ${e.key} was pressed; cursor is at ${currentIdx}`, e)
     switch (true) {
       // ignore if f-keys, tab, esc or modifiers other than shift are active
@@ -32,7 +32,7 @@
           timerCountDownId = setInterval(() => {
             if (timerSeconds.value == 0) {
               clearInterval(timerCountDownId)
-              stats.value = ComputeStats(computedText.value)
+              stats.value = computeStats(computedText.value)
               timerCountDownId = null
               running = false
             } else timerSeconds.value--
@@ -62,7 +62,7 @@
     e.preventDefault()
   }
 
-  function ComputeStats(values) {
+  function computeStats(values) {
     let letters = 0, words = 0, errors = 0, wpm = 0, lpm = 0
     const MODIFIER =  testTime.value / 60
     values.forEach((cur, idx) => {
@@ -79,11 +79,11 @@
     return {letters: letters, words: words, errors: errors, time: testTime.value, wpm: wpm, lpm: lpm}
   }
 
-  function Restart() {
-    computedText.value = ProcessInputText(SampleText.split(''))
+  function restart(newTime) {
+    computedText.value = processInputText(SampleText.split(''))
     currentIdx = 0
-    timerSeconds.value = 30
-    testTime.value = 30
+    timerSeconds.value = newTime ?? 30
+    testTime.value = newTime ?? 30
     running = false
     if (timerCountDownId) {
       clearInterval(timerCountDownId)
@@ -102,18 +102,18 @@
     "search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, " +
     "sometimes by accident, sometimes on purpose (injected humour and the like)."
 
-  const computedText = ref(ProcessInputText(SampleText.split('')))
+  const computedText = ref(processInputText(SampleText.split('')))
 
   let currentIdx = 0
   let running = false
   let timerCountDownId
 
   onMounted(() => {
-    document.addEventListener('keydown', HandleKeyPress, { capture: true })
+    document.addEventListener('keydown', handleKeyPress, { capture: true })
   })
 
   onUnmounted(() => {
-    document.removeEventListener('keydown', HandleKeyPress, { capture: true })
+    document.removeEventListener('keydown', handleKeyPress, { capture: true })
   })
 </script>
 

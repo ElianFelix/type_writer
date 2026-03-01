@@ -1,10 +1,27 @@
 // @import "tailwindcss";
 /* @debug "is this file being loaded?";*/
 
+@mixin text-highlight($color) {
+  color: rgb(var(--v-theme-on-$color));
+  background: rgb(var(--v-theme-$color));
+  box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
+}
+
 .open-menu {
   max-width: 260px;
   height: fit-content;
   box-shadow: -2px 6px 6px 2px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.menu-backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .font-mono {
@@ -44,22 +61,16 @@
 }
 
 .cursor {
-  color: rgb(var(--v-theme-on-primary));
-  background: rgb(var(--v-theme-primary));
-  box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
+  @include text-highlight(primary);
   animation: 0.7s steps(2, jump-none) 0s infinite forwards blinking; 
 }
 
 .right {
-  color: rgb(var(--v-theme-on-secondary));
-  background: rgb(var(--v-theme-secondary));
-  box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
+  @include text-highlight(secondary);
 }
 
 .wrong {
-  color: rgb(var(--v-theme-on-error));
-  background: rgb(var(--v-theme-error));
-  box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
+  @include text-highlight(error);
 }
 
 .inset-shadow {
@@ -73,11 +84,11 @@
 @keyframes blinking {
   from {
     color: rgb(var(--v-theme-on-primary));
-    background-color: rgb(var(--v-theme-primary));
+    background: rgb(var(--v-theme-primary));
   }
   
   to {
     color: rgb(var(--v-theme-on-background));
-    background-color: transparent;
+    background: transparent;
   }
 }

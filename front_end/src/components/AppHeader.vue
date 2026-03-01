@@ -1,16 +1,18 @@
 <template>
-  <div class="d-flex ga-3 position-absolute top-0 right-0 justify-center align-center ma-5">
-    <v-sheet class="d-flex flex-column pa-2 justify-space-between"
+  <div class="d-flex ga-3 position-absolute top-0 right-0 justify-center align-center ma-5"
+       id="mainMenu"
+       tabindex="9"
+  >
+    <v-sheet class="d-flex flex-column pa-2 elevaltion-2 justify-space-between"
              :class="{ 'bg-transparent': !openMenu, 'open-menu': openMenu, 'closed-menu': !openMenu }"
-             tabindex="0"
              rounded
     >
       <div class="d-flex ga-2 justify-space-between">
         <v-btn v-if="!openMenu" icon="mdi-account-circle"></v-btn>
         <v-btn v-if="!openMenu" :icon="activeThemeIcon" @click="changeActiveTheme"></v-btn>
-        <v-btn :icon="openMenu ? 'mdi-close' : 'mdi-menu'" @click="() => {openMenu = !openMenu}"></v-btn>
+        <v-btn :icon="openMenu ? 'mdi-close' : 'mdi-menu'" @click="toggleMenu"></v-btn>
       </div>
-      <div v-if="openMenu" class="d-flex flex-column ga-1 menu-section ma-5 mt-0">
+      <div class="flex-column ga-1 menu-section ma-5 mt-0" :class="openMenu ? 'd-flex' : 'd-none'">
         <div class="menu-item mx-4">
           <div class="menu-sub-heading">Settings</div>
           <div class="d-flex ga-2 justify-start">
@@ -20,7 +22,7 @@
             <v-btn size="small" icon="mdi-stop"></v-btn>
           </div>
         </div>
-        <div class="menu-item mx-4">
+        <div class="menu-item mx-5">
           <div class="menu-sub-heading">Theme</div>
           <div class="ml-4">
             <v-switch v-model="activeTheme"
@@ -43,6 +45,7 @@
         <div class="menu-item"><v-list-item>Login/logout</v-list-item></div>
       </div>
     </v-sheet>
+    <div v-if="openMenu" class="menu-backdrop" @click="toggleMenu"></div>
   </div>
 </template>
 
@@ -55,13 +58,31 @@
     theme.change(activeTheme.value)
   }
 
+  function toggleMenu(e) {
+    // const mainMenu = document.querySelector('#mainMenu')
+    // if (!openMenu.value) {
+    //   mainMenu.focus()
+    // }
+    openMenu.value = !openMenu.value
+  }
+
+  function menuBlurHandler(e) {
+    console.log('blur event ->', e)
+    if (e.explicitOriginalTarget?.matches('#mainMenu *')) {
+      e.target.focus()
+      return
+    }
+    openMenu.value = false
+  }
+
   const theme = useTheme()
   const openMenu = ref(false)
   const activeTheme = ref('dark')
   const activeThemeIcon = computed(() => {
-    console.log('current theme here -> ', theme.current.value)
+    console.log('current theme here ->', theme.current.value)
     return theme.current.value.dark ? 'mdi-weather-night' : 'mdi-white-balance-sunny'
   })
+
 </script>
 
 <style lang="scss" scoped>

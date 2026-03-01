@@ -20,6 +20,7 @@ const light = {
     'on-primary': '#001A14',
     'on-secondary': '#000B1A',
     'on-error': '#190500',
+    background: '#E6E6E6',
 },
 }
 

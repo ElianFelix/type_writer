@@ -5,11 +5,6 @@
         WIP
       </div>
     </div>
-    <div class="d-flex justify-center align-center bg-red select-container">
-      <div>
-        WIP
-      </div>
-    </div>
   </div>
 </template>
 

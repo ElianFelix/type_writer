@@ -2,10 +2,24 @@
 /* @debug "is this file being loaded?";*/
 
 @mixin text-highlight($color) {
-  color: rgb(var(--v-theme-on-$color));
-  background: rgb(var(--v-theme-$color));
+  color: rgb(var(--v-theme-on-#{$color}));
+  background: rgb(var(--v-theme-#{$color}));
   box-shadow: inset 0px 0px 0px 0.5px rgb(var(--v-theme-surface));
 }
+
+@mixin font-mono-sizes($font-sizes...) {
+  @debug $font-sizes;
+  @each $size in $font-sizes {
+    .font-mono-#{$size} {
+      font-family: 'roboto mono';
+      font-size: calc(12px + (3px * $size));
+      line-height: 40px;
+      letter-spacing: calc(2px + ($size * 0.5px));
+    }
+  }
+}
+
+@include font-mono-sizes(1, 2, 3);
 
 .open-menu {
   max-width: 260px;
@@ -31,6 +45,20 @@
   letter-spacing: 2.5px;
 }
 
+.main-container {
+  width: 900px;
+  margin-inline: auto;
+  margin-top: 100px;
+}
+
+.histogram-container {
+  height: 400px;
+}
+
+.select-container {
+  height: 400px;
+}
+
 .app-container {
   width: 1400px;
   margin-inline: auto;
@@ -48,6 +76,8 @@
 
 .timer-container {
   top: 80px;
+  background-color: rgb(var(--v-theme-background));
+  border-radius: 100%;
 }
 
 .area-container {

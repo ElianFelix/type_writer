@@ -3,7 +3,7 @@
     <v-sheet class="px-10 py-4" :class="`font-mono-${fontSize ?? 2}`">
       <span v-for="elem, index in processedText" :key="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
-    <div class="d-flex ga-4 py-5">
+    <div v-if="appStore.completed" class="d-flex ga-4 py-5">
       <v-btn @click="appStore.restartGame(15)">Retry</v-btn>
       <v-btn @click="appStore.restartGame()">Done</v-btn>
     </div>
@@ -27,12 +27,17 @@
     console.log(`Key ${e.key} was pressed; cursor is at ${appStore.cursor}`, e)
     switch (true) {
       // ignore if f-keys, tab, esc or modifiers other than shift are active
-      case /^(F\d{1,2}|Tab|Escape|Enter)$/.test(e.key) || e.ctrlKey || e.altKey || e.metaKey: {
+      case (/^(F\d{1,2}|Tab|Escape|Enter)$/.test(e.key) ||
+        e.ctrlKey ||
+        e.altKey ||
+        e.metaKey ||
+        e.target.matches('#mainMenu *')
+      ): {
         return
       }
       // is printable character
       case /^.$/.test(e.key): {
-        if (appStore.started == false && appStore.cursor == 0) {
+        if (appStore.started == false) {
           appStore.started = true
           appStore.timerId = setInterval(() => {
             if (timerSeconds.value == 0) {
@@ -40,11 +45,14 @@
               stats.value = computeStats(processedText.value)
               appStore.timerId = null
               appStore.started = false
-            } else timerSeconds.value--
+              appStore.completed = true
+            } else {
+              timerSeconds.value--
+            }
           }, 1000, timerSeconds)
         }
         if (appStore.cursor >= processedText.value.length) return
-        if (appStore.started) {
+        if (appStore.started && appStore.timerSeconds > 0) {
           processedText.value[appStore.cursor].status = processedText.value[appStore.cursor].letter == e.key ? 'right' : 'wrong'
           appStore.cursor++
           if (appStore.cursor >= processedText.value.length) return
@@ -124,11 +132,11 @@
   // let timerCountDownId
 
   onMounted(() => {
-    document.addEventListener('keydown', handleKeyPress, { capture: true })
+    document.addEventListener('keydown', handleKeyPress)
   })
 
   onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeyPress, { capture: true })
+    document.removeEventListener('keydown', handleKeyPress)
   })
 </script>
 

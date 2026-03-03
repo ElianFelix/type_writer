@@ -13,13 +13,35 @@
         <v-btn :icon="openMenu ? 'mdi-close' : 'mdi-menu'" @click="toggleMenu"></v-btn>
       </div>
       <div class="flex-column ga-1 menu-section ma-5 mt-0" :class="openMenu ? 'd-flex' : 'd-none'">
-        <div class="menu-item mx-4">
+        <div v-if="showSettings" class="d-flex flex-column ga-1 mx-4 mb-1 menu-item">
           <div class="menu-sub-heading">Settings</div>
           <div class="d-flex ga-2 justify-start">
             <v-btn :disabled="fontSize == 3" size="small" icon="mdi-plus-circle" @click="appStore.incrementFontSize"></v-btn>
             <v-btn :disabled="fontSize == 1" size="small" icon="mdi-minus-circle" @click="appStore.decrementFontSize"></v-btn>
             <v-btn size="small" icon="mdi-restore" @click="appStore.restartGame()"></v-btn>
             <v-btn size="small" icon="mdi-stop"></v-btn>
+          </div>
+          <div class="mx-auto">
+            <v-number-input
+              v-model="timeInput"
+              persistent-placeholder
+              placeholder="secs"
+              :min="15" :max="180"
+              width="150"
+              density="compact"
+              variant="solo-filled"
+              control-variant="split"
+              hide-details
+              :step="15"
+              @update:model-value="appStore.restartGame(timeInput)"
+            ></v-number-input>
+            <!--<v-btn-group border density="compact" variant="tonal">
+              <v-btn icon="mdi-minus"></v-btn>
+              <v-text-field hide-details></v-text-field>
+              <v-btn icon="mdi-plus"></v-btn>
+              <v-btn icon="mdi-check"></v-btn>
+            </v-btn-group> -->
+            <!-- <v-btn size="small" icon="mdi-check"></v-btn> -->
           </div>
         </div>
         <div class="menu-item mx-4">
@@ -52,9 +74,10 @@
 </template>
 
 <script setup>
-  import { computed, ref } from 'vue';
+  import { computed, ref, watch } from 'vue';
   import { useTheme } from 'vuetify'
   import { useAppStore } from '@/stores/app';
+  import { useRoute } from 'vuetify/lib/composables/router.mjs';
 
   function changeActiveTheme() {
     activeTheme.value = activeTheme.value == 'dark' ? 'light' : 'dark'
@@ -63,23 +86,30 @@
 
   function toggleMenu(e) {
     // const mainMenu = document.querySelector('#mainMenu')
-    // if (!openMenu.value) {
-    //   mainMenu.focus()
-    // }
+    if (!openMenu.value && appStore.started) {
+      appStore.pauseGame()
+    }
     openMenu.value = !openMenu.value
   }
 
   const appStore = useAppStore()
   const theme = useTheme()
+  const route = useRoute()
 
   const openMenu = ref(false)
   const activeTheme = ref('dark')
+  const timeInput = ref(appStore.testTime)
 
   const activeThemeIcon = computed(() => {
     console.log('current theme here ->', theme.current.value)
     return theme.current.value.dark ? 'mdi-weather-night' : 'mdi-white-balance-sunny'
   })
   const fontSize = computed(() => appStore.fontSize)
+  const showSettings = computed(() => route.value.name.match(/board/))
+
+  watch(route, () => {
+    console.log('current route info ->', route)
+  })
 
 </script>
 

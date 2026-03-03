@@ -2,7 +2,7 @@
   <div class="fill-height board-container">
     <Timer v-model="appStore.timerSeconds" v-model:test-time="appStore.testTime" />
     <div class="d-flex flex-column fill-height ga-3 align-center">
-      <Stats v-model="appStore.stats" />
+      <Stats v-if="appStore.completed" v-model="appStore.stats" />
       <Area
         v-model:stats="appStore.stats"
         v-model:test-time="appStore.testTime"

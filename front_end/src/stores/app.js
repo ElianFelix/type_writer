@@ -29,6 +29,22 @@ export const useAppStore = defineStore('app', () => {
 
   const getDefaultTime = computed(() => DEFAULT_TIME)
 
+  function incrementTestTime(increment = 15) {
+    const increasedTime = testTime.value + increment
+    if (increasedTime > 180) {
+      return
+    }
+    restartGame(increasedTime)
+  }
+
+  function decrementTestTime(decrement = 15) {
+    const decreasedTime = testTime.value + decrement
+    if (decreasedTime < 15) {
+      return
+    }
+    restartGame(decreasedTime)
+  }
+
   function incrementFontSize() {
     if (fontSize.value < 3) {
       fontSize.value += 1
@@ -41,7 +57,7 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
-  function restartGame(newTime = DEFAULT_TIME) {
+  function restartGame(newTime = testTime.value) {
     testTime.value = newTime
     timerSeconds.value = newTime
     stats.value = null
@@ -50,6 +66,14 @@ export const useAppStore = defineStore('app', () => {
     cursor.value = 0
     gameText.value = DEFAULT_TEXT
     processedGameText.value = processInputText(gameText.value)
+    if (timerId.value) {
+      clearInterval(timerId.value)
+      timerId.value = null
+    }
+  }
+
+  function pauseGame() {
+    started.value = false
     if (timerId.value) {
       clearInterval(timerId.value)
       timerId.value = null
@@ -67,6 +91,6 @@ export const useAppStore = defineStore('app', () => {
     // Getters
     getDefaultTime,
     // Actions
-    incrementFontSize, decrementFontSize, restartGame, endGame,
+    incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize, restartGame, pauseGame, endGame,
   }
 })

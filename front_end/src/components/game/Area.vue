@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column flex-grow-1 align-self-center justify-top align-center mx-8 area-container">
-    <v-sheet class="px-10 py-4" :class="`font-mono-${fontSize ?? 2}`">
+    <v-sheet class="px-10 py-4 text-pre-wrap" :class="`font-mono-${fontSize ?? 2}`">
       <span v-for="elem, index in processedText" :key="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div v-if="appStore.completed" class="d-flex ga-4 py-5">
@@ -46,6 +46,9 @@
               appStore.timerId = null
               appStore.started = false
               appStore.completed = true
+              if (appStore.cursor < processedText.value.length) {
+                processedText.value[appStore.cursor].status = ''
+              }
             } else {
               timerSeconds.value--
             }
@@ -78,13 +81,15 @@
   function computeStats(values) {
     let letters = 0, words = 0, errors = 0, wpm = 0, lpm = 0
     const MODIFIER =  testTime.value / 60
-    values.forEach((cur, idx) => {
+    for (const [idx, val] of values.entries()) {
       if (idx < appStore.cursor) {
         letters++
-        words += /^\s$/.test(cur.letter)
-        errors += cur.status == 'wrong'
+        words += idx == 0 || /^\s$/.test(values[idx - 1]?.letter)
+        errors += val.status == 'wrong'
+      } else {
+        break
       }
-    })
+    }
     wpm = Number((words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
     lpm = Number((letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
     console.log(`letters: ${letters}, words: ${words}, errors: ${errors}, time: ${testTime.value}, wpm: ${wpm}, lpm: ${lpm}`)

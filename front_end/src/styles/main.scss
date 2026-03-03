@@ -5,10 +5,11 @@
   color: rgb(var(--v-theme-on-#{$color}));
   background: rgb(var(--v-theme-#{$color}));
   box-shadow: inset 0px 0px 0px 0.7px rgb(var(--v-theme-surface));
+  border-radius: 4px;
 }
 
 @mixin font-mono-sizes($font-sizes...) {
-  @debug $font-sizes;
+  //@debug $font-sizes;
   @each $size in $font-sizes {
     .font-mono-#{$size} {
       font-family: 'roboto mono';

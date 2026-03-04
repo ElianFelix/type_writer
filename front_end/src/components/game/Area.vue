@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column flex-grow-1 align-self-center justify-top align-center mx-8 area-container">
     <v-sheet class="px-10 py-4 text-pre-wrap" :class="`font-mono-${fontSize ?? 2}`">
-      <span v-for="elem, index in processedText" :key="index" :class="elem.status">{{ elem.letter }}</span>
+      <span v-for="elem, index in processedText" :key="index" :id="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div v-if="appStore.completed" class="d-flex ga-4 py-5">
       <v-btn @click="appStore.restartGame(15)">Retry</v-btn>
@@ -13,15 +13,6 @@
 <script setup>
   import { useAppStore } from '@/stores/app'
   import { onMounted, onUnmounted } from 'vue'
-
-  // function processInputText(text) {
-  //   const output = text.split('').map(
-  //     (l, idx) => {
-  //       return { letter: l, status: idx == 0 ? 'cursor' : '' }
-  //     }
-  //   )
-  //   return output
-  // }
 
   function handleKeyPress(e) {
     console.log(`Key ${e.key} was pressed; cursor is at ${appStore.cursor}`, e)
@@ -97,27 +88,6 @@
     return {letters: letters, words: words, errors: errors, time: testTime.value, wpm: wpm, lpm: lpm}
   }
 
-  // function restart() {
-  //   appStore.restartGame()
-  //   processedText.value = processInputText(appStore.gameText)
-  //   if (timerCountDownId) {
-  //     clearInterval(timerCountDownId)
-  //     timerCountDownId = null
-  //   }
-  // }
-
-  // function oldRestart(newTime) {
-  //   computedText.value = processInputText(SampleText.split(''))
-  //   cursor = 0
-  //   timerSeconds.value = newTime ?? 30
-  //   testTime.value = newTime ?? 30
-  //   appStore.started = false
-  //   if (timerCountDownId) {
-  //     clearInterval(timerCountDownId)
-  //     timerCountDownId = null
-  //   }
-  // }
-
   const appStore = useAppStore()
 
   const timerSeconds = defineModel('timerSeconds')
@@ -133,8 +103,6 @@
       appStore.processedGameText.value = newValue
     },
   })
-
-  // let timerCountDownId
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress)

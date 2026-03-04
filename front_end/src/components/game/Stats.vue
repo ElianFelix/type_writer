@@ -5,7 +5,7 @@
     <v-sheet class="d-flex ga-12 w-100 px-4 py-8 justify-center align-center inset-shadow">
       <div>{{ model?.wpm ?? '' }} WPM</div>
       <div>{{ model?.lpm ?? '' }} LPM</div>
-      <div>time: {{ model?.time ?? '' }}</div>
+      <div>time: {{ model?.time ?? '' }} secs</div>
       <div>letters: {{ model?.letters ?? '' }}</div>
       <div>words: {{ model?.words ?? '' }}</div>
       <div>errors: {{ model?.errors ?? '' }}</div>

@@ -4,18 +4,25 @@
 @mixin text-highlight($color) {
   color: rgb(var(--v-theme-on-#{$color}));
   background: rgb(var(--v-theme-#{$color}));
-  box-shadow: inset 0px 0px 0px 0.7px rgb(var(--v-theme-surface));
-  border-radius: 4px;
+  // outline: 0.5px solid rgb(var(--v-theme-surface));
+  // box-shadow: 0 0 0 1px inset rgb(var(--v-theme-surface));
+  // outline: -3px solid rgb(var(--v-theme-surface));
+  border-radius: 12%;
 }
 
 @mixin font-mono-sizes($font-sizes...) {
   //@debug $font-sizes;
   @each $size in $font-sizes {
     .font-mono-#{$size} {
+      letter-spacing: 0;
       font-family: 'roboto mono';
       font-size: calc(12px + (3px * $size));
       line-height: 40px;
-      letter-spacing: calc(2px + ($size * 0.5px));
+      // letter-spacing: calc(1px + ($size * 0.5px));
+      span {
+        padding-inline: calc(0.5px + (0.5px * $size));
+        margin-inline: calc(0.5px + (0.2px * $size));
+      }
     }
   }
 }

@@ -107,10 +107,6 @@
   const fontSize = computed(() => appStore.fontSize)
   const showSettings = computed(() => route.value.name.match(/board/))
 
-  watch(route, () => {
-    console.log('current route info ->', route)
-  })
-
 </script>
 
 <style lang="scss" scoped>

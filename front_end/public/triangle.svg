@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="14.999999"
+   height="8"
+   viewBox="0 0 14.999999 8"
+   version="1.1"
+   id="svg1"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:export-bgcolor="#ffffff00">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="14.999999"
+       height="8"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient20"
+       inkscape:swatch="gradient">
+      <stop
+         style="stop-color:#808080;stop-opacity:1;"
+         offset="0"
+         id="stop21" />
+      <stop
+         style="stop-color:#808080;stop-opacity:0;"
+         offset="1"
+         id="stop22" />
+    </linearGradient>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-8.937705,-8.8743172)">
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#9e9e9e;fill-opacity:1;stroke:none;stroke-width:10.8279;stroke-dasharray:none"
+       id="path1"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="7.9038253"
+       sodipodi:cy="8.4633884"
+       sodipodi:r1="10.993332"
+       sodipodi:r2="5.496666"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 7.9038256,19.45672 -4.7602527,-8.244999 -4.7602525,-8.2449983 9.520505,-2e-7 9.5205046,-3e-7 -4.760252,8.2449998 z"
+       inkscape:transform-center-y="1.3333335"
+       transform="matrix(0.78777336,0,0,0.48514257,10.211282,7.4350337)"
+       inkscape:export-filename="triangle.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

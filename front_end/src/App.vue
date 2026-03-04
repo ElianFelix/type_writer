@@ -7,3 +7,7 @@
 <script setup>
   //
 </script>
+
+<style lang="scss">
+  @use './styles/main.scss'
+</style>

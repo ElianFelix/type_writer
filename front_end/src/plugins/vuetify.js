@@ -33,6 +33,7 @@ const dark = {
     'on-primary': '#001A14',
     'on-secondary': '#00204D',
     'on-error': '#190500',
+    surface: '#2F2F2F',
   },
 }
 

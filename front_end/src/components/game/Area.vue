@@ -1,6 +1,9 @@
 <template>
   <div class="d-flex flex-column flex-grow-1 align-self-center justify-top align-center mx-8 area-container">
     <v-sheet class="px-10 py-4 text-pre-wrap" :class="`font-mono-${fontSize ?? 2}`">
+      <div class="start-tooltip"
+           :style="`visibility: ${appStore.started || appStore.completed ? 'hidden' : 'visible'};left: ${tooltipOffsetx}px; top: ${tooltipOffsety}px`"
+      >Start typing</div>
       <span v-for="elem, index in processedText" :key="index" :id="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div v-if="appStore.completed" class="d-flex ga-4 py-5">
@@ -12,7 +15,7 @@
 
 <script setup>
   import { useAppStore } from '@/stores/app'
-  import { onMounted, onUnmounted } from 'vue'
+  import { onMounted, onUnmounted, watch } from 'vue'
 
   function handleKeyPress(e) {
     console.log(`Key ${e.key} was pressed; cursor is at ${appStore.cursor}`, e)
@@ -95,6 +98,9 @@
   const stats = defineModel('stats')
   const fontSize = defineModel('fontSize')
 
+  const tooltipOffsetx = ref(10)
+  const tooltipOffsety = ref(0)
+
   const processedText = computed({
     get() {
       return appStore.processedGameText
@@ -104,8 +110,28 @@
     },
   })
 
+  watch([() => appStore.started, () => appStore.fontSize, () => appStore.cursor], ([started, _, cursor]) => {
+    if (!started || cursor == 0) {
+      const cursorElmnt = document.querySelector('.cursor')
+      if (cursorElmnt) {
+        const startTooltip = document.querySelector('.start-tooltip')
+        // console.log(cursor)
+        // console.log(cursor.offsetLeft, cursor.offsetWidth, startTooltip.offsetWidth)
+        tooltipOffsetx.value = cursorElmnt.offsetLeft + cursorElmnt.offsetWidth/2 - startTooltip.offsetWidth/2
+        tooltipOffsety.value = cursorElmnt.offsetTop - cursorElmnt.offsetHeight/4 - startTooltip.offsetHeight
+        // console.log(tooltipOffsetx.value, tooltipOffsety.value)
+      }
+
+    }
+  }, { flush: 'post' })
+
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress)
+
+    const cursor = document.querySelector('.cursor')
+    const startTooltip = document.querySelector('.start-tooltip')
+    tooltipOffsetx.value = cursor.offsetLeft + cursor.offsetWidth/2 - startTooltip.offsetWidth/2
+    tooltipOffsety.value = cursor.offsetTop - cursor.offsetHeight/4 - startTooltip.offsetHeight
   })
 
   onUnmounted(() => {

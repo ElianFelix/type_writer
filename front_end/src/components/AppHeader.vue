@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-  import { computed, ref, watch } from 'vue';
+  import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useTheme } from 'vuetify'
   import { useAppStore } from '@/stores/app';
   import { useRoute } from 'vuetify/lib/composables/router.mjs';
@@ -92,6 +92,12 @@
     openMenu.value = !openMenu.value
   }
 
+  function handleKeyPress(e) {
+    if (/^Escape$/.test(e.key)) {
+      toggleMenu()
+    }
+  }
+
   const appStore = useAppStore()
   const theme = useTheme()
   const route = useRoute()
@@ -107,6 +113,13 @@
   const fontSize = computed(() => appStore.fontSize)
   const showSettings = computed(() => route.value.name.match(/board/))
 
+  onMounted(() => {
+    document.addEventListener('keydown', handleKeyPress)
+  })
+
+  onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeyPress)
+  })
 </script>
 
 <style lang="scss" scoped>

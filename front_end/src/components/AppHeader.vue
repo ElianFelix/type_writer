@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-3 position-absolute top-0 right-0 justify-center align-center ma-5"
+  <div class="d-flex ga-3 position-absolute top-0 right-0 justify-center align-center my-5"
        id="mainMenu"
        tabindex="9"
   >
@@ -54,7 +54,7 @@
                       true-value="dark"
                       :true-icon="activeThemeIcon"
                       density="compact" hide-details
-                      color="blue"
+                      color="secondary"
             >
               <template v-slot:label>
                 {{ activeTheme }}
@@ -85,9 +85,14 @@
   }
 
   function toggleMenu(e) {
-    // const mainMenu = document.querySelector('#mainMenu')
-    if (!openMenu.value && appStore.started) {
-      appStore.pauseGame()
+    const mainMenu = document.querySelector('#mainMenu')
+    if (openMenu.value) {
+      mainMenu.blur()
+    } else {
+      mainMenu.focus()
+      if (appStore.started) {
+        appStore.pauseGame()
+      }
     }
     openMenu.value = !openMenu.value
   }

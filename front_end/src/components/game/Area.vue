@@ -129,9 +129,11 @@
     document.addEventListener('keydown', handleKeyPress)
 
     const cursor = document.querySelector('.cursor')
-    const startTooltip = document.querySelector('.start-tooltip')
-    tooltipOffsetx.value = cursor.offsetLeft + cursor.offsetWidth/2 - startTooltip.offsetWidth/2
-    tooltipOffsety.value = cursor.offsetTop - cursor.offsetHeight/4 - startTooltip.offsetHeight
+    if (cursor) {
+      const startTooltip = document.querySelector('.start-tooltip')
+      tooltipOffsetx.value = cursor.offsetLeft + cursor.offsetWidth/2 - startTooltip.offsetWidth/2
+      tooltipOffsety.value = cursor.offsetTop - cursor.offsetHeight/4 - startTooltip.offsetHeight
+    }
   })
 
   onUnmounted(() => {

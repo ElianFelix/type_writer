@@ -29,6 +29,14 @@
 
 @include font-mono-sizes(1, 2, 3);
 
+#mainMenu {
+  margin-right: min(20px, 2vw);
+  z-index: 3;
+  &:focus {
+    outline: none;
+  }
+}
+
 .open-menu {
   width: 260px;
   height: fit-content;
@@ -161,3 +169,4 @@
     background: transparent;
   }
 }
+

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="35.961239mm"
+   height="35.963215mm"
+   viewBox="0 0 35.961239 35.963215"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     transform="translate(-2.3092224,-1.8465631)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#d3d3d3;stroke-width:4.65103;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1"
+       width="31.310209"
+       height="31.312181"
+       x="4.6347375"
+       y="4.1720781"
+       rx="5.5474339" />
+    <path
+       id="rect2"
+       style="fill:#757575;fill-opacity:1;stroke:none;stroke-width:0.443796;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       d="m 27.325133,19.802901 v 5.366491 H 14.926014 l -0.0057,-3.589128 -7.1381232,5.42956 7.1495902,5.406625 -0.0057,-3.554727 H 30.40135 v -0.02287 h 0.0058 v -9.035951 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.2868px;font-family:'Noto Sans Mono';-inkscape-font-specification:'Noto Sans Mono';writing-mode:lr-tb;direction:ltr;fill:#757575;fill-opacity:1;stroke:none;stroke-width:0.442955;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       x="10.850516"
+       y="19.511213"
+       id="text14"><tspan
+         id="tspan14"
+         style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-size:16.9853px;font-family:'Noto Sans Mono';-inkscape-font-specification:'Noto Sans Mono, Ultra-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#757575;fill-opacity:1;stroke:none;stroke-width:0.442955;stroke-dasharray:none"
+         x="10.850516"
+         y="19.511213">TW</tspan></text>
+  </g>
+</svg>

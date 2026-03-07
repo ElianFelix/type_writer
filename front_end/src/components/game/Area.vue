@@ -98,7 +98,7 @@
   const stats = defineModel('stats')
   const fontSize = defineModel('fontSize')
 
-  const tooltipOffsetx = ref(10)
+  const tooltipOffsetx = ref(7)
   const tooltipOffsety = ref(0)
 
   const processedText = computed({

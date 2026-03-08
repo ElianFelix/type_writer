@@ -30,8 +30,10 @@
 @include font-mono-sizes(1, 2, 3);
 
 #mainMenu {
-  margin-right: min(20px, 2vw);
-  z-index: 3;
+  // margin-right: min(20px, 2vw);
+  z-index: 4;
+  top: 20px;
+  right: max(calc(50vw - 500px), 20px);
   &:focus {
     outline: none;
   }

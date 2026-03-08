@@ -7,7 +7,7 @@
       <span v-for="elem, index in processedText" :key="index" :id="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div v-if="appStore.completed" class="d-flex align-self-center ga-4 py-5">
-      <v-btn @click="appStore.startGame()">Retry</v-btn>
+      <v-btn @click="retryGame">Retry</v-btn>
       <v-btn @click="appStore.endActivity">Done</v-btn>
     </div>
   </div>
@@ -133,9 +133,14 @@
     }
     wpm = Number((words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
     lpm = Number((letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
-    const computedStats = {letters: letters, words: words, errors: errors, time: actualTime, wpm: wpm, lpm: lpm}
+    const computedStats = {wpm: wpm, lpm: lpm, time: actualTime, letters: letters, words: words, errors: errors, corrected: 0}
     console.log(computedStats)
     return computedStats
+  }
+
+  function retryGame() {
+    appStore.addActivityResult()
+    appStore.startGame()
   }
 
 </script>

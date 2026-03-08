@@ -1,4 +1,3 @@
-// Utilities
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
@@ -77,6 +76,21 @@ export const useAppStore = defineStore('app', () => {
   // const selectedText = ref('default-text')
   const selectedText = ref(3)
 
+  const activityResults = ref([
+    {
+      id: 0,
+      type: 'typingTest',
+      title: 'place-holder-title',
+      wpm: 300,
+      lpm: 300,
+      time: 300,
+      letters: 300,
+      words: 300,
+      errors: 300,
+      corrected: 300,
+    },
+  ])
+
 
   //
   // In-game settings
@@ -147,21 +161,6 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
-  function restartGame(newTime = testTime.value) {
-    testTime.value = newTime
-    timerSeconds.value = newTime
-    stats.value = null
-    started.value = false
-    completed.value = false
-    cursor.value = 0
-    gameText.value = DEFAULT_TEXT
-    processedGameText.value = processInputText(gameText.value)
-    if (timerId.value) {
-      clearInterval(timerId.value)
-      timerId.value = null
-    }
-  }
-
   function pauseGame() {
     started.value = false
     if (timerId.value) {
@@ -171,12 +170,14 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function endGame() {
-    clearInterval(timerId.value)
-    timerId.value = null
     started.value = false
     completed.value = true
-    if (cursor < processedGameText.value.length) {
+    if (cursor.value < processedGameText.value.length) {
       processedGameText.value[cursor.value].status = ''
+    }
+    if (timerId.value) {
+      clearInterval(timerId.value)
+      timerId.value = null
     }
   }
 
@@ -186,17 +187,34 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function endActivity() {
+    addActivityResult()
     router.push({ name: '/' })
   }
+
+  function addActivityResult() {
+    if (!stats.value) {
+      return
+    }
+    const resultActivity = activities.value[selectedActivity.value]
+    const resultText = resultActivity.items[selectedText.value]
+    activityResults.value.unshift({
+      id: activityResults.value.length,
+      type: selectedActivity.value,
+      title: resultText.title,
+      ...stats.value
+    })
+  }
+
 
   return {
     // State
     activities, selectedActivity, selectedText, gameText, processedGameText,
     stats, timerId, started, completed, testTime, timerSeconds, fontSize, cursor,
+    activityResults,
     // Getters
     getSelectedActivity, getSelectedText, getDefaultTime,
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
-    startGame, restartGame, pauseGame, endGame, startActivity, endActivity,
+    startGame, pauseGame, endGame, startActivity, endActivity, addActivityResult,
   }
 })

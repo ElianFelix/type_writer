@@ -1,9 +1,57 @@
 <template>
   <div class="d-flex flex-column ga-4 fill-height main-container">
     <div class="d-flex justify-center align-center bg-red histogram-container">
-      <div>
-        WIP
-      </div>
+      <v-table
+        class="w-100 h-100"
+        fixed-header
+      >
+        <thead>
+          <tr>
+            <th class="text-left">
+              Activitity
+            </th>
+            <th class="text-left">
+              Title
+            </th>
+            <th class="text-left">
+              WPM
+            </th>
+            <th class="text-left">
+              LPM
+            </th>
+            <th class="text-left">
+              Time
+            </th>
+            <th class="text-left">
+              Letters
+            </th>
+            <th class="text-left">
+              Words
+            </th>
+            <th class="text-left">
+              Errors
+            </th>
+            <th class="text-left">
+              Corrected
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="item in appStore.activityResults" :key="item.title"
+          >
+            <td>{{ item.type }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.wpm }}</td>
+            <td>{{ item.lpm }}</td>
+            <td>{{ item.time }} secs</td>
+            <td>{{ item.letters }}</td>
+            <td>{{ item.words }}</td>
+            <td>{{ item.errors }}</td>
+            <td>{{ item.corrected }}</td>
+          </tr>
+        </tbody>
+      </v-table>
     </div>
     <div class="d-flex justify-center align-center bg-red select-container">
       <v-sheet class="h-100 w-100">
@@ -57,8 +105,11 @@
 
 <script setup>
   import { useAppStore } from '@/stores/app';
-
-  const appStore = useAppStore()
+  import { ref } from 'vue';
 
   const bgColors = ['red', 'blue', 'green', 'yellow']
+  const appStore = useAppStore()
+
+  const results = ref([{ type: 'typingTest', title: 'place-holder-title', wpm: 300 }])
+
 </script>

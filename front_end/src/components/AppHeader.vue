@@ -1,9 +1,9 @@
 <template>
   <div class="d-flex ga-3 position-absolute top-0 right-0 justify-center align-center my-5"
        id="mainMenu"
-       tabindex="9"
+       tabindex="1"
   >
-    <v-sheet class="d-flex flex-column pa-2 elevaltion-2 justify-space-between"
+    <v-sheet class="d-flex flex-column pa-2 position-sticky elevaltion-2 justify-space-between"
              :class="{ 'bg-transparent': !openMenu, 'open-menu': openMenu, 'closed-menu': !openMenu }"
              rounded
     >
@@ -18,8 +18,8 @@
           <div class="d-flex ga-2 justify-start">
             <v-btn :disabled="fontSize == 3" size="small" icon="mdi-plus-circle" @click="appStore.incrementFontSize"></v-btn>
             <v-btn :disabled="fontSize == 1" size="small" icon="mdi-minus-circle" @click="appStore.decrementFontSize"></v-btn>
-            <v-btn size="small" icon="mdi-restore" @click="appStore.restartGame()"></v-btn>
-            <v-btn size="small" icon="mdi-stop"></v-btn>
+            <v-btn size="small" icon="mdi-restore" @click="appStore.startGame"></v-btn>
+            <v-btn size="small" icon="mdi-stop" @click="appStore.endActivity"></v-btn>
           </div>
           <div class="mx-auto">
             <v-number-input
@@ -33,7 +33,7 @@
               control-variant="split"
               hide-details
               :step="15"
-              @update:model-value="appStore.restartGame(timeInput)"
+              @update:model-value="appStore.startGame(timeInput)"
             ></v-number-input>
             <!--<v-btn-group border density="compact" variant="tonal">
               <v-btn icon="mdi-minus"></v-btn>

@@ -1,19 +1,25 @@
 <template>
   <div class="position-relative">
-    <div class="position-fixed"
-       id="mainMenu"
-       tabindex="0"
+    <div
+      id="mainMenu"
+      class="position-fixed"
+      tabindex="0"
     >
-      <v-sheet class="d-flex flex-column pa-2 justify-space-between"
-               :class="{ 'bg-transparent': !openMenu, 'open-menu': openMenu, 'closed-menu': !openMenu }"
-               rounded
+      <v-sheet
+        id="subMenu"
+        class="d-flex flex-column pa-2"
+        :class="openMenu ? 'open-menu' : 'closed-menu'"
+        rounded
       >
         <div class="d-flex ga-2 justify-space-between">
           <v-btn v-if="!openMenu" icon="mdi-account-circle"></v-btn>
           <v-btn v-if="!openMenu" :icon="activeThemeIcon" @click="changeActiveTheme"></v-btn>
           <v-btn :icon="openMenu ? 'mdi-close' : 'mdi-menu'" @click="toggleMenu"></v-btn>
         </div>
-        <div class="flex-column ga-1 menu-section ma-5 mt-0" :class="openMenu ? 'd-flex' : 'd-none'">
+        <div id="subMenuContent"
+             class="d-flex flex-column ga-1 menu-section ma-5 mt-0"
+             :class="openMenu ? 'open-menu' : 'closed-menu'"
+        >
           <div v-if="showSettings" class="d-flex flex-column ga-1 mx-4 mb-1 menu-item">
             <div class="menu-sub-heading">Settings</div>
             <div class="d-flex ga-2 justify-start">
@@ -81,6 +87,29 @@
   import { useAppStore } from '@/stores/app';
   import { useRoute } from 'vuetify/lib/composables/router.mjs';
 
+  const appStore = useAppStore()
+  const theme = useTheme()
+  const route = useRoute()
+
+  const openMenu = ref(false)
+  const activeTheme = ref('dark')
+  const timeInput = ref(appStore.testTime)
+
+  const activeThemeIcon = computed(() => {
+    console.log('current theme here ->', theme.current.value)
+    return theme.current.value.dark ? 'mdi-weather-night' : 'mdi-white-balance-sunny'
+  })
+  const fontSize = computed(() => appStore.fontSize)
+  const showSettings = computed(() => route.value.name.match(/board/))
+
+  onMounted(() => {
+    document.addEventListener('keydown', handleKeyPress)
+  })
+
+  onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeyPress)
+  })
+
   function changeActiveTheme() {
     activeTheme.value = activeTheme.value == 'dark' ? 'light' : 'dark'
     theme.change(activeTheme.value)
@@ -104,29 +133,6 @@
       toggleMenu()
     }
   }
-
-  const appStore = useAppStore()
-  const theme = useTheme()
-  const route = useRoute()
-
-  const openMenu = ref(false)
-  const activeTheme = ref('dark')
-  const timeInput = ref(appStore.testTime)
-
-  const activeThemeIcon = computed(() => {
-    console.log('current theme here ->', theme.current.value)
-    return theme.current.value.dark ? 'mdi-weather-night' : 'mdi-white-balance-sunny'
-  })
-  const fontSize = computed(() => appStore.fontSize)
-  const showSettings = computed(() => route.value.name.match(/board/))
-
-  onMounted(() => {
-    document.addEventListener('keydown', handleKeyPress)
-  })
-
-  onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeyPress)
-  })
 </script>
 
 <style lang="scss" scoped>

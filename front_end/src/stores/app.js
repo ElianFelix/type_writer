@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
 import { processInputText } from '@/helpers/textProcessing'
-import { getActivities, getTexts } from '@/api/api'
+import * as api from '@/api/api'
 
 const DEFAULT_TIME = 60
 const DEFAULT_TEXT = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
@@ -16,45 +16,17 @@ export const useAppStore = defineStore('app', () => {
   const router = useRouter()
   const route = useRoute()
 
-  // State
-  // const activities = ref({
-  //   'typing-test': {
-  //     description: 'type the text as fast as you can under the time limit',
-  //     settings: {},
-  //     items: [
-  //       {
-  //         title: 'default-text',
-  //         difficulty: 'normal',
-  //         text_body: DEFAULT_TEXT,
-  //         tags: ['testing', 'default'],
-  //       },
-  //       {
-  //         title: 'typing-place-holder',
-  //         difficulty: 'normal',
-  //         text_body: 'some lorem ipsum testing placeholder some lorem ipsum testing placeholder  some lorem ipsum testing placeholder',
-  //         tags: ['testing'],
-  //       },
-  //       {
-  //         title: 'typing-place-holder-2',
-  //         difficulty: 'hard',
-  //         text_body: 'some lorem ipsum testing placeholder',
-  //         tags: ['testing'],
-  //       },
-  //     ],
-  //   },
-  //   'drill': {
-  //     description: 'hit the keys as the appear on screen to practice your accuracy',
-  //     settings: {},
-  //     items: [
-  //       {
-  //         title: 'drill-place-holder',
-  //         difficulty: 'normal',
-  //         text_body: 'some lorem ipsum testing placeholder',
-  //         tags: ['testing'],
-  //       },
-  //     ],
-  //   },
-  // })
+  // hardcoded user to build up functionality
+  const activeUser = ref({
+    id: 1,
+    user_type: "regular",
+    username: "testivo",
+    name: "testivo",
+    email: "test@user.com",
+    created_at: "2026-03-11T04:00:02.518314Z",
+    updated_at: "2026-03-11T18:35:11.425319164Z"
+  })
+
 
   const activities = ref([
     {
@@ -99,27 +71,37 @@ export const useAppStore = defineStore('app', () => {
   const selectedText = ref(0)
 
   const activityResults = ref([
-    {
-      id: 0,
-      user_id: 0,
-      activity_id: 0,
-      text_id: 0,
-      type: 'typing-test',
-      title: 'place-holder-title',
-      time: 300,
-      points: 300,
-      errors: 300,
-      created_at: "timestamp",
-      updated_at: "timestamp",
-      result: { // later implementation will use result as a sub struct
-        wpm: 300,
-        lpm: 300,
-        letters: 300,
-        words: 300,
-        errors: 300,
-        corrected: 300,
+    // later model
+    // {
+    //   id: 0,
+    //   user_id: 0,
+    //   activity_id: 0,
+    //   text_id: 0,
+    //   type: 'typing-test',
+    //   title: 'place-holder-title',
+    //   time: 300,
+    //   points: 300,
+    //   errors: 300,
+    //   created_at: "timestamp",
+    //   updated_at: "timestamp",
+    //   result: { // later implementation will use result as a sub struct
+    //     wpm: 300,
+    //     lpm: 300,
+    //     letters: 300,
+    //     words: 300,
+    //     errors: 300,
+    //     corrected: 300,
+    //   },
+    // },
+      {
+        id: 0,
+        user_id: 1,
+        activity_id: 1,
+        text_id: 1,
+        points: 300,
+        duration: 60,
+        errors: 300
       },
-    },
   ])
 
 
@@ -222,36 +204,49 @@ export const useAppStore = defineStore('app', () => {
     router.push({ name: '/' })
   }
 
-  function addActivityResult() {
+  async function addActivityResult() {
     if (!stats.value) {
       return
     }
     const resultText = texts.value[selectedText.value]
-    activityResults.value.unshift({
-      id: activityResults.value.length,
-      user_id: 0,
-      activity_id: 0,
-      text_id: 0,
-      type: selectedActivity.value,
-      title: resultText.title,
-      time: stats.value.time,
+    // activityResults.value.unshift({
+    //   id: activityResults.value.length,
+    //   user_id: 0,
+    //   activity_id: 0,
+    //   text_id: 0,
+    //   type: selectedActivity.value,
+    //   title: resultText.title,
+    //   time: stats.value.time,
+    //   points: stats.value.wpm,
+    //   errors: stats.value.errors,
+    //   created_at: "timestamp",
+    //   updated_at: "timestamp",
+    //   result: {
+    //     wpm: stats.value.wpm,
+    //     lpm: stats.value.lpm,
+    //     letters: stats.value.letters,
+    //     words: stats.value.words,
+    //     errors: stats.value.errors,
+    //     corrected: stats.value.corrected,
+    //   }
+    // })
+
+    const newScoreResp = await api.createScore({
+      user_id: activeUser.value.id,
+      activity_id: activities.value.find((a) => a.name == selectedActivity.value).id,
+      text_id: resultText.id,
       points: stats.value.wpm,
-      errors: stats.value.errors,
-      created_at: "timestamp",
-      updated_at: "timestamp",
-      result: {
-        wpm: stats.value.wpm,
-        lpm: stats.value.lpm,
-        letters: stats.value.letters,
-        words: stats.value.words,
-        errors: stats.value.errors,
-        corrected: stats.value.corrected,
-      }
+      duration: stats.value.time,
+      errors: stats.value.errors
     })
+    if (newScoreResp) {
+      console.log('new score ->', newScoreResp)
+      activityResults.value.push(newScoreResp)
+    }
   }
 
   async function refreshActivities() {
-    const activitiesResp = await getActivities()
+    const activitiesResp = await api.getActivities()
     console.log('activities resp ->', activitiesResp)
     if (activitiesResp) {
       activities.value = activitiesResp
@@ -259,26 +254,35 @@ export const useAppStore = defineStore('app', () => {
   }
 
   async function refreshTexts() {
-    const textsResp = await getTexts()
+    const textsResp = await api.getTexts()
     console.log('texts resp ->', textsResp)
     if (textsResp) {
       texts.value = textsResp
     }
   }
 
+  async function refreshActivityResults() {
+    const scoresResp = await api.getScores()
+    console.log('scores resp ->', scoresResp)
+    if (scoresResp) {
+      activityResults.value = scoresResp
+    }
+  }
+
   refreshActivities()
   refreshTexts()
+  refreshActivityResults()
 
   return {
     // State
     activities, texts, selectedActivity, selectedText, gameText, processedGameText,
     stats, timerId, started, completed, testTime, timerSeconds, fontSize, cursor,
-    activityResults,
+    activityResults, activeUser,
     // Getters
     getSelectedActivity, getSelectedText, getDefaultTime,
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
     startGame, pauseGame, endGame, startActivity, endActivity, addActivityResult,
-    refreshActivities, refreshTexts,
+    refreshActivities, refreshTexts, refreshActivityResults,
   }
 })

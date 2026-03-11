@@ -8,6 +8,9 @@
         <thead>
           <tr>
             <th class="text-left">
+              User
+            </th>
+            <th class="text-left">
               Activitity
             </th>
             <th class="text-left">
@@ -38,17 +41,18 @@
         </thead>
         <tbody>
           <tr
-            v-for="item in appStore.activityResults" :key="item.title"
+            v-for="item in appStore.activityResults.sort(sortResultsIdDescending)" :key="item.id"
           >
-            <td>{{ item.type }}</td>
-            <td>{{ item.title }}</td>
-            <td>{{ item.result.wpm }}</td>
-            <td>{{ item.result.lpm }}</td>
-            <td>{{ item.time }} secs</td>
-            <td>{{ item.result.letters }}</td>
-            <td>{{ item.result.words }}</td>
-            <td>{{ item.result.errors }}</td>
-            <td>{{ item.result.corrected }}</td>
+            <td>{{ appStore.activeUser.username }}</td>
+            <td>{{ appStore.activities.find((a) => a.id == item.activity_id).name }}</td>
+            <td>{{ appStore.texts.find((t) => t.id == item.text_id).title }}</td>
+            <td>{{ item.points }}</td>
+            <td>{{ 0 }}</td>
+            <td>{{ item.duration }} secs</td>
+            <td>{{ 0 }}</td>
+            <td>{{ 0 }}</td>
+            <td>{{ item.errors }}</td>
+            <td>{{ 0 }}</td>
           </tr>
         </tbody>
       </v-table>
@@ -112,4 +116,9 @@
 
   const results = ref([{ type: 'typingTest', title: 'place-holder-title', wpm: 300 }])
 
+  function sortResultsIdDescending(a, b) {
+    if (a.id > b.id) { return -1 }
+    else if (a.id < b.id) { return 1 }
+    return 0
+  }
 </script>

@@ -229,9 +229,24 @@ export const useAppStore = defineStore('app', () => {
     const resultText = texts.value[selectedText.value]
     activityResults.value.unshift({
       id: activityResults.value.length,
+      user_id: 0,
+      activity_id: 0,
+      text_id: 0,
       type: selectedActivity.value,
       title: resultText.title,
-      ...stats.value
+      time: stats.value.time,
+      points: stats.value.wpm,
+      errors: stats.value.errors,
+      created_at: "timestamp",
+      updated_at: "timestamp",
+      result: {
+        wpm: stats.value.wpm,
+        lpm: stats.value.lpm,
+        letters: stats.value.letters,
+        words: stats.value.words,
+        errors: stats.value.errors,
+        corrected: stats.value.corrected,
+      }
     })
   }
 

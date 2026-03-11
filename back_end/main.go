@@ -44,6 +44,7 @@ func main() {
 	// Middleware
 	e.Use(slogecho.New(logger))
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: fmt.Sprintf("host=type_writer-db-1 user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/New_York", DB_USER, DB_PASS, DB_NAME, DB_PORT),

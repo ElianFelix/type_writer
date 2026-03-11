@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
 import { processInputText } from '@/helpers/textProcessing'
+import { getActivities, getTexts } from '@/api/api'
 
 const DEFAULT_TIME = 60
 const DEFAULT_TEXT = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
@@ -16,78 +17,108 @@ export const useAppStore = defineStore('app', () => {
   const route = useRoute()
 
   // State
-  const activities = ref({
-    'typingTest': {
-      description: 'type the text as fast as you can under the time limit',
-      settings: {},
-      items: [
-        {
-          title: 'default-text',
-          difficulty: 'normal',
-          text: DEFAULT_TEXT,
-          tags: ['testing', 'default'],
-        },
-        {
-          title: 'typing-place-holder',
-          difficulty: 'normal',
-          text: 'some lorem ipsum testing placeholder some lorem ipsum testing placeholder  some lorem ipsum testing placeholder',
-          tags: ['testing'],
-        },
-        {
-          title: 'typing-place-holder-2',
-          difficulty: 'hard',
-          text: 'some lorem ipsum testing placeholder',
-          tags: ['testing'],
-        },
-        {
-          title: 'typing-place-holder-3',
-          difficulty: 'hard',
-          text: 'some lorem ipsum testing placeholder',
-          tags: ['testing'],
-        },
-        {
-          title: 'typing-place-holder-4',
-          difficulty: 'hard',
-          text: 'some lorem ipsum testing placeholder',
-          tags: ['testing'],
-        },
-        {
-          title: 'typing-place-holder-5',
-          difficulty: 'hard',
-          text: 'some lorem ipsum testing placeholder',
-          tags: ['testing'],
-        },
-      ],
+  // const activities = ref({
+  //   'typing-test': {
+  //     description: 'type the text as fast as you can under the time limit',
+  //     settings: {},
+  //     items: [
+  //       {
+  //         title: 'default-text',
+  //         difficulty: 'normal',
+  //         text_body: DEFAULT_TEXT,
+  //         tags: ['testing', 'default'],
+  //       },
+  //       {
+  //         title: 'typing-place-holder',
+  //         difficulty: 'normal',
+  //         text_body: 'some lorem ipsum testing placeholder some lorem ipsum testing placeholder  some lorem ipsum testing placeholder',
+  //         tags: ['testing'],
+  //       },
+  //       {
+  //         title: 'typing-place-holder-2',
+  //         difficulty: 'hard',
+  //         text_body: 'some lorem ipsum testing placeholder',
+  //         tags: ['testing'],
+  //       },
+  //     ],
+  //   },
+  //   'drill': {
+  //     description: 'hit the keys as the appear on screen to practice your accuracy',
+  //     settings: {},
+  //     items: [
+  //       {
+  //         title: 'drill-place-holder',
+  //         difficulty: 'normal',
+  //         text_body: 'some lorem ipsum testing placeholder',
+  //         tags: ['testing'],
+  //       },
+  //     ],
+  //   },
+  // })
+
+  const activities = ref([
+    {
+      "id": 1,
+      "name": "typing-test",
+      "description": "type the text as fast as you can under the time limit",
+      "created_at": "2026-03-10T23:14:08.10223Z",
+      "updated_at": "2026-03-10T23:14:08.10223Z"
     },
-    'drill': {
-      description: 'hit the keys as the appear on screen to practice your accuracy',
-      settings: {},
-      items: [
-        {
-          title: 'drill-place-holder',
-          difficulty: 'normal',
-          text: 'some lorem ipsum testing placeholder',
-          tags: ['testing'],
-        },
-      ],
+    {
+      "id": 2,
+      "name": "drill",
+      "description": "type the text as fast as you can under the time limit",
+      "created_at": "2026-03-10T23:14:13.622774Z",
+      "updated_at": "2026-03-10T23:14:13.622774Z"
     },
-  })
-  const selectedActivity = ref('typingTest')
+  ])
+  const texts = ref([
+    {
+        "id": 1,
+        "text_type": "full-text",
+        "title": "db-in-default-test",
+        "difficulty": "normal",
+        "text_body": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+        "text_length": 613,
+        "created_at": "2026-03-11T01:16:31.708976Z",
+        "updated_at": "2026-03-11T01:16:31.708976Z"
+    },
+    {
+        "id": 2,
+        "text_type": "full-text",
+        "title": "db-in-tinto-talk",
+        "difficulty": "normal",
+        "text_body": "Here, your friendly Content Design Lead Pavia will be your host today, as today @Johan has been hijacked by the Swedes invited to the Swedish Game Awards (as Europa Universalis V has been nominated for 3 categories, Best Technology, Best Design, and Game of the Year; it can also be voted by the community as Player’s Game of the Year); while @SaintDaveUK is busy with a super secret project working on the game’s first DLC, Fate of the Phoenix.",
+        "text_length": 450,
+        "created_at": "2026-03-11T01:39:31.739875Z",
+        "updated_at": "2026-03-11T01:39:31.739875Z"
+    }
+  ])
+  const selectedActivity = ref('typing-test')
   // const selectedText = ref('default-text')
-  const selectedText = ref(3)
+  const selectedText = ref(0)
 
   const activityResults = ref([
     {
       id: 0,
-      type: 'typingTest',
+      user_id: 0,
+      activity_id: 0,
+      text_id: 0,
+      type: 'typing-test',
       title: 'place-holder-title',
-      wpm: 300,
-      lpm: 300,
       time: 300,
-      letters: 300,
-      words: 300,
+      points: 300,
       errors: 300,
-      corrected: 300,
+      created_at: "timestamp",
+      updated_at: "timestamp",
+      result: { // later implementation will use result as a sub struct
+        wpm: 300,
+        lpm: 300,
+        letters: 300,
+        words: 300,
+        errors: 300,
+        corrected: 300,
+      },
     },
   ])
 
@@ -153,8 +184,8 @@ export const useAppStore = defineStore('app', () => {
     started.value = false
     completed.value = false
     cursor.value = 0
-    gameText.value = activities.value[selectedActivity.value].items[selectedText.value] ?? DEFAULT_TEXT
-    processedGameText.value = processInputText(gameText.value.text)
+    gameText.value = texts.value[selectedText.value] ?? DEFAULT_TEXT
+    processedGameText.value = processInputText(gameText.value.text_body)
     if (timerId.value) {
       clearInterval(timerId.value)
       timerId.value = null
@@ -195,8 +226,7 @@ export const useAppStore = defineStore('app', () => {
     if (!stats.value) {
       return
     }
-    const resultActivity = activities.value[selectedActivity.value]
-    const resultText = resultActivity.items[selectedText.value]
+    const resultText = texts.value[selectedText.value]
     activityResults.value.unshift({
       id: activityResults.value.length,
       type: selectedActivity.value,
@@ -205,10 +235,28 @@ export const useAppStore = defineStore('app', () => {
     })
   }
 
+  async function refreshActivities() {
+    const activitiesResp = await getActivities()
+    console.log('activities resp ->', activitiesResp)
+    if (activitiesResp) {
+      activities.value = activitiesResp
+    }
+  }
+
+  async function refreshTexts() {
+    const textsResp = await getTexts()
+    console.log('texts resp ->', textsResp)
+    if (textsResp) {
+      texts.value = textsResp
+    }
+  }
+
+  refreshActivities()
+  refreshTexts()
 
   return {
     // State
-    activities, selectedActivity, selectedText, gameText, processedGameText,
+    activities, texts, selectedActivity, selectedText, gameText, processedGameText,
     stats, timerId, started, completed, testTime, timerSeconds, fontSize, cursor,
     activityResults,
     // Getters
@@ -216,5 +264,6 @@ export const useAppStore = defineStore('app', () => {
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
     startGame, pauseGame, endGame, startActivity, endActivity, addActivityResult,
+    refreshActivities, refreshTexts,
   }
 })

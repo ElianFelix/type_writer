@@ -44,7 +44,7 @@
   transition: 
     width 300ms ease-in-out,
     height 300ms ease-in-out,
-    background 100ms ease-in-out;
+    background 100ms ease-in;
   overflow: hidden;
 
   &.closed-menu {
@@ -61,7 +61,7 @@
 
 
 #subMenuContent {
-  transition: opacity 20ms;
+  transition: opacity 100ms;
 
   &.closed-menu {
     opacity: 0%;

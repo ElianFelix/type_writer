@@ -63,14 +63,37 @@
           <v-tab value="typing-test">Typing Test</v-tab>
           <v-tab value="drill">Drill</v-tab>
         </v-tabs>
-
         <v-tabs-window v-model="appStore.getSelectedActivity">
           <v-tabs-window-item v-for="vo in appStore.activities" :key="vo.name" :id="vo.name" :value="vo.name">
+            <v-sheet id="settingsDrawer" class="d-flex flex-column px-2 justify-start" :class="{ 'open-drawer': openSettingsDrawer }">
+              <v-list-item>Font Size</v-list-item>
+              <div class="d-flex align-center justify-center">
+                <div>lv. {{ appStore.fontSize }}</div>
+                <v-btn :disabled="appStore.fontSize == 3" size="small" icon="mdi-plus-circle" @click="appStore.incrementFontSize"></v-btn>
+                <v-btn :disabled="appStore.fontSize == 1" size="small" icon="mdi-minus-circle" @click="appStore.decrementFontSize"></v-btn>
+              </div>
+              <v-list-item>Timer Limit</v-list-item>
+              <v-number-input
+                v-model="appStore.testTime"
+                class="align-self-center flex-grow-0"
+                persistent-placeholder
+                placeholder="secs"
+                width="150"
+                :min="15" :max="180"
+                density="compact"
+                variant="solo-filled"
+                control-variant="split"
+                hide-details
+                :step="15"
+                @update:model-value="appStore.startGame(appStore.testTime)"
+              ></v-number-input>
+            </v-sheet>
+            <div v-if="openSettingsDrawer" class="menu-backdrop" @click="handleSettingsClick"></div>
             <div class="d-flex ga-6 w-100 align-start justify-space-between position-absolute pa-4"
                  style="z-index: 1; background: linear-gradient(rgb(0 0 0 / 0.6) 20%, transparent);"
             >
               <div class="d-flex ga-2 align-end">
-                <v-btn append-icon="mdi-cog">settings</v-btn>
+                <v-btn append-icon="mdi-cog" @click="handleSettingsClick">settings</v-btn>
                 <v-chip>{{ appStore.texts.length }}</v-chip>
               </div>
               <div class="align-self-stretch">
@@ -78,7 +101,7 @@
                 <v-divider></v-divider>
               </div>
               <div class="d-flex flex-column ga-2 align-end pl-8">
-                <v-btn prepend-icon="mdi-shuffle">random</v-btn>
+                <v-btn prepend-icon="mdi-shuffle" @click="pickRandomActivityText">random</v-btn>
                 <v-btn prepend-icon="mdi-play" @click="appStore.startActivity">start</v-btn>
               </div>
             </div>
@@ -108,17 +131,28 @@
 </template>
 
 <script setup>
-  import { useAppStore } from '@/stores/app';
   import { ref } from 'vue';
+  import { useAppStore } from '@/stores/app';
 
   const bgColors = ['red', 'blue', 'green', 'yellow']
   const appStore = useAppStore()
 
-  const results = ref([{ type: 'typingTest', title: 'place-holder-title', wpm: 300 }])
+  const openSettingsDrawer = ref(false)
 
   function sortResultsIdDescending(a, b) {
     if (a.id > b.id) { return -1 }
     else if (a.id < b.id) { return 1 }
     return 0
+  }
+
+  function pickRandomActivityText() {
+    const pickIndex = Math.floor(Math.random() * appStore.texts.length)
+    console.log('random pick index ->', pickIndex)
+    appStore.selectedText = pickIndex
+    appStore.startActivity()
+  }
+
+  function handleSettingsClick() {
+    openSettingsDrawer.value = !openSettingsDrawer.value
   }
 </script>

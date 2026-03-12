@@ -17,7 +17,7 @@
           <v-btn :icon="openMenu ? 'mdi-close' : 'mdi-menu'" @click="toggleMenu"></v-btn>
         </div>
         <div id="subMenuContent"
-             class="d-flex flex-column ga-1 menu-section ma-5 mt-0"
+             class="menu-section ma-5 mt-0"
              :class="openMenu ? 'open-menu' : 'closed-menu'"
         >
           <div v-if="showSettings" class="d-flex flex-column ga-1 mx-4 mb-1 menu-item">

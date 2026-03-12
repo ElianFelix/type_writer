@@ -45,7 +45,7 @@
     width 300ms ease-in-out,
     height 300ms ease-in-out,
     background 100ms ease-in;
-  overflow: hidden;
+  overflow: clip;
 
   &.closed-menu {
     width: 190px;
@@ -61,20 +61,37 @@
 
 
 #subMenuContent {
-  transition: opacity 100ms;
+  transition: opacity 100ms, display 200ms allow-discrete;
 
   &.closed-menu {
     opacity: 0%;
+    display: none;
   }
 
   &.open-menu {
     opacity: 100%;
+    display: block;
   }
 }
 
+#settingsDrawer {
+  visibility: hidden;
+  position: absolute;
+  height: 100%;
+  width: 25%;
+  z-index: 4;
+  transition: 200ms;
+  translate: -100%;
+
+  &.open-drawer {
+    visibility: visible;
+    translate: none;
+    filter: drop-shadow(20px 0px 20px rgba(0, 0, 0, 0.65));
+  }
+}
 
 .menu-backdrop {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   height: 100vh;

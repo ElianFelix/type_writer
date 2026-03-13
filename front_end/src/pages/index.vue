@@ -87,6 +87,22 @@
                 :step="15"
                 @update:model-value="appStore.startGame(appStore.testTime)"
               ></v-number-input>
+              <v-select
+                clearable
+                chips
+                label="Difficulty"
+                :items="['Normal', 'Easy', 'Hard']"
+                class="px-4 py-1 flex-grow-0"
+                variant="underlined"
+              ></v-select>
+              <v-select
+                clearable
+                chips
+                label="Tags"
+                :items="['Testing']"
+                class="px-4 py-1 flex-grow-0"
+                variant="underlined"
+              ></v-select>
             </v-sheet>
             <div v-if="openSettingsDrawer" class="menu-backdrop" @click="handleSettingsClick"></div>
             <div class="d-flex ga-6 w-100 align-start justify-space-between position-absolute pa-4"
@@ -94,7 +110,7 @@
             >
               <div class="d-flex ga-2 align-end">
                 <v-btn append-icon="mdi-cog" @click="handleSettingsClick">settings</v-btn>
-                <v-chip>{{ appStore.texts.length }}</v-chip>
+                <v-chip>{{ appStore.testTime }} secs</v-chip>
               </div>
               <div class="align-self-stretch">
                 <p style="color: white;">{{ vo.description }}</p>
@@ -122,6 +138,9 @@
                   </div>
                 </div>
               </v-carousel-item>
+              <div class="d-flex position-absolute bottom-0 pb-2 align-self-center justify-center">
+                <v-chip>{{ (appStore.selectedText + 1) + '/' + appStore.texts.length }}</v-chip>
+              </div>
             </v-carousel>
           </v-tabs-window-item>
         </v-tabs-window>

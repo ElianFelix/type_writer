@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column align-center fill-height main-container">
     <v-sheet class="d-flex flex-column ga-4 mt-16 px-16 py-12" width="500">
-      <v-form @submit.prevent="handleFormSubmit">
+      <v-form ref="form" @submit.prevent="handleFormSubmit">
         <v-text-field
           v-model="loginInfo.username"
           :rules="usernameRules"
@@ -37,26 +37,27 @@
   import { ref, watchEffect } from 'vue';
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
   import { useAppStore } from '@/stores/app';
+  import { usernameRules, passwordRules } from '@/helpers/inputRules'
 
   const appStore = useAppStore()
   const router = useRouter()
 
+  const form = ref()
   const loggedIn = ref(false)
   const loginInfo = ref({
     username: '',
     password: '',
   })
 
-  const usernameRules = [
-    (v) => /^\w+$/.test(v)
-  ]
-  const passwordRules = [
-    (v) => /^.{8,}$/.test(v)
-  ]
-
   watchEffect(() => {if (loggedIn.value || appStore.activeUser) router.push('/')})
 
-  function handleFormSubmit() {
-    loggedIn.value = appStore.loginUser(loginInfo.value)
+  async function handleFormSubmit() {
+    if (form.value.isValid) {
+      const result = await appStore.loginUser(loginInfo.value)
+      // console logging for now
+      // TODO: implement alert/messaging display logic
+      console.log('successful login?', result)
+      loggedIn.value = result
+    }
   }
 </script>

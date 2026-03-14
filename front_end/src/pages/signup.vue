@@ -1,13 +1,14 @@
 <template>
   <div class="d-flex flex-column align-center fill-height main-container">
     <v-sheet class="d-flex flex-column ga-4 mt-16 px-16 py-12" width="500">
-      <v-form @submit.prevent="handleFormSubmit">
+      <v-form ref="form" @submit.prevent="handleFormSubmit">
         <v-text-field
           v-model="userInfo.username"
           :rules="usernameRules"
           label="Username"
           variant="outlined"
           density="compact"
+          required
         ></v-text-field>
         <v-text-field
           v-model="userInfo.password"
@@ -17,6 +18,7 @@
           label="Password"
           variant="outlined"
           density="compact"
+          required
         ></v-text-field>
         <v-text-field
           v-model="userInfo.name"
@@ -31,6 +33,7 @@
           label="Email"
           variant="outlined"
           density="compact"
+          required
         ></v-text-field>
         <div class="d-flex flex-column justify-end align-stretch mt-4">
           <v-label class="text-label-small">Already have an account?</v-label>
@@ -51,10 +54,12 @@
   import { ref, watchEffect } from 'vue';
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
   import { useAppStore } from '@/stores/app';
+  import { usernameRules, passwordRules, nameRules, emailRules } from '@/helpers/inputRules'
 
   const appStore = useAppStore()
   const router = useRouter()
 
+  const form = ref()
   const signedUp = ref(false)
   const userInfo = ref({
     username: '',
@@ -64,22 +69,11 @@
     user_type: 'regular',
   })
 
-  const usernameRules = [
-    (v) => /^\w+$/.test(v)
-  ]
-  const passwordRules = [
-    (v) => /^.{8,}$/.test(v)
-  ]
-  const nameRules = [
-    (v) => v.length === 0 || /^(\w+)$/.test(v)
-  ]
-  const emailRules = [
-    (v) => /^\w+@\w+\.\w{3}$/.test(v)
-  ]
-
   watchEffect(() => {if (signedUp.value || appStore.activeUser) router.push('/')})
 
-  function handleFormSubmit() {
-    signedUp.value = appStore.signUpUser(userInfo.value)
+  async function handleFormSubmit() {
+    if (form.value.isValid) {
+      signedUp.value = await appStore.signUpUser(userInfo.value)
+    }
   }
 </script>

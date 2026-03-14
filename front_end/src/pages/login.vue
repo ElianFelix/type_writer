@@ -1,31 +1,43 @@
 <template>
-  <div class="d-flex flex-column ga-4 fill-height main-container">
-    <div class="d-flex justify-center align-center bg-red histogram-container">
-      <v-sheet class="d-flex flex-column ga-4" width="280">
-        <v-form @submit.prevent>
-          <v-text-field
-            v-model="username"
-            :rules="rules"
-            label="Username"
-            variant="outlined"
-          ></v-text-field>
-          <v-text-field
-            v-model="password"
-            :type="false ? 'text' : 'password'"
-            hint="At least 8 characters"
-            :rules="rules"
-            label="Password"
-            variant="outlined"
-          ></v-text-field>
-          <div class="d-flex justify-end">
-            <v-btn class="mt-2">Sign Up</v-btn>
-            <v-btn class="mt-2" type="submit">Submit</v-btn>
+  <div class="d-flex flex-column align-center fill-height main-container">
+    <v-sheet class="d-flex flex-column ga-4 mt-16 px-16 py-12" width="500">
+      <v-form @submit.prevent>
+        <v-text-field
+          v-model="username"
+          :rules="rules"
+          label="Username"
+          variant="outlined"
+          density="compact"
+        ></v-text-field>
+        <v-text-field
+          v-model="password"
+          :type="false ? 'text' : 'password'"
+          hint="At least 8 characters"
+          :rules="rules"
+          label="Password"
+          variant="outlined"
+          density="compact"
+        ></v-text-field>
+        <div class="d-flex flex-column justify-end align-stretch mt-4">
+          <v-label class="text-label-small">Don't have an account?</v-label>
+          <div class="d-flex justify-space-between align-end">
+            <v-btn @click="() => router.push('/signup')">Sign Up</v-btn>
+            <v-btn-group density="compact">
+              <v-btn @click="() => router.push('/')">Cancel</v-btn>
+              <v-btn type="submit">Login</v-btn>
+            </v-btn-group>
           </div>
-        </v-form>
-      </v-sheet>
-    </div>
+        </div>
+      </v-form>
+    </v-sheet>
   </div>
 </template>
 
 <script setup>
+  import { useAppStore } from '@/stores/app';
+  import { ref } from 'vue';
+  import { useRouter } from 'vuetify/lib/composables/router.mjs';
+
+  const appStore = useAppStore()
+  const router = useRouter()
 </script>

@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
 import { processInputText } from '@/helpers/textProcessing'
 import * as api from '@/api/api'
+import { convert24to12 } from 'vuetify/lib/components/VTimePicker/util.mjs'
 
 const DEFAULT_TIME = 60
 const DEFAULT_TEXT = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
@@ -269,6 +270,15 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
+  async function signUpUser(userInfo = {}) {
+    const signUpResp = await api.createUser(userInfo)
+    if (signUpResp) {
+      activeUser.value = signUpResp
+      return true
+    }
+    return false
+  }
+
   refreshActivities()
   refreshTexts()
   refreshActivityResults()
@@ -283,6 +293,6 @@ export const useAppStore = defineStore('app', () => {
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
     startGame, pauseGame, endGame, startActivity, endActivity, addActivityResult,
-    refreshActivities, refreshTexts, refreshActivityResults,
+    refreshActivities, refreshTexts, refreshActivityResults, signUpUser,
   }
 })

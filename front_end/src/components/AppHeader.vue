@@ -71,8 +71,10 @@
           </div>
           <v-list-item to="/">Home</v-list-item>
           <v-list-item to="/board">Board</v-list-item>
-          <v-list-item to="/profile">Profile</v-list-item>
-          <v-list-item v-if="appStore.activeUser" @click="handleLogout">Log Out</v-list-item>
+          <template v-if="appStore.activeUser">
+            <v-list-item to="/profile">Profile</v-list-item>
+            <v-list-item @click="handleLogout">Log Out</v-list-item>
+          </template>
           <template v-else>
             <v-list-item to="/login">Login</v-list-item>
             <v-list-item to="/signup">Sign Up</v-list-item>

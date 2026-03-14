@@ -54,7 +54,7 @@
     (v) => /^.{8,}$/.test(v)
   ]
 
-  watchEffect(() => {if (loggedIn.value) router.push('/')})
+  watchEffect(() => {if (loggedIn.value || appStore.activeUser) router.push('/')})
 
   function handleFormSubmit() {
     loggedIn.value = appStore.loginUser(loginInfo.value)

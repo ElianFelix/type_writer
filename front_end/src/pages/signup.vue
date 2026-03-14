@@ -77,7 +77,7 @@
     (v) => /^\w+@\w+\.\w{3}$/.test(v)
   ]
 
-  watchEffect(() => {if (signedUp.value) router.push('/')})
+  watchEffect(() => {if (signedUp.value || appStore.activeUser) router.push('/')})
 
   function handleFormSubmit() {
     signedUp.value = appStore.signUpUser(userInfo.value)

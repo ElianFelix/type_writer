@@ -306,6 +306,15 @@ export const useAppStore = defineStore('app', () => {
     return false
   }
 
+  async function updateUserDetails(userInfo = {}) {
+    const updateResp = await api.updateUser(userInfo)
+    if (updateResp) {
+      activeUser.value = updateResp
+      return true
+    }
+    return false
+  }
+
   refreshActivities()
   refreshTexts()
   refreshActivityResults()
@@ -322,6 +331,6 @@ export const useAppStore = defineStore('app', () => {
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
     startGame, pauseGame, endGame, startActivity, endActivity, addActivityResult,
     refreshActivities, refreshTexts, refreshActivityResults, signUpUser, loginUser,
-    refreshUsers,
+    refreshUsers, updateUserDetails,
   }
 })

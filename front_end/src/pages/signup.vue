@@ -48,9 +48,9 @@
 </template>
 
 <script setup>
-  import { useAppStore } from '@/stores/app';
-  import { ref } from 'vue';
+  import { ref, watchEffect } from 'vue';
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
+  import { useAppStore } from '@/stores/app';
 
   const appStore = useAppStore()
   const router = useRouter()
@@ -76,6 +76,8 @@
   const emailRules = [
     (v) => /^\w+@\w+\.\w{3}$/.test(v)
   ]
+
+  watchEffect(() => {if (signedUp.value) router.push('/')})
 
   function handleFormSubmit() {
     signedUp.value = appStore.signUpUser(userInfo.value)

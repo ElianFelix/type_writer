@@ -43,7 +43,7 @@
           <tr
             v-for="item in appStore.activityResults.sort(sortResultsIdDescending)" :key="item.id"
           >
-            <td>{{ appStore.activeUser.username }}</td>
+            <td>{{ appStore.users.find((a) => a.id == item.user_id).username }}</td>
             <td>{{ appStore.activities.find((a) => a.id == item.activity_id).name }}</td>
             <td>{{ appStore.texts.find((t) => t.id == item.text_id).title }}</td>
             <td>{{ item.points }}</td>

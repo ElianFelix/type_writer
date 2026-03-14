@@ -69,11 +69,15 @@
               </v-switch>
             </div>
           </div>
-          <div class="menu-item"><v-list-item to="/">Home</v-list-item></div>
-          <div class="menu-item"><v-list-item to="/board">Board</v-list-item></div>
-          <div class="menu-item"><v-list-item to="/profile">Profile</v-list-item></div>
-          <div class="menu-item"><v-list-item to="/login">Login</v-list-item></div>
-          <div class="menu-item"><v-list-item to="/signup">Signup</v-list-item></div>
+          <v-list-item to="/">Home</v-list-item>
+          <v-list-item to="/board">Board</v-list-item>
+          <v-list-item to="/profile">Profile</v-list-item>
+          <v-list-item v-if="appStore.activeUser" @click="handleLogout">Log Out</v-list-item>
+          <template v-else>
+            <v-list-item to="/login">Login</v-list-item>
+            <v-list-item to="/signup">Sign Up</v-list-item>
+          </template>
+
         </div>
       </v-sheet>
     </div>
@@ -84,11 +88,12 @@
 <script setup>
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useTheme } from 'vuetify'
+  import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs';
   import { useAppStore } from '@/stores/app';
-  import { useRoute } from 'vuetify/lib/composables/router.mjs';
 
   const appStore = useAppStore()
   const theme = useTheme()
+  const router = useRouter()
   const route = useRoute()
 
   const openMenu = ref(false)
@@ -132,6 +137,11 @@
     if (/^Escape$/.test(e.key)) {
       toggleMenu()
     }
+  }
+
+  function handleLogout() {
+    appStore.activeUser = null
+    router.push('/')
   }
 </script>
 

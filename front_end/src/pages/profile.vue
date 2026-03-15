@@ -3,8 +3,11 @@
     <v-expansion-panels v-model="activeSections">
       <v-expansion-panel title="Profile Details" value="profile-details">
         <template v-slot:text>
-          profile details inputs
           <v-form ref="form" @submit.prevent="handleFormSubmit">
+            <div class="d-flex justify-space-between align-end mb-6">
+              <div>Account type: {{ userInfo.user_type }} user</div>
+              <v-avatar color="secondary" size="large" icon="mdi-account-circle"></v-avatar>
+            </div>
             <v-text-field
               v-model="userInfo.username"
               :rules="usernameRules"

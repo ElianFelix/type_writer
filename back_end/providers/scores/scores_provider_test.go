@@ -2,11 +2,12 @@ package scores_provider
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 	"time"
+	"type_writer_api/helpers"
 	"type_writer_api/structures"
 	"type_writer_api/testing/mocks"
-	"type_writer_api/helpers"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
@@ -21,9 +22,8 @@ func TestGetScoresSuccess(t *testing.T) {
 			UserId:     1,
 			ActivityId: 1,
 			TextId:     1,
-			Points:     10,
 			Duration:   60,
-			Errors:     0,
+			Result: 	map[string]any{"wpm": float64(300), "errors": float64(300)}, // type casting ints because json unmarshalls ints into floats64
 			CreatedAt:  time.Now(),
 			UpdatedAt:  time.Now(),
 		},
@@ -32,9 +32,8 @@ func TestGetScoresSuccess(t *testing.T) {
 			UserId:     2,
 			ActivityId: 2,
 			TextId:     2,
-			Points:     10,
 			Duration:   60,
-			Errors:     0,
+			Result: 	map[string]any{"wpm": float64(300), "errors": float64(300)},
 			CreatedAt:  time.Now(),
 			UpdatedAt:  time.Now(),
 		},
@@ -45,22 +44,25 @@ func TestGetScoresSuccess(t *testing.T) {
 		"user_id",
 		"activity_id",
 		"text_id",
-		"points",
 		"duration",
-		"errors",
+		"result",
 		"created_at",
 		"updated_at",
 	})
 
 	for _, expectedRow := range expectedRows {
+		sResult, err := json.Marshal(expectedRow.Result)
+		if err != nil {
+			t.Fatalf("error in serializing text tags %v", err)
+		}
+
 		resultRows.AddRow(
 			expectedRow.Id,
 			expectedRow.UserId,
 			expectedRow.ActivityId,
 			expectedRow.TextId,
-			expectedRow.Points,
 			expectedRow.Duration,
-			expectedRow.Errors,
+			sResult,
 			expectedRow.CreatedAt,
 			expectedRow.UpdatedAt,
 		)
@@ -75,10 +77,11 @@ func TestGetScoresSuccess(t *testing.T) {
 	}
 
 	if len(result) != 2 {
-		t.Fatalf("unexpected result length: expected %v, got %v", 2, len(result))
+		t.Fatalf("unexpected result length: expected %v,\n got %v\n", 2, len(result))
 	}
 
 	for indx, resultRow := range result {
+		// fmt.Printf("result row %v, expected %v", *resultRow, expectedRows[indx])
 		err := helpers.CompareReflectedStructFields(*resultRow, expectedRows[indx])
 		if err != nil {
 			t.Fatalf("row %v failed: %v\n", indx, err.Error())
@@ -95,11 +98,15 @@ func TestGetScoreByIdOrNameSuccess(t *testing.T) {
 		UserId:     1,
 		ActivityId: 1,
 		TextId:     1,
-		Points:     10,
 		Duration:   60,
-		Errors:     0,
+		Result: 	map[string]any{"wpm": float64(300), "errors": float64(300)},
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
+	}
+
+	sResult, err := json.Marshal(expectedRow.Result)
+	if err != nil {
+		t.Fatalf("error in serializing text tags %v", err)
 	}
 
 	resultRows := sqlmock.NewRows([]string{
@@ -107,9 +114,8 @@ func TestGetScoreByIdOrNameSuccess(t *testing.T) {
 		"user_id",
 		"activity_id",
 		"text_id",
-		"points",
 		"duration",
-		"errors",
+		"result",
 		"created_at",
 		"updated_at",
 	}).AddRow(
@@ -117,9 +123,8 @@ func TestGetScoreByIdOrNameSuccess(t *testing.T) {
 		expectedRow.UserId,
 		expectedRow.ActivityId,
 		expectedRow.TextId,
-		expectedRow.Points,
 		expectedRow.Duration,
-		expectedRow.Errors,
+		sResult,
 		expectedRow.CreatedAt,
 		expectedRow.UpdatedAt,
 	)
@@ -146,11 +151,15 @@ func TestCreateScoreSuccess(t *testing.T) {
 		UserId:     1,
 		ActivityId: 1,
 		TextId:     1,
-		Points:     10,
 		Duration:   60,
-		Errors:     0,
+		Result: 	map[string]any{"wpm": float64(300), "errors": float64(300)},
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
+	}
+
+	sResult, err := json.Marshal(expectedRow.Result)
+	if err != nil {
+		t.Fatalf("error in serializing text tags %v", err)
 	}
 
 	resultRows := sqlmock.NewRows([]string{
@@ -158,9 +167,8 @@ func TestCreateScoreSuccess(t *testing.T) {
 		"user_id",
 		"activity_id",
 		"text_id",
-		"points",
 		"duration",
-		"errors",
+		"result",
 		"created_at",
 		"updated_at",
 	}).AddRow(
@@ -168,9 +176,8 @@ func TestCreateScoreSuccess(t *testing.T) {
 		expectedRow.UserId,
 		expectedRow.ActivityId,
 		expectedRow.TextId,
-		expectedRow.Points,
 		expectedRow.Duration,
-		expectedRow.Errors,
+		sResult,
 		expectedRow.CreatedAt,
 		expectedRow.UpdatedAt,
 	)
@@ -197,15 +204,14 @@ func TestUpdateScoreSuccess(t *testing.T) {
 		UserId:     1,
 		ActivityId: 1,
 		TextId:     1,
-		Points:     10,
 		Duration:   60,
-		Errors:     0,
+		Result: 	map[string]any{"wpm": float64(300), "errors": float64(300)},
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 	}
 
 	mockDB.ExpectBegin()
-	mockDB.ExpectExec(`UPDATE "scores" SET "user_id"=.+,"activity_id"=.+,"text_id"=.+,"points"=.+,"duration"=.+,"created_at"=.+,"updated_at"=.+ WHERE "id" = .+`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mockDB.ExpectExec(`UPDATE "scores" SET "user_id"=.+,"activity_id"=.+,"text_id"=.+,"duration"=.+,"created_at"=.+,"updated_at"=.+ WHERE "id" = .+`).WillReturnResult(sqlmock.NewResult(1, 1))
 	mockDB.ExpectCommit()
 
 	result, err := scoresProvider.UpdateScore(context.Background(), expectedRow)

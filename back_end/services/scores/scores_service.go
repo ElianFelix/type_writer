@@ -65,14 +65,11 @@ func (a *ScoresService) UpdateScore(ctx context.Context, scoreInfo structures.Sc
 		return nil, err
 	}
 
-	if scoreInfo.Points != 0 {
-		existingScore.Points = scoreInfo.Points
-	}
 	if scoreInfo.Duration != 0 {
 		existingScore.Duration = scoreInfo.Duration
 	}
-	if scoreInfo.Errors != 0 {
-		existingScore.Errors = scoreInfo.Errors
+	if len(scoreInfo.Result) != 0 {
+		existingScore.Result = scoreInfo.Result
 	}
 
 	updatedScore, err := a.ScoresProvider.UpdateScore(ctx, *existingScore)

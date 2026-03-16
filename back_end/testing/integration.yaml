@@ -250,16 +250,14 @@ testcases:
     - result.bodyjson.scores.scores0.user_id ShouldEqual 1
     - result.bodyjson.scores.scores0.activity_id ShouldEqual 1
     - result.bodyjson.scores.scores0.text_id ShouldEqual 1
-    - result.bodyjson.scores.scores0.points ShouldEqual 100
     - result.bodyjson.scores.scores0.duration ShouldEqual 60
-    - result.bodyjson.scores.scores0.errors ShouldEqual 0
+    - result.bodyjson.scores.scores0.result ShouldEqual map[errors:300 wpm:300]
     - result.bodyjson.scores.scores1.id ShouldEqual 2
     - result.bodyjson.scores.scores1.user_id ShouldEqual 2
     - result.bodyjson.scores.scores1.activity_id ShouldEqual 2
     - result.bodyjson.scores.scores1.text_id ShouldEqual 2
-    - result.bodyjson.scores.scores1.points ShouldEqual 0
     - result.bodyjson.scores.scores1.duration ShouldEqual 60
-    - result.bodyjson.scores.scores1.errors ShouldEqual 53
+    - result.bodyjson.scores.scores1.result ShouldEqual map[errors:300 wpm:300]
 
 - name: POST score
   steps:
@@ -271,9 +269,8 @@ testcases:
         "user_id": 1,
         "activity_id": 2,
         "text_id": 1,
-        "points": 50,
         "duration": 60,
-        "errors": 50
+        "result": { "wpm": 300, "errors": 300}
       }
     headers:
       Content-Type: application/json
@@ -284,9 +281,8 @@ testcases:
     - result.bodyjson.user_id ShouldEqual 1
     - result.bodyjson.activity_id ShouldEqual 2
     - result.bodyjson.text_id ShouldEqual 1
-    - result.bodyjson.points ShouldEqual 50
     - result.bodyjson.duration ShouldEqual 60
-    - result.bodyjson.errors ShouldEqual 50
+    - result.bodyjson.result ShouldEqual map[errors:300 wpm:300]
 
 - name: PUT score
   steps:
@@ -297,7 +293,7 @@ testcases:
       {
         "points": 49,
         "duration": 60,
-        "errors": 51
+        "result": { "wpm": 300, "errors": 301 }
       }
     headers:
       Content-Type: application/json
@@ -308,9 +304,8 @@ testcases:
     - result.bodyjson.user_id ShouldEqual 1
     - result.bodyjson.activity_id ShouldEqual 2
     - result.bodyjson.text_id ShouldEqual 1
-    - result.bodyjson.points ShouldEqual 49
     - result.bodyjson.duration ShouldEqual 60
-    - result.bodyjson.errors ShouldEqual 51
+    - result.bodyjson.result ShouldEqual map[errors:301 wpm:300]
 
 - name: DELETE score
   steps:

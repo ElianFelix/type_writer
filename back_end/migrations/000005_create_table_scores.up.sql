@@ -3,9 +3,8 @@ CREATE TABLE scores(
     user_id integer REFERENCES users,
     activity_id integer REFERENCES activities,
     text_id integer REFERENCES texts,
-    points integer not null DEFAULT 0,
     duration integer DEFAULT 0,
-    errors integer DEFAULT 0,
+    result jsonb not null,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );

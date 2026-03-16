@@ -16,12 +16,12 @@ import (
 func TestGetScores(t *testing.T) {
 	var (
 		mockResult1 = []*structures.Score{
-			{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
-			{2, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
+			{2, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 		}
 		expectedResult1 = []*structures.Score{
-			{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
-			{2, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
+			{2, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 		}
 		mockResult2 = []*structures.Score{}
 		expectedResult2 = []*structures.Score{}
@@ -70,8 +70,8 @@ func TestGetScores(t *testing.T) {
 				t.Fatalf("slice length missmatch: got %v, expected %v", len(result), len(testCase.expectedResult))
 			}
 
-			for idx, activity := range result {
-				err := helpers.CompareReflectedStructFields(*activity, *testCase.expectedResult[idx])
+			for idx, score := range result {
+				err := helpers.CompareReflectedStructFields(*score, *testCase.expectedResult[idx])
 				if err != nil {
 					t.Fatalf("row %v failed: %v\n", idx, err.Error())
 				}
@@ -92,9 +92,9 @@ func TestGetScoreById(t *testing.T) {
 		{
 			"valid id",
 			1,
-			&structures.Score{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			&structures.Score{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 			nil,
-			&structures.Score{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			&structures.Score{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 			nil,
 		},
 		{
@@ -142,11 +142,11 @@ func TestCreateScore(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			"valid input activity request",
-			structures.ScoreReq{1, 1, 1, 100, 60, 0},
-			&structures.Score{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			"valid input score request",
+			structures.ScoreReq{1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }},
+			&structures.Score{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 			nil,
-			&structures.Score{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			&structures.Score{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 			nil,
 		},
 	}
@@ -188,13 +188,13 @@ func TestUpdateScore(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			"valid input activity request",
-			structures.ScoreReq{1, 1, 1, 100, 60, 0},
+			"valid input score request",
+			structures.ScoreReq{1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }},
 			1,
-			&structures.Score{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
-			&structures.Score{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			&structures.Score{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
+			&structures.Score{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 			nil,
-			&structures.Score{1, 1, 1, 1, 100, 60, 0, time.Now(), time.Now()},
+			&structures.Score{1, 1, 1, 1, 60, map[string]any{ "wpm": 300, "errors": 300 }, time.Now(), time.Now()},
 			nil,
 		},
 	}

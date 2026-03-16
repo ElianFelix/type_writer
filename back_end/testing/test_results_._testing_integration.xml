@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites>
+  <testsuite name="type_writer api integration tests" package="./testing/integration.yaml" tests="16" time="0.123107">
+    <testcase classname="integration.yaml" name="GET-users" time="0.004355441">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="POST-user" time="0.061216433">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="PUT-user" time="0.004673319">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="DELETE-user" time="0.00390331">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="GET-activities" time="0.002293235">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="POST-activity" time="0.003507169">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="PUT-activity" time="0.003267793">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="DELETE-activity" time="0.002691681">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="GET-texts" time="0.003799919">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="POST-text" time="0.011095715">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="PUT-text" time="0.004989054">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="DELETE-text" time="0.002766817">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="GET-scores" time="0.00416511">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="POST-score" time="0.00376429">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="PUT-score" time="0.003522359">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+    <testcase classname="integration.yaml" name="DELETE-score" time="0.002834639">
+      <system-out></system-out>
+      <system-err><![CDATA[
+]]></system-err>
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -1,7 +1,7 @@
-INSERT INTO scores (user_id, activity_id, text_id, points, duration, errors)
+INSERT INTO scores (user_id, activity_id, text_id, duration, result)
 VALUES (
-    1, 1, 1, 100, 60, 0
+    1, 1, 1, 60, '{ "wpm": 300, "errors": 300 }'
 ),
 (
-    2, 2, 2, 0, 60, 53
+    2, 2, 2, 60, '{ "wpm": 300, "errors": 300 }'
 )

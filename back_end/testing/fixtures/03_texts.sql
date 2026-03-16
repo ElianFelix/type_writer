@@ -1,8 +1,9 @@
-INSERT INTO texts (text_type, title, difficulty, text_body, text_length)
+INSERT INTO texts (text_type, title, difficulty, tags, text_body, text_length)
 VALUES (
     'full-text',
     'test text 1',
     'easy',
+    '["test tag"]',
     'this full test text is a full-test that is rather easy',
     54
 ),
@@ -10,6 +11,7 @@ VALUES (
     'drill',
     'test text 2',
     'normal',
+    '["test tag"]',
     'this drill test text is a drill that is rather normal',
     53
 )

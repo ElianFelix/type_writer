@@ -2,6 +2,7 @@ package texts_provider
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 	"time"
 	"type_writer_api/helpers"
@@ -21,6 +22,7 @@ func TestGetTextsSuccess(t *testing.T) {
 			TextType:   "drill",
 			Title:      "test drill",
 			Difficulty: "easy",
+			Tags:		[]string{"testing elem", "testing elem"},
 			TextBody:   "ffff jjjj fj fj",
 			TextLength: 15,
 			CreatedAt:  time.Now(),
@@ -31,6 +33,7 @@ func TestGetTextsSuccess(t *testing.T) {
 			TextType:   "drill",
 			Title:      "test drill 2",
 			Difficulty: "easy",
+			Tags:		[]string{},
 			TextBody:   "ffff jjjj fj fj fj",
 			TextLength: 18,
 			CreatedAt:  time.Now(),
@@ -43,6 +46,7 @@ func TestGetTextsSuccess(t *testing.T) {
 		"text_type",
 		"title",
 		"difficulty",
+		"tags",
 		"text_body",
 		"text_length",
 		"created_at",
@@ -50,11 +54,16 @@ func TestGetTextsSuccess(t *testing.T) {
 	})
 
 	for _, expectedRow := range expectedRows {
+		sTags, err := json.Marshal(expectedRow.Tags)
+		if err != nil {
+			t.Fatalf("error in serializing text tags %v", err)
+		}
 		resultRows.AddRow(
 			expectedRow.Id,
 			expectedRow.TextType,
 			expectedRow.Title,
 			expectedRow.Difficulty,
+			sTags,
 			expectedRow.TextBody,
 			expectedRow.TextLength,
 			expectedRow.CreatedAt,
@@ -91,17 +100,23 @@ func TestGetTextByIdOrNameSuccess(t *testing.T) {
 		TextType:   "drill",
 		Title:      "test drill",
 		Difficulty: "easy",
+		Tags:		[]string{"test elem"},
 		TextBody:   "ffff jjjj fj fj",
 		TextLength: 15,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 	}
 
+	sTags, err := json.Marshal(expectedRow.Tags)
+	if err != nil {
+		t.Fatalf("error in serializing text tags %v", err)
+	}
 	resultRows := sqlmock.NewRows([]string{
 		"id",
 		"text_type",
 		"title",
 		"difficulty",
+		"tags",
 		"text_body",
 		"text_length",
 		"created_at",
@@ -111,6 +126,7 @@ func TestGetTextByIdOrNameSuccess(t *testing.T) {
 		expectedRow.TextType,
 		expectedRow.Title,
 		expectedRow.Difficulty,
+		sTags,
 		expectedRow.TextBody,
 		expectedRow.TextLength,
 		expectedRow.CreatedAt,
@@ -141,17 +157,23 @@ func TestCreateTextSuccess(t *testing.T) {
 		TextType:   "drill",
 		Title:      "test drill",
 		Difficulty: "easy",
+		Tags:		[]string{"test elem"},
 		TextBody:   "ffff jjjj fj fj",
 		TextLength: 15,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 	}
 
+	sTags, err := json.Marshal(expectedRow.Tags)
+	if err != nil {
+		t.Fatalf("error in serializing text tags %v", err)
+	}
 	resultRows := sqlmock.NewRows([]string{
 		"id",
 		"text_type",
 		"title",
 		"difficulty",
+		"tags",
 		"text_body",
 		"text_length",
 		"created_at",
@@ -161,6 +183,7 @@ func TestCreateTextSuccess(t *testing.T) {
 		expectedRow.TextType,
 		expectedRow.Title,
 		expectedRow.Difficulty,
+		sTags,
 		expectedRow.TextBody,
 		expectedRow.TextLength,
 		expectedRow.CreatedAt,
@@ -189,6 +212,7 @@ func TestUpdateTextSuccess(t *testing.T) {
 		TextType:   "drill",
 		Title:      "test drill",
 		Difficulty: "easy",
+		Tags:		[]string{"test elem"},
 		TextBody:   "ffff jjjj fj fj",
 		TextLength: 15,
 		CreatedAt:  time.Now(),
@@ -196,7 +220,7 @@ func TestUpdateTextSuccess(t *testing.T) {
 	}
 
 	mockDB.ExpectBegin()
-	mockDB.ExpectExec(`UPDATE "texts" SET "text_type"=.+,"title"=.+,"difficulty"=.+,"text_body"=.+,"text_length"=.+,"created_at"=.+,"updated_at"=.+ WHERE "id" = .+`).WillReturnResult(sqlmock.NewResult(1, 1))
+	mockDB.ExpectExec(`UPDATE "texts" SET "text_type"=.+,"title"=.+,"difficulty"=.+,"tags"=.+,"text_body"=.+,"text_length"=.+,"created_at"=.+,"updated_at"=.+ WHERE "id" = .+`).WillReturnResult(sqlmock.NewResult(1, 1))
 	mockDB.ExpectCommit()
 
 	result, err := textsProvider.UpdateText(context.Background(), expectedRow)

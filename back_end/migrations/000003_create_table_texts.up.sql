@@ -1,12 +1,13 @@
 CREATE TYPE difficulty AS ENUM ('easy', 'normal', 'hard');
 
-CREATE TYPE text_type AS ENUM ('drill', 'full-text', 'article');
+CREATE TYPE text_type AS ENUM ('drill', 'full-text');
 
 CREATE TABLE texts(
     id serial primary key,
     text_type text_type not null DEFAULT 'full-text',
     title varchar(60) not null,
     difficulty difficulty not null DEFAULT 'easy',
+    tags jsonb not null,
     text_body text not null,
     text_length integer not null,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),

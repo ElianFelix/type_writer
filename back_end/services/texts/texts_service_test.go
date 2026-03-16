@@ -16,12 +16,12 @@ import (
 func TestGetTexts(t *testing.T) {
 	var (
 		mockResult1 = []*structures.Text{
-			{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
-			{2, "drill", "test text 2", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
+			{2, "drill", "test text 2", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 		}
 		expectedResult1 = []*structures.Text{
-			{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
-			{2, "drill", "test text 2", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
+			{2, "drill", "test text 2", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 		}
 		mockResult2 = []*structures.Text{}
 		expectedResult2 = []*structures.Text{}
@@ -94,18 +94,18 @@ func TestGetTextByIdOrName(t *testing.T) {
 			"valid id",
 			1,
 			"",
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 			nil,
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 			nil,
 		},
 		{
 			"valid title",
 			0,
 			"test text 1",
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 			nil,
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 			nil,
 		},
 		{
@@ -155,10 +155,10 @@ func TestCreateText(t *testing.T) {
 	}{
 		{
 			"valid input text request",
-			structures.TextReq{"drill", "test text 1", "normal", "test text body"},
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			structures.TextReq{"drill", "test text 1", "normal", []string{"test elem"}, "test text body"},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 			nil,
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
 			nil,
 		},
 	}
@@ -201,12 +201,12 @@ func TestUpdateText(t *testing.T) {
 	}{
 		{
 			"valid input text request",
-			structures.TextReq{"drill", "test text 1", "normal", "test text body after update"},
+			structures.TextReq{"drill", "test text 1", "normal", []string{"test elem"}, "test text body after update"},
 			1,
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body", len("test text body"), time.Now(), time.Now()},
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body after update", len("test text body after update"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body", len("test text body"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body after update", len("test text body after update"), time.Now(), time.Now()},
 			nil,
-			&structures.Text{1, "drill", "test text 1", "normal", "test text body after update", len("test text body after update"), time.Now(), time.Now()},
+			&structures.Text{1, "drill", "test text 1", "normal", []string{"test elem"}, "test text body after update", len("test text body after update"), time.Now(), time.Now()},
 			nil,
 		},
 	}

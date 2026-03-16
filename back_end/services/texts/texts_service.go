@@ -74,6 +74,9 @@ func (t *TextsService) UpdateText(ctx context.Context, textInfo structures.TextR
 	if textInfo.Difficulty != "" {
 		existingText.Difficulty = textInfo.Difficulty
 	}
+	if len(textInfo.Tags) != 0 {
+		existingText.Tags = textInfo.Tags
+	}
 	if textInfo.TextBody != "" {
 		existingText.TextBody = textInfo.TextBody
 		existingText.TextLength = len(textInfo.TextBody)

@@ -32,7 +32,11 @@ func CompareReflectedStructFields(firstI, secondI any) error {
 			}
 		}
 
-		if !firstFieldValue.Equal(secondFieldValue) {
+		if firstFieldValue.Kind() == reflect.Slice {
+			if !reflect.DeepEqual(firstFieldValue.Interface(), secondFieldValue.Interface()) {
+				return fmt.Errorf("fields did not match: got %v=%[2]v, expected %[1]v=%[3]v", first.Type().Field(i).Name, firstFieldValue, secondFieldValue)
+			}
+		} else if !firstFieldValue.Equal(secondFieldValue) {
 			return fmt.Errorf("fields did not match: got %v=%[2]v, expected %[1]v=%[3]v", first.Type().Field(i).Name, firstFieldValue, secondFieldValue)
 		}
 	}

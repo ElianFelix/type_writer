@@ -20,7 +20,6 @@
   const appStore = useAppStore()
 
   const timerSeconds = defineModel('timerSeconds')
-  const testTime = defineModel('testTime')
   const stats = defineModel('stats')
   const fontSize = defineModel('fontSize')
 
@@ -119,7 +118,7 @@
   }
 
   function retryGame() {
-    appStore.addActivityResult()
+    appStore.addScore()
     appStore.startGame()
   }
 

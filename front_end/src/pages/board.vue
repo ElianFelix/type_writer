@@ -5,7 +5,6 @@
       <Stats v-if="appStore.completed" v-model="appStore.stats" />
       <Area
         v-model:stats="appStore.stats"
-        v-model:test-time="appStore.testTime"
         v-model:timer-seconds="appStore.timerSeconds"
         v-model:font-size="appStore.fontSize"
       />

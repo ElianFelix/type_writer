@@ -46,13 +46,13 @@
             <td>{{ appStore.users.find((a) => a.id == item.user_id).username }}</td>
             <td>{{ appStore.activities.find((a) => a.id == item.activity_id).name }}</td>
             <td>{{ appStore.texts.find((t) => t.id == item.text_id).title }}</td>
-            <td>{{ item.points }}</td>
-            <td>{{ 0 }}</td>
+            <td>{{ item.result.wpm }}</td>
+            <td>{{ item.result.lpm }}</td>
             <td>{{ item.duration }} secs</td>
-            <td>{{ 0 }}</td>
-            <td>{{ 0 }}</td>
-            <td>{{ item.errors }}</td>
-            <td>{{ 0 }}</td>
+            <td>{{ item.result.letters }}</td>
+            <td>{{ item.result.words }}</td>
+            <td>{{ item.result.errors }}</td>
+            <td>{{ item.result.corrected }}</td>
           </tr>
         </tbody>
       </v-table>

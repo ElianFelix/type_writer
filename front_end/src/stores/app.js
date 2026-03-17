@@ -61,6 +61,7 @@ export const useAppStore = defineStore('app', () => {
         "text_type": "full-text",
         "title": "db-in-default-test",
         "difficulty": "normal",
+        "tags": ["testing"],
         "text_body": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
         "text_length": 613,
         "created_at": "2026-03-11T01:16:31.708976Z",
@@ -71,11 +72,12 @@ export const useAppStore = defineStore('app', () => {
         "text_type": "full-text",
         "title": "db-in-tinto-talk",
         "difficulty": "normal",
+        "tags": ["testing"],
         "text_body": "Here, your friendly Content Design Lead Pavia will be your host today, as today @Johan has been hijacked by the Swedes invited to the Swedish Game Awards (as Europa Universalis V has been nominated for 3 categories, Best Technology, Best Design, and Game of the Year; it can also be voted by the community as Player’s Game of the Year); while @SaintDaveUK is busy with a super secret project working on the game’s first DLC, Fate of the Phoenix.",
         "text_length": 450,
         "created_at": "2026-03-11T01:39:31.739875Z",
         "updated_at": "2026-03-11T01:39:31.739875Z"
-    }
+    },
   ])
   const selectedActivity = ref('typing-test')
   // const selectedText = ref('default-text')
@@ -109,9 +111,8 @@ export const useAppStore = defineStore('app', () => {
         user_id: 1,
         activity_id: 1,
         text_id: 1,
-        points: 300,
         duration: 60,
-        errors: 300
+        result: { wpm: 300, lpm: 300, letters: 100, words: 100, errors: 100, corrected: 0 }
       },
   ])
 
@@ -220,35 +221,13 @@ export const useAppStore = defineStore('app', () => {
       return
     }
     const resultText = texts.value[selectedText.value]
-    // activityResults.value.unshift({
-    //   id: activityResults.value.length,
-    //   user_id: 0,
-    //   activity_id: 0,
-    //   text_id: 0,
-    //   type: selectedActivity.value,
-    //   title: resultText.title,
-    //   time: stats.value.time,
-    //   points: stats.value.wpm,
-    //   errors: stats.value.errors,
-    //   created_at: "timestamp",
-    //   updated_at: "timestamp",
-    //   result: {
-    //     wpm: stats.value.wpm,
-    //     lpm: stats.value.lpm,
-    //     letters: stats.value.letters,
-    //     words: stats.value.words,
-    //     errors: stats.value.errors,
-    //     corrected: stats.value.corrected,
-    //   }
-    // })
 
     const newScoreResp = await api.createScore({
       user_id: activeUser.value.id,
       activity_id: activities.value.find((a) => a.name == selectedActivity.value).id,
       text_id: resultText.id,
-      points: stats.value.wpm,
-      duration: stats.value.time,
-      errors: stats.value.errors
+      duration: stats.value[0],
+      result: stats.value[1],
     })
     if (newScoreResp) {
       console.log('new score ->', newScoreResp)

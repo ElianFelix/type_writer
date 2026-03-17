@@ -3,12 +3,12 @@
        :class="{ 'hidden': false }"
   >
     <v-sheet class="d-flex ga-12 w-100 px-4 py-8 justify-center align-center inset-shadow">
-      <div>{{ model?.wpm ?? '' }} WPM</div>
-      <div>{{ model?.lpm ?? '' }} LPM</div>
-      <div>time: {{ model?.time ?? '' }} secs</div>
-      <div>letters: {{ model?.letters ?? '' }}</div>
-      <div>words: {{ model?.words ?? '' }}</div>
-      <div>errors: {{ model?.errors ?? '' }}</div>
+      <div>{{ model[1].wpm ?? '' }} WPM</div>
+      <div>{{ model[1].lpm ?? '' }} LPM</div>
+      <div>time: {{ model[0] ?? '' }} secs</div>
+      <div>letters: {{ model[1].letters ?? '' }}</div>
+      <div>words: {{ model[1].words ?? '' }}</div>
+      <div>errors: {{ model[1].errors ?? '' }}</div>
       <div>corrected</div>
     </v-sheet>
   </div>

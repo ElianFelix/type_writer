@@ -133,7 +133,7 @@
     }
     wpm = Number((words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
     lpm = Number((letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
-    const computedStats = {wpm: wpm, lpm: lpm, time: actualTime, letters: letters, words: words, errors: errors, corrected: 0}
+    const computedStats = [actualTime, {wpm: wpm, lpm: lpm, letters: letters, words: words, errors: errors, corrected: 0}]
     console.log(computedStats)
     return computedStats
   }

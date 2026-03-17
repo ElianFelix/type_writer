@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
-import { processInputText } from '@/helpers/textProcessing'
+import { processInputText } from '@/helpers/text_processing'
 import * as api from '@/api/api'
 
 const DEFAULT_TIME = 60
@@ -83,36 +83,21 @@ export const useAppStore = defineStore('app', () => {
   // const selectedText = ref('default-text')
   const selectedText = ref(0)
 
-  const activityResults = ref([
-    // later model
-    // {
-    //   id: 0,
-    //   user_id: 0,
-    //   activity_id: 0,
-    //   text_id: 0,
-    //   type: 'typing-test',
-    //   title: 'place-holder-title',
-    //   time: 300,
-    //   points: 300,
-    //   errors: 300,
-    //   created_at: "timestamp",
-    //   updated_at: "timestamp",
-    //   result: { // later implementation will use result as a sub struct
-    //     wpm: 300,
-    //     lpm: 300,
-    //     letters: 300,
-    //     words: 300,
-    //     errors: 300,
-    //     corrected: 300,
-    //   },
-    // },
-      {
+  const scores = ref([
+     {
         id: 0,
         user_id: 1,
         activity_id: 1,
         text_id: 1,
         duration: 60,
-        result: { wpm: 300, lpm: 300, letters: 100, words: 100, errors: 100, corrected: 0 }
+        result: {
+          wpm: 300,
+          lpm: 300,
+          letters: 100,
+          words: 100,
+          errors: 100,
+          corrected: 0
+        }
       },
   ])
 
@@ -212,11 +197,31 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function endActivity() {
-    addActivityResult()
+    addScore()
     router.push({ name: '/' })
   }
 
-  async function addActivityResult() {
+  function computeStats() {
+    const actualTime = timerSeconds.value == 0 ? testTime.value :  testTime.value - timerSeconds.value
+    const MODIFIER =  actualTime / 60
+    let letters = 0, words = 0, errors = 0, wpm = 0, lpm = 0
+    for (const [idx, val] of processedGameText.value.entries()) {
+      if (idx < cursor.value) {
+        letters++
+        words += idx == 0 || /^\s$/.test(processedGameText.value[idx - 1]?.letter)
+        errors += val.status == 'wrong'
+      } else {
+        break
+      }
+    }
+    wpm = Number((words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
+    lpm = Number((letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
+    const computedStats = [actualTime, {wpm, lpm, letters, words, errors, corrected: 0}]
+    // console.log(computedStats)
+    return computedStats
+  }
+
+  async function addScore() {
     if (!stats.value) {
       return
     }
@@ -231,7 +236,7 @@ export const useAppStore = defineStore('app', () => {
     })
     if (newScoreResp) {
       console.log('new score ->', newScoreResp)
-      activityResults.value.push(newScoreResp)
+      scores.value.push(newScoreResp)
     }
   }
 
@@ -251,11 +256,11 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
-  async function refreshActivityResults() {
+  async function refreshScores() {
     const scoresResp = await api.getScores()
     console.log('scores resp ->', scoresResp)
     if (scoresResp) {
-      activityResults.value = scoresResp
+      scores.value = scoresResp
     }
   }
 
@@ -296,20 +301,20 @@ export const useAppStore = defineStore('app', () => {
 
   refreshActivities()
   refreshTexts()
-  refreshActivityResults()
+  refreshScores()
   refreshUsers()
 
   return {
     // State
     users, activities, texts, selectedActivity, selectedText, gameText, processedGameText,
     stats, timerId, started, completed, testTime, timerSeconds, fontSize, cursor,
-    activityResults, activeUser,
+    scores, activeUser,
     // Getters
     getSelectedActivity, getSelectedText, getDefaultTime,
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
-    startGame, pauseGame, endGame, startActivity, endActivity, addActivityResult,
-    refreshActivities, refreshTexts, refreshActivityResults, signUpUser, loginUser,
+    startGame, pauseGame, endGame, startActivity, endActivity, computeStats, addScore,
+    refreshActivities, refreshTexts, refreshScores, signUpUser, loginUser,
     refreshUsers, updateUserDetails,
   }
 })

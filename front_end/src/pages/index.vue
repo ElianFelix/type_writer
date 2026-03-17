@@ -41,11 +41,11 @@
         </thead>
         <tbody>
           <tr
-            v-for="item in appStore.activityResults.sort(sortResultsIdDescending)" :key="item.id"
+            v-for="item in appStore.scores.sort(sortResultsIdDescending)" :key="item.id"
           >
-            <td>{{ appStore.users.find((a) => a.id == item.user_id).username }}</td>
-            <td>{{ appStore.activities.find((a) => a.id == item.activity_id).name }}</td>
-            <td>{{ appStore.texts.find((t) => t.id == item.text_id).title }}</td>
+            <td>{{ appStore.users.find((a) => a.id == item.user_id)?.username ?? '' }}</td>
+            <td>{{ appStore.activities.find((a) => a.id == item.activity_id)?.name ?? '' }}</td>
+            <td>{{ appStore.texts.find((t) => t.id == item.text_id)?.title ?? '' }}</td>
             <td>{{ item.result.wpm }}</td>
             <td>{{ item.result.lpm }}</td>
             <td>{{ item.duration }} secs</td>

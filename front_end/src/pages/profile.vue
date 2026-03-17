@@ -54,11 +54,13 @@
 </template>
 
 <script setup>
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, watchEffect } from 'vue';
   import { useAppStore } from '@/stores/app';
-  import { usernameRules, passwordRules, nameRules, emailRules } from '@/helpers/inputRules'
+  import { usernameRules, passwordRules, nameRules, emailRules } from '@/helpers/input_rules'
+  import { useRouter } from 'vuetify/lib/composables/router.mjs';
 
   const appStore = useAppStore()
+  const router = useRouter()
 
   const form = ref()
   const userInfo = ref({
@@ -70,6 +72,8 @@
     user_type: 'regular',
   })
   const activeSections = ref(['profile-details'])
+
+  watchEffect(() => {if (!appStore.activeUser) router.push('/login')})
 
   onMounted(() => {
     userInfo.value = { ...appStore.activeUser }

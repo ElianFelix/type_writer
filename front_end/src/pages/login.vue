@@ -37,7 +37,7 @@
   import { ref, watchEffect } from 'vue';
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
   import { useAppStore } from '@/stores/app';
-  import { usernameRules, passwordRules } from '@/helpers/inputRules'
+  import { usernameRules, passwordRules } from '@/helpers/input_rules'
 
   const appStore = useAppStore()
   const router = useRouter()

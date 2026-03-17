@@ -48,7 +48,7 @@
         // console.log(tooltipOffsetx.value, tooltipOffsety.value)
       }
     } else if (cursor == processedText.value.length) {
-      stats.value = computeStats(processedText.value)
+      stats.value = appStore.computeStats()
       appStore.endGame()
     }
   }, { flush: 'post' })
@@ -87,7 +87,7 @@
           appStore.started = true
           appStore.timerId = setInterval(() => {
             if (timerSeconds.value == 0) {
-              stats.value = computeStats(processedText.value)
+              stats.value = appStore.computeStats()
               appStore.endGame()
             } else {
               timerSeconds.value--
@@ -116,26 +116,6 @@
     }
     e.stopPropagation()
     e.preventDefault()
-  }
-
-  function computeStats(values) {
-    const actualTime = timerSeconds.value == 0 ? testTime.value :  testTime.value - timerSeconds.value
-    const MODIFIER =  actualTime / 60
-    let letters = 0, words = 0, errors = 0, wpm = 0, lpm = 0
-    for (const [idx, val] of values.entries()) {
-      if (idx < appStore.cursor) {
-        letters++
-        words += idx == 0 || /^\s$/.test(values[idx - 1]?.letter)
-        errors += val.status == 'wrong'
-      } else {
-        break
-      }
-    }
-    wpm = Number((words / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
-    lpm = Number((letters / MODIFIER).toString().match(/\d+(.\d{1,2})?/).at(0))
-    const computedStats = [actualTime, {wpm: wpm, lpm: lpm, letters: letters, words: words, errors: errors, corrected: 0}]
-    console.log(computedStats)
-    return computedStats
   }
 
   function retryGame() {

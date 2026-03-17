@@ -12,7 +12,7 @@
         rounded
       >
         <div class="d-flex ga-2 justify-space-between">
-          <v-btn v-if="!openMenu" icon="mdi-account-circle"></v-btn>
+          <v-btn v-if="!openMenu" icon="mdi-account-circle" to="/profile"></v-btn>
           <v-btn v-if="!openMenu" :icon="activeThemeIcon" @click="changeActiveTheme"></v-btn>
           <v-btn :icon="openMenu ? 'mdi-close' : 'mdi-menu'" @click="toggleMenu"></v-btn>
         </div>

@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
 import { processInputText } from '@/helpers/text_processing'
 import * as api from '@/api/api'
+import { useUserStore } from './user'
 
 const DEFAULT_TIME = 60
 const DEFAULT_TEXT = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
@@ -15,29 +16,7 @@ const DEFAULT_TEXT = "It is a long established fact that a reader will be distra
 export const useAppStore = defineStore('app', () => {
   const router = useRouter()
   const route = useRoute()
-
-  // hardcoded user to build up functionality
-  const activeUser = ref({
-    id: 1,
-    user_type: "regular",
-    username: "testivo",
-    name: "testivo",
-    email: "test@user.com",
-    created_at: "2026-03-11T04:00:02.518314Z",
-    updated_at: "2026-03-11T18:35:11.425319164Z"
-  })
-
-  const users = ref([
-    {
-      id: 1,
-      user_type: "regular",
-      username: "testivo",
-      name: "testivo",
-      email: "test@user.com",
-      created_at: "2026-03-11T04:00:02.518314Z",
-      updated_at: "2026-03-11T18:35:11.425319164Z"
-    },
-  ])
+  const userStore = useUserStore()
 
   const activities = ref([
     {
@@ -228,7 +207,7 @@ export const useAppStore = defineStore('app', () => {
     const resultText = texts.value[selectedText.value]
 
     const newScoreResp = await api.createScore({
-      user_id: activeUser.value.id,
+      user_id: userStore.activeUser.id,
       activity_id: activities.value.find((a) => a.name == selectedActivity.value).id,
       text_id: resultText.id,
       duration: stats.value[0],
@@ -264,57 +243,20 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
-  async function refreshUsers() {
-    const usersResp = await api.getUsers()
-    console.log('texts resp ->', usersResp)
-    if (usersResp) {
-      users.value = usersResp
-    }
-  }
-
-  async function signUpUser(userInfo = {}) {
-    const signUpResp = await api.createUser(userInfo)
-    if (signUpResp) {
-      activeUser.value = signUpResp
-      return true
-    }
-    return false
-  }
-
-  async function loginUser(loginInfo = {}) {
-    const loginResp = await api.getUserByIdOrUsername(loginInfo.username)
-    if (loginResp) {
-      activeUser.value = loginResp
-      return true
-    }
-    return false
-  }
-
-  async function updateUserDetails(userInfo = {}) {
-    const updateResp = await api.updateUser(userInfo)
-    if (updateResp) {
-      activeUser.value = updateResp
-      return true
-    }
-    return false
-  }
-
   refreshActivities()
   refreshTexts()
   refreshScores()
-  refreshUsers()
 
   return {
     // State
-    users, activities, texts, selectedActivity, selectedText, gameText, processedGameText,
+    activities, texts, selectedActivity, selectedText, gameText, processedGameText,
     stats, timerId, started, completed, testTime, timerSeconds, fontSize, cursor,
-    scores, activeUser,
+    scores,
     // Getters
     getSelectedActivity, getSelectedText, getDefaultTime,
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
     startGame, pauseGame, endGame, startActivity, endActivity, computeStats, addScore,
-    refreshActivities, refreshTexts, refreshScores, signUpUser, loginUser,
-    refreshUsers, updateUserDetails,
+    refreshActivities, refreshTexts, refreshScores,
   }
 })

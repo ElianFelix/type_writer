@@ -36,10 +36,10 @@
 <script setup>
   import { ref, watchEffect } from 'vue';
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
-  import { useAppStore } from '@/stores/app';
   import { usernameRules, passwordRules } from '@/helpers/input_rules'
+  import { useUserStore } from '@/stores/user';
 
-  const appStore = useAppStore()
+  const userStore = useUserStore()
   const router = useRouter()
 
   const form = ref()
@@ -49,11 +49,11 @@
     password: '',
   })
 
-  watchEffect(() => {if (loggedIn.value || appStore.activeUser) router.push('/')})
+  watchEffect(() => {if (loggedIn.value || authStore.activeUser) router.push('/')})
 
   async function handleFormSubmit() {
     if (form.value.isValid) {
-      const result = await appStore.loginUser(loginInfo.value)
+      const result = await userStore.loginUser(loginInfo.value)
       // console logging for now
       // TODO: implement alert/messaging display logic
       console.log('successful login?', result)

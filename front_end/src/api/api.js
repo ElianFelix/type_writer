@@ -8,7 +8,18 @@ const appApi =
     baseURL: API_BASE_URL,
   })
 
-
+//
+// Auth
+//
+export async function login(loginInfo = {}) {
+  try {
+    const response = await appApi.post('/login', loginInfo)
+    return response.data
+  } catch(error) {
+    console.log(error)
+  }
+  return null
+}
 //
 // Users
 //
@@ -42,9 +53,11 @@ export async function createUser(user = {}) {
   return null
 }
 
-export async function updateUser(updUser = {}) {
+export async function updateUser(updUser = {}, authToken) {
   try {
-    const response = await appApi.put(`/users/${updUser.id}`, updUser)
+    const response = await appApi.put(`/users/${updUser.id}`,
+                                      updUser,
+                                      { headers: { Authorization: authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -52,9 +65,10 @@ export async function updateUser(updUser = {}) {
   return null
 }
 
-export async function deleteUser(id = 0) {
+export async function deleteUser(id = 0, authToken) {
   try {
-    const response = await appApi.delete(`/users/${id}`)
+    const response = await appApi.delete(`/users/${id}`,
+                                         { headers: { Authorization: authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -85,9 +99,11 @@ export async function getActivityByIdOrName(keyword = 0) {
   return null
 }
 
-export async function createActivity(activity = {}) {
+export async function createActivity(activity = {}, authToken) {
   try {
-    const response = await appApi.post('/activities', activity)
+    const response = await appApi.post('/activities',
+                                       activity,
+                                       { headers: { Authorization: authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -95,9 +111,11 @@ export async function createActivity(activity = {}) {
   return null
 }
 
-export async function updateActivity(updActivity = {}) {
+export async function updateActivity(updActivity = {}, authToken) {
   try {
-    const response = await appApi.put(`/activities/${updActivity.id}`, updActivity)
+    const response = await appApi.put(`/activities/${updActivity.id}`,
+                                      updActivity,
+                                      { headers: { Authorization: authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -105,9 +123,10 @@ export async function updateActivity(updActivity = {}) {
   return null
 }
 
-export async function deleteActivity(id = 0) {
+export async function deleteActivity(id = 0, authToken) {
   try {
-    const response = await appApi.delete(`/activities/${id}`)
+    const response = await appApi.delete(`/activities/${id}`,
+                                               { headers: { Authorization: authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -138,9 +157,11 @@ export async function getTextByIdOrTitle(keyword = 0) {
   return null
 }
 
-export async function createText(text = {}) {
+export async function createText(text = {}, authToken) {
   try {
-    const response = await appApi.post('/texts', text)
+    const response = await appApi.post('/texts',
+                                       text,
+                                       { headers: { Authorization: authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -148,9 +169,11 @@ export async function createText(text = {}) {
   return null
 }
 
-export async function updateText(updText = {}) {
+export async function updateText(updText = {}, authToken) {
   try {
-    const response = await appApi.put(`/texts/${updText.id}`, updText)
+    const response = await appApi.put(`/texts/${updText.id}`,
+                                      updText,
+                                      { headers: { Authorization: authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -191,9 +214,12 @@ export async function getScoreById(id = 0) {
   return null
 }
 
-export async function createScore(score = {}) {
+export async function createScore(score = {}, authToken) {
   try {
-    const response = await appApi.post('/scores', score)
+    const response = await appApi.post('/scores',
+                                       score,
+                                       { headers: { Authorization: authToken }})
+
     return response.data
   } catch(error) {
     console.log(error)
@@ -201,9 +227,12 @@ export async function createScore(score = {}) {
   return null
 }
 
-export async function updateScore(updScore = {}) {
+export async function updateScore(updScore = {}, authToken) {
   try {
-    const response = await appApi.put(`/scores/${updScore.id}`, updScore)
+    const response = await appApi.put(`/scores/${updScore.id}`,
+                                      updScore,
+                                      { headers: { Authorization: authToken }})
+
     return response.data
   } catch(error) {
     console.log(error)
@@ -211,9 +240,10 @@ export async function updateScore(updScore = {}) {
   return null
 }
 
-export async function deleteScore(id = 0) {
+export async function deleteScore(id = 0, authToken) {
   try {
-    const response = await appApi.delete(`/scores/${id}`)
+    const response = await appApi.delete(`/scores/${id}`, { headers: { Authorization: authToken }})
+
     return response.data
   } catch(error) {
     console.log(error)

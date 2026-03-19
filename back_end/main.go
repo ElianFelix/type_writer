@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"type_writer_api/controllers"
 	"type_writer_api/helpers"
+	local_middleware "type_writer_api/middleware"
 	"type_writer_api/providers/activities"
 	"type_writer_api/providers/scores"
 	"type_writer_api/providers/texts"
@@ -14,44 +14,20 @@ import (
 	"type_writer_api/services/scores"
 	"type_writer_api/services/texts"
 	"type_writer_api/services/users"
+	"type_writer_api/structures"
 
 	"log/slog"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/casbin/casbin/v3"
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	slogecho "github.com/samber/slog-echo"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-func contextUserGetter(ctx echo.Context) (string, error) {
-	token, err := echo.ContextGet[*jwt.Token](ctx, "user")
-	if err != nil {
-		return "", err
-	}
-	return token.Claims.GetSubject()
-}
-
-func NewCasbinMiddleware(enforcer *casbin.Enforcer, userGetter func(echo.Context) (string, error)) echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(ctx echo.Context) error {
-			user_type, err := userGetter(ctx)
-			if err != nil {
-				return echo.NewHTTPError(http.StatusUnauthorized, err)
-			}
-			if pass, err := enforcer.Enforce(user_type, ctx.Request().URL.Path, ctx.Request().Method); err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError, err)
-			} else if !pass {
-				return echo.NewHTTPError(http.StatusForbidden, "access denied")
-			}
-			return next(ctx)
-		}
-	}
-}
 
 func main() {
 	DB_USER := os.Getenv("DB_USER")
@@ -110,7 +86,22 @@ func main() {
 
 	// Secure route group setup
 	s := e.Group("")
-	s.Use(echojwt.JWT([]byte("super_secret")))
+
+	ce, err := casbin.NewEnforcer("config/authorization/auth_model.conf", "config/authorization/auth_policy.csv")
+	if err != nil {
+		e.Logger.Fatal("Error loading authorization enfocer", err)
+	}
+
+	s.Use(
+		echojwt.WithConfig(echojwt.Config{
+			NewClaimsFunc: 
+				func(ctx echo.Context) jwt.Claims {
+					return new(structures.JwtCustomClaims)
+				},
+			SigningKey: []byte("super_secret"),
+		}),
+	)
+	s.Use(local_middleware.CasbinMiddleware(ce))
 
 	// API routes
 	//

@@ -34,8 +34,8 @@ func (a *AuthController) Login(ctx echo.Context) error {
 	// Custom claims for authorization middleware
 	claims := &structures.JwtCustomClaims{
 		loginUserInfo.UserType,
-		loginUserInfo.Username,
 		jwt.RegisteredClaims{
+			Subject: loginUserInfo.Username,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),
 		},
 	}

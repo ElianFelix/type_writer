@@ -33,6 +33,11 @@ type UserResp struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type UserLoginReq struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func ConvertRequestToUser(req *UserReq) *User {
 	return &User{
 		UserType: req.UserType,

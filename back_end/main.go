@@ -19,13 +19,39 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/casbin/casbin/v3"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	slogecho "github.com/samber/slog-echo"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-const TESTING = "integration"
+func contextUserGetter(ctx echo.Context) (string, error) {
+	token, err := echo.ContextGet[*jwt.Token](ctx, "user")
+	if err != nil {
+		return "", err
+	}
+	return token.Claims.GetSubject()
+}
+
+func NewCasbinMiddleware(enforcer *casbin.Enforcer, userGetter func(echo.Context) (string, error)) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(ctx echo.Context) error {
+			user_type, err := userGetter(ctx)
+			if err != nil {
+				return echo.NewHTTPError(http.StatusUnauthorized, err)
+			}
+			if pass, err := enforcer.Enforce(user_type, ctx.Request().URL.Path, ctx.Request().Method); err != nil {
+				return echo.NewHTTPError(http.StatusInternalServerError, err)
+			} else if !pass {
+				return echo.NewHTTPError(http.StatusForbidden, "access denied")
+			}
+			return next(ctx)
+		}
+	}
+}
 
 func main() {
 	DB_USER := os.Getenv("DB_USER")
@@ -49,7 +75,6 @@ func main() {
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: fmt.Sprintf("host=type_writer-db-1 user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/New_York", DB_USER, DB_PASS, DB_NAME, DB_PORT),
 	}), &gorm.Config{})
-
 	if err != nil {
 		e.Logger.Fatal("Error initializing DB")
 		e.Close()
@@ -81,39 +106,48 @@ func main() {
 	textController := controllers.NewTextsController(textsService)
 	activityController := controllers.NewActivitiesController(activitiesService)
 	scoreController := controllers.NewScoresController(scoresService)
+	authController := controllers.NewAuthController(usersService)
 
-	// Routes
-	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, "Hello, World!")
-	})
+	// Secure route group setup
+	s := e.Group("")
+	s.Use(echojwt.JWT([]byte("super_secret")))
+
+	// API routes
+	//
+	// Authentication routes
+	e.POST("/login", authController.Login)
 
 	// User routes
 	e.GET("/users", userController.GetUsers)
 	e.GET("/users/:user_id", userController.GetUser)
 	e.POST("/users", userController.CreateUser)
-	e.PUT("/users/:user_id", userController.UpdateUser)
-	e.DELETE("/users/:user_id", userController.DeleteUser)
+	// Secure routes
+	s.PUT("/users/:user_id", userController.UpdateUser)
+	s.DELETE("/users/:user_id", userController.DeleteUser)
 
 	// Text routes
 	e.GET("/texts", textController.GetTexts)
 	e.GET("/texts/:text_id", textController.GetText)
-	e.POST("/texts", textController.CreateText)
-	e.PUT("/texts/:text_id", textController.UpdateText)
-	e.DELETE("/texts/:text_id", textController.DeleteText)
+	// Secure routes
+	s.POST("/texts", textController.CreateText)
+	s.PUT("/texts/:text_id", textController.UpdateText)
+	s.DELETE("/texts/:text_id", textController.DeleteText)
 
 	// Activity routes
 	e.GET("/activities", activityController.GetActivities)
 	e.GET("/activities/:activity_id", activityController.GetActivity)
-	e.POST("/activities", activityController.CreateActivity)
-	e.PUT("/activities/:activity_id", activityController.UpdateActivity)
-	e.DELETE("/activities/:activity_id", activityController.DeleteActivity)
+	// Secure routes
+	s.POST("/activities", activityController.CreateActivity)
+	s.PUT("/activities/:activity_id", activityController.UpdateActivity)
+	s.DELETE("/activities/:activity_id", activityController.DeleteActivity)
 
 	// Score routes
 	e.GET("/scores", scoreController.GetScores)
 	e.GET("/scores/:score_id", scoreController.GetScore)
-	e.POST("/scores", scoreController.CreateScore)
-	e.PUT("/scores/:score_id", scoreController.UpdateScore)
-	e.DELETE("/scores/:score_id", scoreController.DeleteScore)
+	// Secure routes
+	s.POST("/scores", scoreController.CreateScore)
+	s.PUT("/scores/:score_id", scoreController.UpdateScore)
+	s.DELETE("/scores/:score_id", scoreController.DeleteScore)
 
 	// Server start
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", API_PORT)))

@@ -2,6 +2,7 @@ package users_service
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"type_writer_api/helpers"
 	"type_writer_api/providers/users"
@@ -14,6 +15,7 @@ type UsersServiceInterface interface {
 	CreateUser(ctx context.Context, userInfo structures.UserReq) (*structures.UserResp, error)
 	UpdateUser(ctx context.Context, userInfo structures.UserReq, userId int) (*structures.UserResp, error)
 	DeleteUser(ctx context.Context, userId int) (bool, error)
+	ValidateLoginUser(ctx context.Context, username, password string) (*structures.UserResp, error)
 }
 
 type UsersService struct {
@@ -111,6 +113,20 @@ func (u *UsersService) DeleteUser(ctx context.Context, userId int) (bool, error)
 	}
 
 	return deleted, nil
+}
+
+func (u *UsersService) ValidateLoginUser(ctx context.Context, username, password string) (*structures.UserResp, error) {
+	user, err := u.UsersProvider.GetUserByIdOrUsername(ctx, nil, &username)
+	if err != nil {
+		return nil, err
+	}
+	
+	if user.Username != username || helpers.TestPasswordHash(user.PasswdHash, password) != nil {
+		return nil, errors.New("wrong login information")
+	}
+
+	result := structures.ConvertUserToResponse(user)
+	return result, nil
 }
 
 func NewUsersService(usersProvider users_provider.UsersProviderInterface) *UsersService {

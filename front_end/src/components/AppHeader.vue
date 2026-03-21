@@ -15,6 +15,7 @@
           <v-btn v-if="!openMenu" icon="mdi-account-circle" to="/profile"></v-btn>
           <v-btn v-if="!openMenu" :icon="activeThemeIcon" @click="changeActiveTheme"></v-btn>
           <v-btn :icon="openMenu ? 'mdi-close' : 'mdi-menu'" @click="toggleMenu"></v-btn>
+          <div v-if="userStore.isLoggedIn && openMenu" class="mr-5 my-auto">@{{ userStore.getActiveUser.username }}</div>
         </div>
         <div id="subMenuContent"
              class="menu-section ma-5 mt-0"
@@ -71,7 +72,7 @@
           </div>
           <v-list-item to="/">Home</v-list-item>
           <v-list-item to="/board">Board</v-list-item>
-          <template v-if="appStore.activeUser">
+          <template v-if="userStore.isLoggedIn">
             <v-list-item to="/profile">Profile</v-list-item>
             <v-list-item @click="handleLogout">Log Out</v-list-item>
           </template>
@@ -92,8 +93,10 @@
   import { useTheme } from 'vuetify'
   import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs';
   import { useAppStore } from '@/stores/app';
+  import { useUserStore } from '@/stores/user';
 
   const appStore = useAppStore()
+  const userStore = useUserStore()
   const theme = useTheme()
   const router = useRouter()
   const route = useRoute()
@@ -142,7 +145,7 @@
   }
 
   function handleLogout() {
-    appStore.activeUser = null
+    userStore.logoutUser()
     router.push('/')
   }
 </script>

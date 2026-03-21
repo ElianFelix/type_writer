@@ -49,7 +49,7 @@
     password: '',
   })
 
-  watchEffect(() => {if (loggedIn.value || authStore.activeUser) router.push('/')})
+  watchEffect(() => {if (loggedIn.value || userStore.activeUser) router.push('/')})
 
   async function handleFormSubmit() {
     if (form.value.isValid) {

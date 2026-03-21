@@ -53,10 +53,10 @@
 <script setup>
   import { ref, watchEffect } from 'vue';
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
-  import { useAppStore } from '@/stores/app';
   import { usernameRules, passwordRules, nameRules, emailRules } from '@/helpers/input_rules'
+  import { useUserStore } from '@/stores/user';
 
-  const appStore = useAppStore()
+  const userStore = useUserStore()
   const router = useRouter()
 
   const form = ref()
@@ -69,11 +69,11 @@
     user_type: 'regular',
   })
 
-  watchEffect(() => {if (signedUp.value || appStore.activeUser) router.push('/')})
+  watchEffect(() => {if (signedUp.value || userStore.activeUser) router.push('/')})
 
   async function handleFormSubmit() {
     if (form.value.isValid) {
-      signedUp.value = await appStore.signUpUser(userInfo.value)
+      signedUp.value = await userStore.signUpUser(userInfo.value)
     }
   }
 </script>

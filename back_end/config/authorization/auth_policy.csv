@@ -1,12 +1,12 @@
-p, admin, /users/*, (PUT)|(DELETE)
-p, owner, /users/*, (PUT)|(DELETE)
+p, admin, /users*, (PUT)|(DELETE)
+p, owner, /users*, (PUT)|(DELETE)
 
-p, admin, /activities/*, (POST)|(PUT)|(DELETE)
+p, admin, /activities*, (POST)|(PUT)|(DELETE)
 
-p, admin, /texts/*, (POST)|(PUT)|(DELETE)
-p, regular, /texts/*, POST
+p, admin, /texts*, (POST)|(PUT)|(DELETE)
+p, regular, /texts*, POST
 
-p, admin, /scores/*, (POST)|(PUT)|(DELETE)
-p, regular, /scores/*, POST
-p, generic, /scores/*, POST
+p, admin, /scores*, (POST)|(PUT)|(DELETE)
+p, regular, /scores*, POST
+p, generic, /scores*, POST
 

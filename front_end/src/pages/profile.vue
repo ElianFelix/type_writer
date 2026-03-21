@@ -55,11 +55,13 @@
 
 <script setup>
   import { onMounted, ref, watchEffect } from 'vue';
-  import { useAppStore } from '@/stores/app';
-  import { usernameRules, passwordRules, nameRules, emailRules } from '@/helpers/input_rules'
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
+  import { useAppStore } from '@/stores/app';
+  import { useUserStore } from '@/stores/user';
+  import { usernameRules, passwordRules, nameRules, emailRules } from '@/helpers/input_rules'
 
   const appStore = useAppStore()
+  const userStore = useUserStore()
   const router = useRouter()
 
   const form = ref()
@@ -73,15 +75,15 @@
   })
   const activeSections = ref(['profile-details'])
 
-  watchEffect(() => {if (!appStore.activeUser) router.push('/login')})
+  watchEffect(() => {if (!userStore.isLoggedIn) router.push('/login')})
 
   onMounted(() => {
-    userInfo.value = { ...appStore.activeUser }
+    userInfo.value = { ...userStore.getActiveUser }
   })
 
   async function handleFormSubmit() {
     if (form.value.isValid) {
-      await appStore.updateUserDetails(userInfo.value)
+      await userStore.updateUserDetails(userInfo.value)
     }
   }
 </script>

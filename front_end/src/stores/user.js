@@ -15,7 +15,7 @@ export const useUserStore = defineStore('user', () => {
   //     updated_at: "2026-03-11T18:35:11.425319164Z"
   //   },
   // ]
-  const users = ref()
+  const users = ref(null)
 
   // {
   //   id: 1,
@@ -26,10 +26,17 @@ export const useUserStore = defineStore('user', () => {
   //   created_at: "2026-03-11T04:00:02.518314Z",
   //   updated_at: "2026-03-11T18:35:11.425319164Z"
   // }
-  const activeUser = ref()
+  const activeUser = ref(null)
   const authToken = ref("")
 
   const getActiveUser = computed(() => activeUser.value)
+  const getAuthToken = computed(() => authToken.value)
+  const isLoggedIn = computed(() => activeUser.value !== null && authToken.value !== '')
+
+  function logoutUser() {
+    activeUser.value = null
+    authToken.value = ""
+  }
 
   async function loginUser(loginInfo = {}) {
     const loginResp = await api.login(loginInfo)
@@ -53,7 +60,7 @@ export const useUserStore = defineStore('user', () => {
     const signUpResp = await api.createUser(userInfo)
     if (signUpResp) {
       activeUser.value = signUpResp
-      const loggedIn = await loginUser({ ...userInfo.username, ...userInfo.password})
+      const loggedIn = await loginUser({ username: userInfo.username, password: userInfo.password})
       return loggedIn
     }
     return false
@@ -74,8 +81,8 @@ export const useUserStore = defineStore('user', () => {
     // State
     users, activeUser, authToken,
     // Getters
-    getActiveUser,
+    getActiveUser, getAuthToken, isLoggedIn,
     // Actions
-    loginUser, refreshUsers, signUpUser, updateUserDetails,
+    logoutUser, loginUser, refreshUsers, signUpUser, updateUserDetails,
   }
 })

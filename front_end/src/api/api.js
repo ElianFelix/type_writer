@@ -57,7 +57,7 @@ export async function updateUser(updUser = {}, authToken) {
   try {
     const response = await appApi.put(`/users/${updUser.id}`,
                                       updUser,
-                                      { headers: { Authorization: authToken }})
+                                      { headers: { Authorization: "Bearer " + authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -68,7 +68,7 @@ export async function updateUser(updUser = {}, authToken) {
 export async function deleteUser(id = 0, authToken) {
   try {
     const response = await appApi.delete(`/users/${id}`,
-                                         { headers: { Authorization: authToken }})
+                                         { headers: { Authorization: "Bearer " + authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -103,7 +103,7 @@ export async function createActivity(activity = {}, authToken) {
   try {
     const response = await appApi.post('/activities',
                                        activity,
-                                       { headers: { Authorization: authToken }})
+                                       { headers: { Authorization: "Bearer " + authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -115,7 +115,7 @@ export async function updateActivity(updActivity = {}, authToken) {
   try {
     const response = await appApi.put(`/activities/${updActivity.id}`,
                                       updActivity,
-                                      { headers: { Authorization: authToken }})
+                                      { headers: { Authorization: "Bearer " + authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -126,7 +126,7 @@ export async function updateActivity(updActivity = {}, authToken) {
 export async function deleteActivity(id = 0, authToken) {
   try {
     const response = await appApi.delete(`/activities/${id}`,
-                                               { headers: { Authorization: authToken }})
+                                               { headers: { Authorization: "Bearer " + authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -161,7 +161,7 @@ export async function createText(text = {}, authToken) {
   try {
     const response = await appApi.post('/texts',
                                        text,
-                                       { headers: { Authorization: authToken }})
+                                       { headers: { Authorization: "Bearer " + authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -173,7 +173,7 @@ export async function updateText(updText = {}, authToken) {
   try {
     const response = await appApi.put(`/texts/${updText.id}`,
                                       updText,
-                                      { headers: { Authorization: authToken }})
+                                      { headers: { Authorization: "Bearer " + authToken }})
     return response.data
   } catch(error) {
     console.log(error)
@@ -218,7 +218,7 @@ export async function createScore(score = {}, authToken) {
   try {
     const response = await appApi.post('/scores',
                                        score,
-                                       { headers: { Authorization: authToken }})
+                                       { headers: { Authorization: "Bearer " + authToken }})
 
     return response.data
   } catch(error) {
@@ -231,7 +231,7 @@ export async function updateScore(updScore = {}, authToken) {
   try {
     const response = await appApi.put(`/scores/${updScore.id}`,
                                       updScore,
-                                      { headers: { Authorization: authToken }})
+                                      { headers: { Authorization: "Bearer " + authToken }})
 
     return response.data
   } catch(error) {
@@ -242,7 +242,7 @@ export async function updateScore(updScore = {}, authToken) {
 
 export async function deleteScore(id = 0, authToken) {
   try {
-    const response = await appApi.delete(`/scores/${id}`, { headers: { Authorization: authToken }})
+    const response = await appApi.delete(`/scores/${id}`, { headers: { Authorization: "Bearer " + authToken }})
 
     return response.data
   } catch(error) {

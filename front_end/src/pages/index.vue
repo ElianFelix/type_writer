@@ -41,11 +41,11 @@
         </thead>
         <tbody>
           <tr
-            v-for="item in appStore.scores.sort(sortResultsIdDescending)" :key="item.id"
+            v-for="item in appStore.scores?.sort(sortResultsIdDescending)" :key="item.id"
           >
-            <td>{{ appStore.users.find((a) => a.id == item.user_id)?.username ?? '' }}</td>
-            <td>{{ appStore.activities.find((a) => a.id == item.activity_id)?.name ?? '' }}</td>
-            <td>{{ appStore.texts.find((t) => t.id == item.text_id)?.title ?? '' }}</td>
+            <td>{{ userStore.users?.find((a) => a.id == item.user_id)?.username ?? '' }}</td>
+            <td>{{ appStore.activities?.find((a) => a.id == item.activity_id)?.name ?? '' }}</td>
+            <td>{{ appStore.texts?.find((t) => t.id == item.text_id)?.title ?? '' }}</td>
             <td>{{ item.result.wpm }}</td>
             <td>{{ item.result.lpm }}</td>
             <td>{{ item.duration }} secs</td>
@@ -139,7 +139,7 @@
                 </div>
               </v-carousel-item>
               <div class="d-flex position-absolute bottom-0 pb-2 align-self-center justify-center">
-                <v-chip>{{ (appStore.selectedText + 1) + '/' + appStore.texts.length }}</v-chip>
+                <v-chip>{{ (appStore.selectedText + 1) + '/' + appStore.texts?.length }}</v-chip>
               </div>
             </v-carousel>
           </v-tabs-window-item>
@@ -152,9 +152,11 @@
 <script setup>
   import { ref } from 'vue';
   import { useAppStore } from '@/stores/app';
+import { useUserStore } from '@/stores/user';
 
   const bgColors = ['red', 'blue', 'green', 'yellow']
   const appStore = useAppStore()
+  const userStore = useUserStore()
 
   const openSettingsDrawer = ref(false)
 

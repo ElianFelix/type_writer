@@ -7,8 +7,8 @@
       <span v-for="elem, index in processedText" :key="index" :id="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div v-if="appStore.completed" class="d-flex align-self-center ga-4 py-5">
-      <v-btn @click="retryGame">Retry</v-btn>
-      <v-btn @click="appStore.endActivity">Done</v-btn>
+      <v-btn @click="appStore.endActivity(true)">Retry</v-btn>
+      <v-btn @click="appStore.endActivity()">Done</v-btn>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@
   const stats = defineModel('stats')
   const fontSize = defineModel('fontSize')
 
-  const tooltipOffsetx = ref(7)
+  const tooltipOffsetx = ref(6)
   const tooltipOffsety = ref(0)
 
   const processedText = computed({
@@ -115,11 +115,6 @@
     }
     e.stopPropagation()
     e.preventDefault()
-  }
-
-  function retryGame() {
-    appStore.addScore()
-    appStore.startGame()
   }
 
 </script>

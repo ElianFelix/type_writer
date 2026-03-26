@@ -6,12 +6,17 @@ import * as api from '@/api/api'
 import { useUserStore } from './user'
 
 const DEFAULT_TIME = 60
-const DEFAULT_TEXT = "It is a long established fact that a reader will be distracted by the readable content of a page when " +
-    "looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of " +
-    "letters, as opposed to using 'Content here, content here', making it look like readable English. " +
-    "Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a " +
-    "search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, " +
-    "sometimes by accident, sometimes on purpose (injected humour and the like)."
+const DEFAULT_TEXT = {
+  "id": 1,
+  "text_type": "full-text",
+  "title": "db-in-default-test",
+  "difficulty": "normal",
+  "tags": ["testing"],
+  "text_body": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+  "text_length": 613,
+  "created_at": "2026-03-11T01:16:31.708976Z",
+  "updated_at": "2026-03-11T01:16:31.708976Z"
+}
 
   export const useAppStore = defineStore('app', () => {
   const router = useRouter()
@@ -87,7 +92,7 @@ const DEFAULT_TEXT = "It is a long established fact that a reader will be distra
   // In-game settings
   //
   const gameText = ref(DEFAULT_TEXT)
-  const processedGameText = ref(processInputText(gameText.value))
+  const processedGameText = ref(processInputText(gameText.value.text_body))
 
   const stats = ref(null)
   const timerId = ref(null)
@@ -144,7 +149,7 @@ const DEFAULT_TEXT = "It is a long established fact that a reader will be distra
     started.value = false
     completed.value = false
     cursor.value = 0
-    gameText.value = texts.value[selectedText.value] ?? DEFAULT_TEXT
+    gameText.value = texts.value?.find((t) => t.id == selectedText.value) ?? DEFAULT_TEXT
     processedGameText.value = processInputText(gameText.value.text_body)
     if (timerId.value) {
       clearInterval(timerId.value)
@@ -177,9 +182,16 @@ const DEFAULT_TEXT = "It is a long established fact that a reader will be distra
     router.push({ name: '/board' })
   }
 
-  function endActivity() {
+  function endActivity(retry = false) {
+    if (!userStore.isLoggedIn) {
+      return
+    }
     addScore()
-    router.push({ name: '/' })
+    if (retry) {
+      startGame()
+    } else {
+      router.push({ name: '/' })
+    }
   }
 
   function computeStats() {
@@ -206,12 +218,11 @@ const DEFAULT_TEXT = "It is a long established fact that a reader will be distra
     if (!stats.value) {
       return
     }
-    const resultText = texts.value[selectedText.value]
 
     const newScoreResp = await api.createScore({
       user_id: userStore.activeUser.id,
       activity_id: activities.value.find((a) => a.name == selectedActivity.value).id,
-      text_id: resultText.id,
+      text_id: gameText.value.id,
       duration: stats.value[0],
       result: stats.value[1],
     }, userStore.getAuthToken)

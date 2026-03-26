@@ -88,19 +88,23 @@
                 @update:model-value="appStore.startGame(appStore.testTime)"
               ></v-number-input>
               <v-select
-                clearable
+                v-model="difficultyFilter"
                 chips
-                label="Difficulty"
-                :items="['Normal', 'Easy', 'Hard']"
+                clearable
                 class="px-4 py-1 flex-grow-0"
+                :items="['normal', 'easy', 'hard']"
+                label="Difficulty"
+                multiple
                 variant="underlined"
               ></v-select>
               <v-select
-                clearable
+                v-model="tagsFilter"
+                :items="tagSet"
                 chips
-                label="Tags"
-                :items="['Testing']"
+                clearable
                 class="px-4 py-1 flex-grow-0"
+                label="Tags"
+                multiple
                 variant="underlined"
               ></v-select>
             </v-sheet>
@@ -121,9 +125,9 @@
                 <v-btn prepend-icon="mdi-play" @click="appStore.startActivity">start</v-btn>
               </div>
             </div>
-            <v-carousel v-model="appStore.selectedText" height="364" hide-delimiters>
+            <v-carousel v-model="selectedFilteredIndx" height="364" hide-delimiters>
               <v-carousel-item
-                v-for="(vi, i) in appStore.texts" :key="i" :id="vi.title"
+                v-for="(vi, i) in filteredTexts" :key="vi.id" :id="vi.title"
                 :color="bgColors[i % bgColors.length]"
               >
                 <div class="d-flex align-center justify-center" style="margin-top: 160px; margin-inline: 150px;">
@@ -132,14 +136,14 @@
                       <h2>{{ vi.title }}</h2>
                       <v-divider vertical></v-divider>
                       <v-chip>{{ vi.difficulty }}</v-chip>
-                      <!-- <v-chip v-for="tag in vi.tags" :key="tag">{{ tag }}</v-chip> -->
+                      <v-chip v-for="tag in vi.tags" :key="tag">{{ tag }}</v-chip>
                     </div>
                     <p>{{ vi.text_body.length > 200 ? vi.text_body.split(' ').slice(0, 50).join(' ') + ' ...' : vi.text_body }}</p>
                   </div>
                 </div>
               </v-carousel-item>
               <div class="d-flex position-absolute bottom-0 pb-2 align-self-center justify-center">
-                <v-chip>{{ (appStore.selectedText + 1) + '/' + appStore.texts?.length }}</v-chip>
+                <v-chip>{{ (selectedFilteredIndx + 1) + '/' + filteredTexts?.length }}</v-chip>
               </div>
             </v-carousel>
           </v-tabs-window-item>
@@ -150,15 +154,42 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import { computed, ref, watch } from 'vue';
   import { useAppStore } from '@/stores/app';
-import { useUserStore } from '@/stores/user';
+  import { useUserStore } from '@/stores/user';
 
   const bgColors = ['red', 'blue', 'green', 'yellow']
   const appStore = useAppStore()
   const userStore = useUserStore()
 
   const openSettingsDrawer = ref(false)
+  const selectedFilteredIndx = ref(0)
+  const difficultyFilter = ref([])
+  const tagsFilter = ref([])
+
+  const tagSet = computed(() => {
+    const result = new Set()
+    for (const text of appStore.texts) {
+      for (const tag of text.tags) {
+        result.add(tag)
+      }
+    }
+    return [...result.values()]
+  })
+  const filteredTexts = computed(() => {
+    let result = appStore.texts
+    if (difficultyFilter.value.length > 0) {
+      result = result.filter((t) => difficultyFilter.value.includes(t.difficulty))
+    }
+    if (tagsFilter.value.length > 0) {
+      result = result.filter((t) => t.tags.reduce((r,c) => tagsFilter.value.includes(c) || r, false))
+    }
+    return result
+  })
+
+  watch(selectedFilteredIndx, () => {
+    appStore.selectedText = filteredTexts.value[selectedFilteredIndx.value].id
+  })
 
   function sortResultsIdDescending(a, b) {
     if (a.id > b.id) { return -1 }
@@ -167,9 +198,9 @@ import { useUserStore } from '@/stores/user';
   }
 
   function pickRandomActivityText() {
-    const pickIndex = Math.floor(Math.random() * appStore.texts.length)
+    const pickIndex = Math.floor(Math.random() * filteredTexts.value.length)
     console.log('random pick index ->', pickIndex)
-    appStore.selectedText = pickIndex
+    appStore.selectedText = filteredTexts.value[pickIndex].id
     appStore.startActivity()
   }
 

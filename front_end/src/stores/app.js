@@ -187,9 +187,8 @@ const DEFAULT_TEXT = {
       return
     }
     addScore()
-    if (retry) {
-      startGame()
-    } else {
+    startGame()
+    if (!retry) {
       router.push({ name: '/' })
     }
   }

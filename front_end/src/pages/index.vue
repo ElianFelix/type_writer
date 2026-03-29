@@ -65,7 +65,7 @@
         </v-tabs>
         <v-tabs-window v-model="appStore.getSelectedActivity">
           <v-tabs-window-item v-for="vo in appStore.activities" :key="vo.name" :id="vo.name" :value="vo.name">
-            <v-sheet id="settingsDrawer" class="d-flex flex-column px-2 justify-start" :class="{ 'open-drawer': openSettingsDrawer }">
+            <v-sheet id="settingsDrawer" class="d-flex flex-column px-2 justify-start overflow-y-scroll" :class="{ 'open-drawer': openSettingsDrawer }">
               <v-list-item>Font Size</v-list-item>
               <div class="d-flex align-center justify-center">
                 <div>lv. {{ appStore.fontSize }}</div>
@@ -169,9 +169,11 @@
 
   const tagSet = computed(() => {
     const result = new Set()
-    for (const text of appStore.texts) {
-      for (const tag of text.tags) {
-        result.add(tag)
+    if (appStore.texts) {
+      for (const text of appStore.texts) {
+        for (const tag of text.tags) {
+          result.add(tag)
+        }
       }
     }
     return [...result.values()]
@@ -187,7 +189,7 @@
     return result
   })
 
-  watch(selectedFilteredIndx, () => {
+  watch([selectedFilteredIndx, filteredTexts], () => {
     appStore.selectedText = filteredTexts.value[selectedFilteredIndx.value].id
   })
 

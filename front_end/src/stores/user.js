@@ -26,16 +26,18 @@ export const useUserStore = defineStore('user', () => {
   //   created_at: "2026-03-11T04:00:02.518314Z",
   //   updated_at: "2026-03-11T18:35:11.425319164Z"
   // }
-  const activeUser = ref(null)
-  const authToken = ref("")
+  const activeUser = ref(JSON.parse(localStorage.getItem('user.active_user')))
+  const authToken = ref(JSON.parse(localStorage.getItem('user.auth_token')))
 
   const getActiveUser = computed(() => activeUser.value)
   const getAuthToken = computed(() => authToken.value)
-  const isLoggedIn = computed(() => activeUser.value !== null && authToken.value !== '')
+  const isLoggedIn = computed(() => activeUser.value !== null && authToken.value !== null)
 
   function logoutUser() {
     activeUser.value = null
-    authToken.value = ""
+    authToken.value = null
+    localStorage.removeItem('user.active_user')
+    localStorage.removeItem('user.auth_token')
   }
 
   async function loginUser(loginInfo = {}) {
@@ -43,6 +45,8 @@ export const useUserStore = defineStore('user', () => {
     if (loginResp) {
       activeUser.value = loginResp.active_user
       authToken.value = loginResp.token
+      localStorage.setItem('user.active_user', JSON.stringify(activeUser.value))
+      localStorage.setItem('user.auth_token', JSON.stringify(authToken.value))
       return true
     }
     return false
@@ -67,7 +71,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function updateUserDetails(userInfo = {}) {
-    const updateResp = await api.updateUser(userInfo)
+    const updateResp = await api.updateUser(userInfo, authToken.value)
     if (updateResp) {
       activeUser.value = updateResp
       return true

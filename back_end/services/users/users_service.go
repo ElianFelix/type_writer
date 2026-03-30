@@ -109,6 +109,7 @@ func (u *UsersService) UpdateUser(ctx context.Context, userInfo structures.UserR
 func (u *UsersService) DeleteUser(ctx context.Context, userId int) (bool, error) {
 	deleted, err := u.UsersProvider.DeleteUser(ctx, userId)
 	if err != nil {
+		slog.ErrorContext(ctx, "failed to delete user", "error", err)
 		return false, err
 	}
 
@@ -118,11 +119,13 @@ func (u *UsersService) DeleteUser(ctx context.Context, userId int) (bool, error)
 func (u *UsersService) ValidateLoginUser(ctx context.Context, username, password string) (*structures.UserResp, error) {
 	user, err := u.UsersProvider.GetUserByIdOrUsername(ctx, nil, &username)
 	if err != nil {
+		slog.ErrorContext(ctx, "failed to find user", "error", err)
 		return nil, err
 	}
 	
 	if user.Username != username || helpers.TestPasswordHash(user.PasswdHash, password) != nil {
-		return nil, errors.New("wrong login information")
+		slog.InfoContext(ctx, "failed validation", "user", username)
+		return nil, errors.New("failed validation")
 	}
 
 	result := structures.ConvertUserToResponse(user)

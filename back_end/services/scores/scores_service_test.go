@@ -62,7 +62,7 @@ func TestGetScores(t *testing.T) {
 			result, err := scoresService.GetScores(context.Background())
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			}
@@ -120,7 +120,7 @@ func TestGetScoreById(t *testing.T) {
 			result, err := scoresService.GetScoreById(context.Background(), testCase.inputId)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -164,7 +164,7 @@ func TestCreateScore(t *testing.T) {
 			result, err := scoresService.CreateScore(context.Background(), testCase.inputScore)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -216,7 +216,7 @@ func TestUpdateScore(t *testing.T) {
 			result, err := scoresService.UpdateScore(context.Background(), testCase.inputScore, testCase.inputUpdateId)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -268,7 +268,7 @@ func TestDeleteActivity(t *testing.T) {
 			result, err := scoresService.DeleteScore(context.Background(), testCase.inputDeleteId)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {

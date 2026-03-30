@@ -62,7 +62,7 @@ func TestGetTexts(t *testing.T) {
 			result, err := textsService.GetTexts(context.Background())
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			}
@@ -132,7 +132,7 @@ func TestGetTextByIdOrName(t *testing.T) {
 			result, err := textsService.GetTextByIdOrTitle(context.Background(), &testCase.inputId, &testCase.inputName)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -176,7 +176,7 @@ func TestCreateText(t *testing.T) {
 			result, err := textsService.CreateText(context.Background(), testCase.inputText)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -228,7 +228,7 @@ func TestUpdateText(t *testing.T) {
 			result, err := textsService.UpdateText(context.Background(), testCase.inputText, testCase.inputUpdateId)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -280,7 +280,7 @@ func TestDeleteText(t *testing.T) {
 			result, err := textsService.DeleteText(context.Background(), testCase.inputDeleteId)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {

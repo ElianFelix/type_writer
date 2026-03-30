@@ -2,6 +2,7 @@ package users_service
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
@@ -64,7 +65,7 @@ func TestGetUsers(t *testing.T) {
 			result, err := usersService.GetUsers(context.Background())
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			}
@@ -136,7 +137,7 @@ func TestGetUserByIdOrName(t *testing.T) {
 			result, err := usersService.GetUserByIdOrUsername(context.Background(), &testCase.inputId, &testCase.inputName)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -182,7 +183,7 @@ func TestCreateUser(t *testing.T) {
 			result, err := usersService.CreateUser(context.Background(), testCase.inputUser)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -236,7 +237,7 @@ func TestUpdateUser(t *testing.T) {
 			result, err := usersService.UpdateUser(context.Background(), testCase.inputUser, testCase.inputUpdateId)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
@@ -288,12 +289,69 @@ func TestDeleteUser(t *testing.T) {
 			result, err := usersService.DeleteUser(context.Background(), testCase.inputDeleteId)
 
 			if testCase.expectedErr != nil {
-				if err != testCase.expectedErr {
+				if err.Error() != testCase.expectedErr.Error() {
 					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
 				}
 			} else {
 				if result != testCase.expectedResult {
 					t.Fatalf("expected %v, got %v", result, testCase.expectedResult)
+				}
+			}
+		})
+	}
+}
+
+func TestValidateLoginUser(t *testing.T) {
+	password := "testPassword"
+	hashedPassword, _ := helpers.HashPassword(password)
+	data := []struct{
+		testName string
+		inputName string
+		inputPassword string
+		mockResult *structures.User
+		mockErr error
+		expectedResult *structures.UserResp
+		expectedErr error
+	}{
+		{
+			"valid username and password",
+			"testuser1",
+			"testPassword",
+			&structures.User{1, "regular", "testuser1", hashedPassword, "test user1", "tu1@regular", time.Now(), time.Now()},
+			nil,
+			&structures.UserResp{1, "regular", "testuser1", "test user1", "tu1@regular", time.Now(), time.Now()},
+			nil,
+		},
+		{
+			"invalid username or password error",
+			"testuser1",
+			"nottestPassword",
+			&structures.User{1, "regular", "testuser1", hashedPassword, "test user1", "tu1@regular", time.Now(), time.Now()},
+			nil,
+			nil,
+			errors.New("failed validation"),
+		},
+	}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockUsersProvider := mockProviders.NewMockUsersProviderInterface(ctrl)
+	usersService := NewUsersService(mockUsersProvider)
+
+	for _, testCase := range data {
+		t.Run(testCase.testName, func(t *testing.T) {
+			mockUsersProvider.EXPECT().GetUserByIdOrUsername(context.Background(), nil, &testCase.inputName).Return(testCase.mockResult, testCase.mockErr).Times(1)
+
+			result, err := usersService.ValidateLoginUser(context.Background(), testCase.inputName, testCase.inputPassword)
+
+			if testCase.expectedErr != nil {
+				if err.Error() != testCase.expectedErr.Error() {
+					t.Fatalf("expected error: %v but got %v instead", testCase.expectedErr, err)
+				}
+			} else {
+				if err := helpers.CompareReflectedStructFields(*result, *testCase.expectedResult); err != nil {
+					t.Fatal(err)
 				}
 			}
 		})

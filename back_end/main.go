@@ -36,6 +36,7 @@ func main() {
 	DB_PORT := os.Getenv("DB_PORT")
 	API_PORT := os.Getenv("API_PORT")
 	ENV := os.Getenv("ENV")
+	JWT_SIGNING_KEY := os.Getenv("JWT_SIGNING_KEY")
 
 	// Create a slog logger, which:
 	//   - Logs to stdout.
@@ -54,6 +55,13 @@ func main() {
 	if err != nil {
 		e.Logger.Fatal("Error initializing DB")
 		e.Close()
+	}
+
+	var keyString []byte
+	if JWT_SIGNING_KEY != "" {
+		keyString = []byte(JWT_SIGNING_KEY)
+	} else {
+		e.Logger.Fatal("Error loading jwt signing key from env")
 	}
 
 	if ENV == "INTEGRATION" {
@@ -82,7 +90,7 @@ func main() {
 	textController := controllers.NewTextsController(textsService)
 	activityController := controllers.NewActivitiesController(activitiesService)
 	scoreController := controllers.NewScoresController(scoresService)
-	authController := controllers.NewAuthController(usersService)
+	authController := controllers.NewAuthController(keyString, usersService)
 
 	// Secure route group setup
 	s := e.Group("")
@@ -98,7 +106,7 @@ func main() {
 				func(ctx echo.Context) jwt.Claims {
 					return new(structures.JwtCustomClaims)
 				},
-			SigningKey: []byte("super_secret"),
+			SigningKey: keyString,
 		}),
 	)
 	s.Use(local_middleware.CasbinMiddleware(ce))

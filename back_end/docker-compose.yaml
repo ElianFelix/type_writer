@@ -24,6 +24,7 @@ services:
     build:
       target: api
     environment:
+      JWT_SIGNING_KEY:
       DB_USER:
       DB_PASS:
       DB_NAME:

@@ -12,6 +12,7 @@ import (
 )
 
 type AuthController struct {
+	keyString []byte
 	UsersService users_service.UsersServiceInterface
 }
 
@@ -44,7 +45,7 @@ func (a *AuthController) Login(ctx echo.Context) error {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Generate encoded token and send it as response.
-	t, err := token.SignedString([]byte("super_secret"))
+	t, err := token.SignedString(a.keyString)
 	if err != nil {
 		slog.ErrorContext(reqCtx, "failed to validate user", "error", err)
 		return ctx.JSON(http.StatusUnauthorized, "failed to validate user")
@@ -56,8 +57,9 @@ func (a *AuthController) Login(ctx echo.Context) error {
 	})
 }
 
-func NewAuthController(usersService *users_service.UsersService) *AuthController {
+func NewAuthController(keyString []byte, usersService *users_service.UsersService) *AuthController {
 	return &AuthController{
+		keyString: keyString,
 		UsersService: usersService,
 	}
 }

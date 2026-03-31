@@ -15,13 +15,18 @@ integration-test: clean
 	sudo docker compose --env-file $(ENV_FILE) -f docker-compose.yaml up --build -d
 	venom run ./testing/integration.yaml
 	sleep 2s
-	@# make clean
+	make clean
 
 test: unit-test integration-test
 	@echo testing complete
 
 # clean any existing containers related to application
 clean:
+	rm -f ./testing/test_results_._testing_integration.xml ./testing/venom.log
+	sudo docker compose --env-file $(ENV_FILE) -f docker-compose.yaml down
+
+# clean any existing containers and volumes related to application
+clean-all:
 	rm -f ./testing/test_results_._testing_integration.xml ./testing/venom.log
 	sudo docker compose --env-file $(ENV_FILE) -f docker-compose.yaml down -v
 

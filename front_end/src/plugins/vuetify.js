@@ -16,10 +16,12 @@ const light = {
   colors: {
     primary: '#82FFE2',
     secondary: '#74AEFF',
-    error: '#FD3A0F',
+    mistake: '#FD3A0F',
+    error: '#F22727',
     'on-primary': '#001A14',
     'on-secondary': '#000B1A',
-    'on-error': '#190500',
+    'on-mistake': '#190500',
+    'on-error': '#1C0000',
     background: '#E6E6E6',
   },
 }
@@ -29,10 +31,12 @@ const dark = {
   colors: {
     primary: '#82FFE2',
     secondary: '#74AEFF',
-    error: '#FD3A0F',
+    mistake: '#FD3A0F',
+    error: '#E60000',
     'on-primary': '#001A14',
     'on-secondary': '#00204D',
-    'on-error': '#190500',
+    'on-mistake': '#190500',
+    'on-error': '#FFDEDE',
     surface: '#2F2F2F',
   },
 }

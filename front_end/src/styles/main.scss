@@ -197,7 +197,7 @@
 }
 
 .wrong {
-  @include text-highlight(error);
+  @include text-highlight(mistake);
 }
 
 .inset-shadow {

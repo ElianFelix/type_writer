@@ -2,8 +2,11 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
 import * as api from '@/api/api'
+import { useAppStore } from './app'
 
 export const useUserStore = defineStore('user', () => {
+  const appStore = useAppStore()
+
   // [
   //   {
   //     id: 1,
@@ -40,6 +43,14 @@ export const useUserStore = defineStore('user', () => {
     localStorage.removeItem('user.auth_token')
   }
 
+  async function refreshUsers() {
+    const usersResp = await api.getUsers()
+    console.log('users resp ->', usersResp)
+    if (usersResp) {
+      users.value = usersResp
+    }
+  }
+
   async function loginUser(loginInfo = {}) {
     const loginResp = await api.login(loginInfo)
     if (loginResp) {
@@ -49,15 +60,8 @@ export const useUserStore = defineStore('user', () => {
       localStorage.setItem('user.auth_token', JSON.stringify(authToken.value))
       return true
     }
+    appStore.addMessage("Failed login", "error")
     return false
-  }
-
-  async function refreshUsers() {
-    const usersResp = await api.getUsers()
-    console.log('users resp ->', usersResp)
-    if (usersResp) {
-      users.value = usersResp
-    }
   }
 
   async function signUpUser(userInfo = {}) {
@@ -67,6 +71,7 @@ export const useUserStore = defineStore('user', () => {
       const loggedIn = await loginUser({ username: userInfo.username, password: userInfo.password})
       return loggedIn
     }
+    appStore.addMessage("Failed sign up", "error")
     return false
   }
 
@@ -74,8 +79,11 @@ export const useUserStore = defineStore('user', () => {
     const updateResp = await api.updateUser(userInfo, authToken.value)
     if (updateResp) {
       activeUser.value = updateResp
+      localStorage.setItem('user.active_user', JSON.stringify(activeUser.value))
+      appStore.addMessage("User details updated")
       return true
     }
+    appStore.addMessage("Failed user details update", "error")
     return false
   }
 

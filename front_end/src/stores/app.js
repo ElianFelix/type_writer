@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vuetify/lib/composables/router.mjs'
-import { processInputText } from '@/helpers/text_processing'
 import * as api from '@/api/api'
+import { processInputText } from '@/helpers/text_processing'
 import { useUserStore } from './user'
 
 const DEFAULT_TIME = 60
@@ -65,8 +65,6 @@ const DEFAULT_TEXT = {
   //   },
   // ]
   const texts = ref(null)
-  const selectedActivity = ref('typing-test')
-  const selectedText = ref(0)
 
   // [
   //   {
@@ -87,6 +85,9 @@ const DEFAULT_TEXT = {
   // ]
   const scores = ref(null)
 
+  const selectedActivity = ref('typing-test')
+  const selectedText = ref(0)
+  const messages = ref([])
 
   //
   // In-game settings
@@ -183,10 +184,11 @@ const DEFAULT_TEXT = {
   }
 
   function endActivity(retry = false) {
-    if (!userStore.isLoggedIn) {
-      return
+    if (userStore.isLoggedIn) {
+      addScore()
+    } else {
+      addMessage("Result not saved. Log in to save results", "warning")
     }
-    addScore()
     startGame()
     if (!retry) {
       router.push({ name: '/' })
@@ -211,6 +213,10 @@ const DEFAULT_TEXT = {
     const computedStats = [actualTime, {wpm, lpm, letters, words, errors, corrected: 0}]
     // console.log(computedStats)
     return computedStats
+  }
+
+  function addMessage(text, color='info') {
+    messages.value.push({ text, color })
   }
 
   async function addScore() {
@@ -263,12 +269,12 @@ const DEFAULT_TEXT = {
     // State
     activities, texts, selectedActivity, selectedText, gameText, processedGameText,
     stats, timerId, started, completed, testTime, timerSeconds, fontSize, cursor,
-    scores,
+    scores, messages,
     // Getters
     getSelectedActivity, getSelectedText, getDefaultTime,
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
     startGame, pauseGame, endGame, startActivity, endActivity, computeStats, addScore,
-    refreshActivities, refreshTexts, refreshScores,
+    refreshActivities, refreshTexts, refreshScores, addMessage,
   }
 })

@@ -33,10 +33,23 @@
         MIT License
       </a>
     </div>
+    <v-snackbar-queue v-model="appStore.messages" closable>
+      <template v-slot:actions="{ props }">
+        <v-btn
+          icon="mdi-close"
+          size="small"
+          variant="text"
+          v-bind="props"
+        ></v-btn>
+      </template>
+    </v-snackbar-queue>
   </v-footer>
 </template>
 
 <script setup>
+  import { useAppStore } from '@/stores/app';
+
+  const appStore = useAppStore()
   const items = [
     {
       title: 'Vuetify Documentation',

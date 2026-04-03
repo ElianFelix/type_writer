@@ -53,11 +53,7 @@
 
   async function handleFormSubmit() {
     if (form.value.isValid) {
-      const result = await userStore.loginUser(loginInfo.value)
-      // console logging for now
-      // TODO: implement alert/messaging display logic
-      console.log('successful login?', result)
-      loggedIn.value = result
+      loggedIn.value = await userStore.loginUser(loginInfo.value)
     }
   }
 </script>

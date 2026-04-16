@@ -27,7 +27,7 @@
               <v-btn :disabled="fontSize == 3" size="small" icon="mdi-plus-circle" @click="appStore.incrementFontSize"></v-btn>
               <v-btn :disabled="fontSize == 1" size="small" icon="mdi-minus-circle" @click="appStore.decrementFontSize"></v-btn>
               <v-btn size="small" icon="mdi-restore" @click="appStore.startGame()"></v-btn>
-              <v-btn size="small" icon="mdi-stop" @click="appStore.endActivity"></v-btn>
+              <v-btn size="small" icon="mdi-stop" @click="appStore.endActivity()"></v-btn>
             </div>
             <div class="mx-auto">
               <v-number-input
@@ -71,7 +71,8 @@
             </div>
           </div>
           <v-list-item to="/">Home</v-list-item>
-          <v-list-item to="/board">Board</v-list-item>
+          <v-list-item v-if="appStore.started" to="/board">Board</v-list-item>
+          <v-list-item v-if="userStore.isAdmin" to="/admin">Admin Panel</v-list-item>
           <template v-if="userStore.isLoggedIn">
             <v-list-item to="/profile">Profile</v-list-item>
             <v-list-item @click="handleLogout">Log Out</v-list-item>

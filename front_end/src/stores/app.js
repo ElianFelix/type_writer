@@ -18,7 +18,7 @@ const DEFAULT_TEXT = {
   "updated_at": "2026-03-11T01:16:31.708976Z"
 }
 
-  export const useAppStore = defineStore('app', () => {
+export const useAppStore = defineStore('app', () => {
   const router = useRouter()
   const route = useRoute()
   const userStore = useUserStore()

@@ -35,6 +35,7 @@ export const useUserStore = defineStore('user', () => {
   const getActiveUser = computed(() => activeUser.value)
   const getAuthToken = computed(() => authToken.value)
   const isLoggedIn = computed(() => activeUser.value !== null && authToken.value !== null)
+  const isAdmin = computed(() => activeUser.value !== null && activeUser.value.user_type == 'admin')
 
   function logoutUser() {
     activeUser.value = null
@@ -93,7 +94,7 @@ export const useUserStore = defineStore('user', () => {
     // State
     users, activeUser, authToken,
     // Getters
-    getActiveUser, getAuthToken, isLoggedIn,
+    getActiveUser, getAuthToken, isLoggedIn, isAdmin,
     // Actions
     logoutUser, loginUser, refreshUsers, signUpUser, updateUserDetails,
   }

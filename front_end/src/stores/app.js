@@ -253,6 +253,30 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
+  async function createOrUpdateText(text) {
+    const textReq = {
+      text_type: text.text_type,
+      title: text.title,
+      difficulty: text.difficulty,
+      tags: text.tags.split(","),
+      text_body: text.text_body
+    }
+
+    const textResp =
+      text.id == 0
+      ? await api.createText(textReq, userStore.getAuthToken)
+      : await api.updateText(text.id, textReq, userStore.getAuthToken)
+
+    if (textResp) {
+      await refreshTexts()
+      addMessage("Successful text creation/update", "success")
+      return textResp.id
+    } else {
+      addMessage("Failed text creation/update", "error")
+      return 0
+    }
+  }
+
   async function refreshScores() {
     const scoresResp = await api.getScores()
     console.log('scores resp ->', scoresResp)
@@ -275,6 +299,6 @@ export const useAppStore = defineStore('app', () => {
     // Actions
     incrementTestTime, decrementTestTime, incrementFontSize, decrementFontSize,
     startGame, pauseGame, endGame, startActivity, endActivity, computeStats, addScore,
-    refreshActivities, refreshTexts, refreshScores, addMessage,
+    refreshActivities, refreshTexts, refreshScores, addMessage, createOrUpdateText,
   }
 })

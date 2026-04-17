@@ -15,3 +15,10 @@ export const emailRules = [
   (v) => /^\w+@\w+\.\w{3}$/.test(v)
 ]
 
+export const textTitleRules = [
+  (v) => /^\w+(\w+[ -])*\w+$/.test(v)
+]
+
+export const genericTextRules = [
+  (v) => /^\S.+\S$/.test(v)
+]

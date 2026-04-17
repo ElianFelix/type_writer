@@ -169,9 +169,9 @@ export async function createText(text = {}, authToken) {
   return null
 }
 
-export async function updateText(updText = {}, authToken) {
+export async function updateText(updId, updText = {}, authToken) {
   try {
-    const response = await appApi.put(`/texts/${updText.id}`,
+    const response = await appApi.put(`/texts/${updId}`,
                                       updText,
                                       { headers: { Authorization: "Bearer " + authToken }})
     return response.data

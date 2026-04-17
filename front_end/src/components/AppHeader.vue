@@ -72,7 +72,7 @@
           </div>
           <v-list-item to="/">Home</v-list-item>
           <v-list-item v-if="appStore.started" to="/board">Board</v-list-item>
-          <v-list-item v-if="userStore.isAdmin" to="/admin">Admin Panel</v-list-item>
+          <v-list-item v-if="userStore.isAdmin" to="/admin">Admin</v-list-item>
           <template v-if="userStore.isLoggedIn">
             <v-list-item to="/profile">Profile</v-list-item>
             <v-list-item @click="handleLogout">Log Out</v-list-item>

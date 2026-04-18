@@ -39,13 +39,11 @@ func (t *ScoresProvider) GetScoreById(ctx context.Context, scoreId int) (*struct
 }
 
 func (t *ScoresProvider) CreateScore(ctx context.Context, scoreInfo structures.Score) (*structures.Score, error) {
-	var score *structures.Score
-	// TODO: change to force create every request
-	err := t.Db.WithContext(ctx).Table(structures.SCORE_TABLE_NAME).FirstOrCreate(&score, &scoreInfo).Error
+	err := t.Db.WithContext(ctx).Table(structures.SCORE_TABLE_NAME).Create(&scoreInfo).Error
 	if err != nil {
 		return nil, err
 	}
-	return score, nil
+	return &scoreInfo, nil
 }
 
 func (t *ScoresProvider) UpdateScore(ctx context.Context, updatedScoreInfo structures.Score) (*structures.Score, error) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column ga-4 fill-height main-container">
+  <div class="d-flex flex-column ga-4 main-container">
     <v-expansion-panels v-model="activeSections">
       <v-expansion-panel title="Profile Details" value="profile-details">
         <template v-slot:text>

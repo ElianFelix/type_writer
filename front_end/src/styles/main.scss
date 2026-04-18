@@ -114,7 +114,7 @@
 .main-container {
   width: 900px;
   margin-inline: auto;
-  margin-top: 140px;
+  //margin-top: 140px;
 }
 
 .histogram-container {
@@ -126,17 +126,19 @@
 }
 
 .app-container {
-  width: 1400px;
+  // width: 1400px;
+  width: 100vw;
+  height: 100vh;
   margin-inline: auto;
   // padding-inline: 10px;
-  overflow: hidden;
+  overflow: scroll;
   flex-grow: 1;
 }
 
 .board-container {
   width: 990px;
   min-width: 700px;
-  padding-top: 120px;
+  // padding-top: 120px;
   margin-inline: auto;
 }
 

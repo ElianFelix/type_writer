@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-center fill-height main-container">
+  <div class="d-flex flex-column align-center main-container">
     <v-sheet class="d-flex flex-column ga-4 mt-16 px-16 py-12" width="500">
       <v-form ref="form" @submit.prevent="handleFormSubmit">
         <v-text-field

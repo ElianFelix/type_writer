@@ -5,6 +5,7 @@
       <Stats v-if="appStore.completed" v-model="appStore.stats" />
       <Area
         v-model:font-size="appStore.fontSize"
+        v-model:processed-text="appStore.processedGameText"
         v-model:stats="appStore.stats"
         v-model:timer-seconds="appStore.timerSeconds"
       />

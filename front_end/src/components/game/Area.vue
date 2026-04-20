@@ -1,10 +1,11 @@
 <template>
   <div class="d-flex flex-column align-stretch justify-top align-center mx-8 area-container">
     <v-sheet class="px-10 py-4 text-pre-wrap" :class="`font-mono-${fontSize ?? 2}`">
-      <div class="start-tooltip"
-           :style="`visibility: ${appStore.started || appStore.completed ? 'hidden' : 'visible'};left: ${tooltipOffsetx}px; top: ${tooltipOffsety}px`"
+      <div
+        class="start-tooltip"
+        :style="`visibility: ${appStore.started || appStore.completed ? 'hidden' : 'visible'};left: ${tooltipOffsetx}px; top: ${tooltipOffsety}px`"
       >Start typing</div>
-      <span v-for="elem, index in processedText" :key="index" :id="index" :class="elem.status">{{ elem.letter }}</span>
+      <span v-for="elem, index in processedText" :id="index" :key="index" :class="elem.status">{{ elem.letter }}</span>
     </v-sheet>
     <div v-if="appStore.completed" class="d-flex align-self-center ga-4 py-5">
       <v-btn @click="appStore.endActivity(true)">Retry</v-btn>
@@ -14,43 +15,44 @@
 </template>
 
 <script setup>
-  import { useAppStore } from '@/stores/app'
   import { onMounted, onUnmounted, watch } from 'vue'
+  import { useAppStore } from '@/stores/app'
 
   const appStore = useAppStore()
 
   const timerSeconds = defineModel('timerSeconds')
   const stats = defineModel('stats')
   const fontSize = defineModel('fontSize')
+  const processedText = defineModel('processedText')
 
-  const tooltipOffsetx = ref(6)
+  const tooltipOffsetx = ref(0)
   const tooltipOffsety = ref(0)
 
-  const processedText = computed({
-    get() {
-      return appStore.processedGameText
-    },
-    set(newValue) {
-      appStore.processedGameText.value = newValue
-    },
-  })
-
-  watch([() => appStore.started, () => appStore.fontSize, () => appStore.cursor], ([started, _, cursor]) => {
-    if (!started || cursor == 0) {
-      const cursorElmnt = document.querySelector('.cursor')
-      if (cursorElmnt) {
-        const startTooltip = document.querySelector('.start-tooltip')
-        // console.log(cursor)
-        // console.log(cursor.offsetLeft, cursor.offsetWidth, startTooltip.offsetWidth)
-        tooltipOffsetx.value = cursorElmnt.offsetLeft + cursorElmnt.offsetWidth/2 - startTooltip.offsetWidth/2
-        tooltipOffsety.value = cursorElmnt.offsetTop - cursorElmnt.offsetHeight/4 - startTooltip.offsetHeight
-        // console.log(tooltipOffsetx.value, tooltipOffsety.value)
-      }
-    } else if (cursor == processedText.value.length) {
-      stats.value = appStore.computeStats()
-      appStore.endGame()
-    }
-  }, { flush: 'post' })
+  watch([
+          () => appStore.started,
+          () => appStore.fontSize,
+          () => appStore.cursor
+        ],
+        ([started, _, cursor]) => {
+          if (!started || cursor == 0) {
+            const cursorElmnt = document.querySelector('.cursor')
+            if (cursorElmnt) {
+              const startTooltip = document.querySelector('.start-tooltip')
+              // console.log(cursor)
+              // console.log(cursor.offsetLeft, cursor.offsetWidth, startTooltip.offsetWidth)
+              tooltipOffsetx.value =
+                cursorElmnt.offsetLeft + cursorElmnt.offsetWidth/2 - startTooltip.offsetWidth/2
+              tooltipOffsety.value =
+                cursorElmnt.offsetTop - cursorElmnt.offsetHeight/4 - startTooltip.offsetHeight
+              // console.log(tooltipOffsetx.value, tooltipOffsety.value)
+            }
+          } else if (cursor == processedText.value.length) {
+            stats.value = appStore.computeStats()
+            appStore.endGame()
+          }
+        },
+        { flush: 'post' }
+  )
 
   onMounted(() => {
     document.addEventListener('keydown', handleKeyPress)
@@ -95,7 +97,8 @@
         }
         if (appStore.cursor >= processedText.value.length) return
         if (appStore.started && appStore.timerSeconds > 0) {
-          processedText.value[appStore.cursor].status = processedText.value[appStore.cursor].letter == e.key ? 'right' : 'wrong'
+          processedText.value[appStore.cursor].status =
+            processedText.value[appStore.cursor].letter == e.key ? 'right' : 'wrong'
           appStore.cursor++
           if (appStore.cursor >= processedText.value.length) return
           processedText.value[appStore.cursor].status = 'cursor'
@@ -105,7 +108,8 @@
       // is deleting prev input
       case /^Backspace$/.test(e.key) && appStore.started: {
         if (appStore.cursor <= 0) return
-        if (appStore.cursor < processedText.value.length) processedText.value[appStore.cursor].status = ''
+        if (appStore.cursor < processedText.value.length)
+          processedText.value[appStore.cursor].status = ''
         appStore.cursor--
         processedText.value[appStore.cursor].status = 'cursor'
         break

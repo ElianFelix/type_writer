@@ -12,9 +12,8 @@
 </template>
 
 <script setup>
-  import { computed, onMounted, ref, watchEffect } from 'vue';
+  import { ref, watchEffect } from 'vue';
   import { useRouter } from 'vuetify/lib/composables/router.mjs';
-  import { genericTextRules, textTitleRules } from '@/helpers/input_rules';
   import { useAppStore } from '@/stores/app';
   import { useUserStore } from '@/stores/user';
 

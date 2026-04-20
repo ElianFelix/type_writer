@@ -6,6 +6,7 @@
         label="search"
         variant="outlined"
         density="comfortable"
+        clearable
       ></v-text-field>
       <v-list
         lines="three"
@@ -98,9 +99,12 @@
   const textInfo = ref(emptyText.value)
   const showForm = ref(false)
   const searchFilter = ref('')
-  const activeSections = ref(['texts-tab'])
 
-  const filteredTexts = computed(() => model.value?.filter((t) => t.title.includes(searchFilter.value)))
+  const filteredTexts = computed(() => {
+    return searchFilter.value
+      ? model.value?.filter((t) => t.title.includes(searchFilter.value))
+      : model.value
+  })
 
   function startEditingItem(item) {
     textInfo.value = item

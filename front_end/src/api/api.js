@@ -1,9 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = process.env.api_domain
-console.log('app name ->', import.meta.env.VITE_APP_NAME)
-console.log('active env mode is DEV ->',import.meta.env.DEV)
-console.log('api domain name ->', API_BASE_URL)
+const API_BASE_URL = process.env.API_DOMAIN
 
 const appApi =
   axios.create({

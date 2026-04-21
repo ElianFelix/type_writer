@@ -2,11 +2,9 @@
   <v-main class="d-flex flex-column app-container">
     <AppHeader />
     <router-view v-slot="{ Component }">
-      <div style="margin-top: 120px; padding-bottom: 40px;">
-        <transition>
-          <component :is="Component" />
-        </transition>
-      </div>
+      <transition>
+        <component :is="Component" />
+      </transition>
     </router-view>
     <AppFooter />
   </v-main>

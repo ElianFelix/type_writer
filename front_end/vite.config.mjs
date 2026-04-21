@@ -3,7 +3,6 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Fonts from 'unplugin-fonts/vite'
 import Layouts from 'vite-plugin-vue-layouts-next'
-import tailwindcss from '@tailwindcss/vite'
 import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
@@ -18,7 +17,6 @@ export default defineConfig({
   plugins: [
     VueRouter(),
     Layouts(),
-    tailwindcss(),
     Vue({
       template: { transformAssetUrls },
     }),
@@ -64,7 +62,11 @@ export default defineConfig({
       'unplugin-vue-router/data-loaders/basic',
     ],
   },
-  define: { 'process.env': {} },
+  define: { 
+    'process.env': {
+      'api_domain': import.meta.env.API_DOMAIN
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('src', import.meta.url)),

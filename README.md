@@ -1,91 +1,88 @@
-# Type Writer Web App
+# Type Writer
 
-## Description
 speed and accuracy typing webapp - sleek interface developed with VueJS and backed up by go/echo main backend
-
-WIP
 
 ## UI Screenshots
 
-WIP
+![Home Page](./resources/ui_screenshot_index.png)
 
-## Stacks
+## Technology Stack
 
 ### FrontEnd
 
-js
-vue
-vuetify
-pinia
-sass
+- js
+- vue
+- vuetify
+- pinia
+- sass
 
 ### BackEnd
 
-go
-echo
-postgresql
-gorm
-
-WIP
+- go
+- echo
+- gorm
+- postgresql
 
 ## How To Run
 
 ### FrontEnd
 
-requires a node package manager to be installed, this project uses pnpm
+**requires**:
+    node package manager -- this project uses pnpm
 
+'''bash
 pnpm add
 pnpm dev
-visit http://localhost:3000
+visit [](http://localhost:3000)
+'''
 
 ### BackEnd
 
-requires go >= 1.24, make to be installed
+**requires**:
+    go >= 1.24,
+    make 
+    docker
+    docker compose
 
+'''bash
 go mod tidy
 make deps-install
 make local
-
-WIP
+'''
 
 ## Dependencies
 
 ### FrontEnd
 
-js
-vue
-vuerouter
-vuetify
-pinia
-vite
-eslint
-sass
-axios
-roboto, roboto mono
+- js
+- vue
+- vuerouter
+- vuetify
+- pinia
+- vite
+- eslint
+- sass
+- axios
 
 ### BackEnd
 
-go
-go-sqlmock
-migrate
-echo
-echo-jwt
-slog-echo
-crypto
-gorm
-venom
-postgresql
-casbin
-crypto
-make
-wget
-
-WIP
-
-## API Structure
-
-WIP
+- go
+- go-sqlmock
+- migrate
+- echo
+- echo-jwt
+- slog-echo
+- crypto
+- gorm
+- venom
+- postgresql
+- casbin
+- crypto
+- make
+- wget
+- docker
+- docker compose
 
 ## Licensing
 
-WIP
+This repository is licensed under the Apache 2.0 license, see [LICENSE.txt](./LICENSE.txt) for more details.

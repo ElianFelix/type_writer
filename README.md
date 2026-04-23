@@ -1,6 +1,13 @@
 # Type Writer
 
-speed and accuracy typing webapp - sleek interface developed with VueJS and backed up by go/echo main backend
+Elevate your typing mastery with our clean and sleek web app, designed to transform
+your speed and accuracy into a professional-grade skill set. Whether you're looking
+to test your limits or engage in targeted practice, our platform adapts to your
+favorite texts, ensuring every session feels personal and engaging. With a diverse
+range of activities specifically engineered to sharpen finger dexterity and precision,
+you can seamlessly track your progress through an intuitive UI that stays out of your
+way while you work. Stop just typing and start performing—experience a smarter,
+more adaptive way to track your growth today.
 
 ## UI Screenshots
 
@@ -28,27 +35,26 @@ speed and accuracy typing webapp - sleek interface developed with VueJS and back
 ### FrontEnd
 
 **requires**:
-    node package manager -- this project uses pnpm
+- node package manager -- this project uses pnpm
 
-'''bash
+```bash
 pnpm add
 pnpm dev
-visit [](http://localhost:3000)
-'''
+navigate to http://localhost:3000
+```
 
 ### BackEnd
 
 **requires**:
-    go >= 1.24,
-    make 
-    docker
-    docker compose
+- go >= 1.24,
+- make 
+- docker + docker-compose
 
-'''bash
+```bash
 go mod tidy
 make deps-install
 make local
-'''
+```
 
 ## Dependencies
 

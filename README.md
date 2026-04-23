@@ -61,29 +61,28 @@ make local
 ### FrontEnd
 
 - js
-- vue
-- vuerouter
-- vuetify
-- pinia
-- vite
-- eslint
-- sass
-- axios
+- vue >= v3.5
+- vuerouter >= v4.5 
+- vuetify >= v3.11
+- pinia v3
+- vite >= v7.1 
+- eslint >= v9.35
+- sass >= 1.92
+- axios >= 1.13
 
 ### BackEnd
 
-- go
-- go-sqlmock
-- migrate
-- echo
-- echo-jwt
-- slog-echo
-- crypto
-- gorm
-- venom
-- postgresql
-- casbin
-- crypto
+- go >= v1.24
+- go-sqlmock v1.5
+- migrate v4.18
+- echo v4
+- echo-jwt v4 
+- slog-echo v1.21
+- crypto v0.49
+- gorm v1.31
+- venom v1.2
+- postgresql >= v18
+- casbin v3
 - make
 - wget
 - docker
